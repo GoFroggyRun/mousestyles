@@ -172,6 +172,65 @@ locomotion for each mouse at each time <span class="math">\(t\)</span></li>
 <li>The above dataframe with a classification of consumption size and moving
 distance with each event at each time <span class="math">\(t\)</span></li>
 </ul>
+<p>A graphic view of the above is as below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="14%" />
+<col width="16%" />
+<col width="14%" />
+<col width="22%" />
+<col width="19%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">strain</th>
+<th class="head">mouse</th>
+<th class="head">time</th>
+<th class="head">IS/AS</th>
+<th class="head">D/F/L/S*</th>
+<th class="head">Consn.</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>1</td>
+<td>1.1</td>
+<td>IS</td>
+<td>S</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>1</td>
+<td>1.4</td>
+<td>AS</td>
+<td>F</td>
+<td>4</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>2</td>
+<td>1.1</td>
+<td>AS</td>
+<td>D</td>
+<td>5</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>2</td>
+<td>1.3</td>
+<td>AS</td>
+<td>D</td>
+<td>3</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>2</td>
+<td>1.6</td>
+<td>IS</td>
+<td>S</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>*<strong>``D/F/L/S``</strong> above is a flag for <strong>D</strong>rinking/ <strong>F</strong>eeding/
+<strong>L</strong>ocomotion/ <strong>S</strong>tationary</p>
 </div>
 <div class="section" id="methodology-approach-description">
 <h2>Methodology/ Approach Description<a class="headerlink" href="#methodology-approach-description" title="Permalink to this headline">¶</a></h2>
@@ -192,6 +251,8 @@ restrict the movement to i.e. x_lower, x_upper, y_lower, y_upper.</li>
 a SQL (in <code class="docutils literal"><span class="pre">pandas</span></code> form) filtering/ grouping query to generate the
 required output metrics (from flowchart) in the form of a list</li>
 </ul>
+<p>An example of a metric calculation for <cite>Drinking</cite> is as follows:
+<span class="math">\(\frac{Drinking}{Total\ Time}=\frac{Drink\ Consumed}{AS\ Time}\times \frac{AS\ Time}{Total\ Time}\)</span></p>
 </div>
 <div class="section" id="testing-framework-outline">
 <h2>Testing Framework Outline<a class="headerlink" href="#testing-framework-outline" title="Permalink to this headline">¶</a></h2>

@@ -131,6 +131,88 @@ of the combination of strain, mouse and day</p>
 </div>
 </dd></dl>
 
+<dl class="function">
+<dt id="mousestyles.data.load_movement_and_intervals">
+<code class="descclassname">mousestyles.data.</code><code class="descname">load_movement_and_intervals</code><span class="sig-paren">(</span><em>strain, mouse, day, features=['AS', 'F', 'IS', 'M_AS', 'M_IS', 'W']</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#load_movement_and_intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.load_movement_and_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pandas.DataFrame object of project movement and interval
+data for the specified combination of strain, mouse and day.</p>
+<p>There are 4 + len(features) columns in the dataframe: t: Time
+coordinates (in seconds) x: X coordinates indicating the
+left-right position of the cage y: Y coordinates indicating the
+front-back position of the cage isHB: Boolean indicating whether
+the point is in the home base or not Additonal columns taking
+their names from features: Boolean indicating whether the time
+point is in an interval of behavior of the given feature.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; nonnegative integer indicating the day number</li>
+<li><strong>features</strong> (<em>list (or other iterable) of strings</em>) &#8211; list of features from {&#8220;AS&#8221;, &#8220;F&#8221;, &#8220;IS&#8221;, &#8220;M_AS&#8221;, &#8220;M_IS&#8221;, &#8220;W&#8221;}</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>movement</strong> &#8211; coordinates, home base status, and feature interval information
+for a given srain, mouse and day</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame CT, CX, CY</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="n">load_movement_and_intervals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[])</span> <span class="c1"># don&#39;t add any features</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">m1</span> <span class="o">==</span> <span class="n">m2</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span> <span class="o">=</span> <span class="n">load_movement_and_intervals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;AS&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">m1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># adds one column</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">m1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># same number of rows</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m3</span><span class="p">[</span><span class="mi">29</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span>
+<span class="go">            t      x       y   isHB     AS</span>
+<span class="go">29  56448.333 -6.289  34.902  False  False</span>
+<span class="go">30  56448.653 -5.509  34.173   True   True</span>
+<span class="go">31  56449.273 -5.048  33.284   True   True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.load_start_time_end_time">
+<code class="descclassname">mousestyles.data.</code><code class="descname">load_start_time_end_time</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#load_start_time_end_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.load_start_time_end_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the start and end times recorded
+for the mouse-day. The first number indicates
+the number of seconds elapsed since midnight,
+the second number indicates when the cage is
+closed for cleaning. In other words, this is
+the interval for which all sensors are active.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; nonnegative integer indicating the day number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>times</strong> &#8211; the start time and end time</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a tuple of (float, float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
