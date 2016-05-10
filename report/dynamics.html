@@ -44,129 +44,72 @@
 <span id="dynamics"></span><h1>Dynamics of AS Patterns<a class="headerlink" href="#dynamics-of-as-patterns" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="statement-of-problem">
 <h2>Statement of Problem<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
-<p>The objective of Dynamics Analysis is to classify the active states and
-inactive states, as well as understand the dynamics/transitions between
-AS and IS..</p>
+<p>The objective of Dynamics Analysis is to analyze and characterize the behaviors of different strains of mice using Markov Chain model. We could use the MC models to further explore the discrepancy between different strains and even simulate a particular mouse day for a particular strain.</p>
 </div>
 <div class="section" id="statement-of-statistical-problems">
 <h2>Statement of Statistical Problems<a class="headerlink" href="#statement-of-statistical-problems" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Use the Raw Observation Data of Mouse&#8217;s spatial and temporal data, to
-classify for each time-stamp whether the mice is in Active State or
-Inactive State, therefore to calculate AS numbers, AS durations, and
-AS probability for the 2-hour bin.</li>
-<li>Calculate the probability of events transition (e.g. eating =&gt;
-drinking) and of states transition (i.e. active =&gt; inactive).</li>
-<li>Using those probabilities as a feature of our &#8220;big model&#8221; to predict
-the mice&#8217;s gene type based on their behavior.</li>
+<p>The statistical problems in this project are mainly naturally divided into two parts, the modeling part and the simluation of the model part. The modelling part consists of estimating the probability of events transition using the raw data of mouse&#8217;s spatial and temporal data, and once we&#8217;ve got the model, we could use this model to do predictions and simulate a fake mouse day.</p>
+<p>For the estimation, the statistical problems include:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Define the states of interest.</li>
+<li>Estimate the transition probability matrix given the data we have</li>
+<li>Expand the capacity of our model to take into account the effect of time in our estimation. We want our model to be time-dependent (non-homogeneous) and could also model some of the time series structure of the behaviors of the mice during one typical mouse day</li>
 </ul>
-</div>
-<div class="section" id="exploratory-analysis">
-<h2>Exploratory Analysis<a class="headerlink" href="#exploratory-analysis" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Paper Define that when the mice is inside the Home Base, it is in IS.
-However, we make some improvement by adding the assumption that mice
-bring food back to Home Base.<ul>
-<li>Original Classification:</li>
-<li>Improved Classification:</li>
-</ul>
-</li>
-<li>EDA on their result to get a rough idea of the expectation: Summary
-statistics and plots can serve starting points to answer our
-problems. For example, it can be helpful to plot the features (e.g.
-food consumption, moving distance) over time bin for all mice.<ul>
-<li>Food Consumed:</li>
-<li>Distance Traveled:</li>
-</ul>
-</li>
-</ul>
+</div></blockquote>
 </div>
 <div class="section" id="data-requirements-description">
 <h2>Data Requirements Description<a class="headerlink" href="#data-requirements-description" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Variables should be explained in detail for further analysis. For
-example, we need to merge the interval data to the main data to apply
-the methodology, but it is little explained how to match the
-time-stamps of the interval data to those of the main data.</li>
+<li>We need labels of states of interest with respect to the time intervals in a specific mouse day to extract the structure of the Markov Chain.</li>
 </ul>
 </div>
 <div class="section" id="methodology-approach-description">
 <h2>Methodology/ Approach Description<a class="headerlink" href="#methodology-approach-description" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>First Step: How to define AS and IS States?</li>
+<li>Defining states of interest: which behaviors of the mouse are we interested in?<ul>
+<li>Feeding: labeled by event F</li>
+<li>Drinking: labeled by event W</li>
+<li>Other active state behaviors: This could possibly include all other movements in the AS state of a mouse besides drinking and eating.</li>
+<li>Inactive State: labeled by event I.</li>
+</ul>
+</li>
+<li>Data Preprocessing: convert the data we had into strings of the events chosen. This could be done by checking out the states of a typical mouse day at a lot of equally spaced time points and store the states and the time points in the same order. In order to perform this task, we need basically do the following two steps:<ul>
+<li>Data cleaning: Clean the raw intervals given by the measurements in the experiment into interval data that makes more sense and consistent. Also need to check if any of our states overlapped.</li>
+<li>Data reformating: Convert the cleaned interval data into strings of events or matrices containing both information from timestamps and the events at those timepoints.</li>
+</ul>
+</li>
+<li>Estimating Transition Probability: Estimate the transition probability matrix of the Markov Chain using the data given. One of the key challenges to estimate the transition matrix is that our model is actually time continuous non-homogeneous Markov Chain, and the parameters are too difficult to estimate given the data we have. Instead, we figured out a way to make our model a composite of small homogeneous discrete time Markov Chains, so that we could perform a rough estimation of the original time continuous non-homogeneous Markov Chain. We followed the following steps to achieve our goal:<ul>
+<li>Divide each mouse day into small time intervals, say 5 minutes</li>
+<li>For each of the small time intervals, aggregate the data from all mouses in the same strain for all mouse days and estimate the transition probability matrix of a discrete homogeneous Markov Chain model just for this small time interval.
+- each of these transition probability matrices is estimated by MLE method, where e.g.:
+.. math:: P(F_{t+1} | W_{t}) = frac{N_{WF}}{N_{W.}}
+where ..math::N_{WF} indicates the counts of transitions from W to F and ..math::N_{W.} indicates the counts of transitions starting from W, no matter where it ends.</li>
+<li>Build the whole model by compositing the models for each small time intervals.</li>
+</ul>
+</li>
+<li>Simluation: Use previous estimated model to simluate a typical mouse day for a typical strain. This part could also be used to evaluate the length of the time interval chosen in the previous step.</li>
 </ol>
-<ul class="simple">
-<li>Feeding(in/out), drinking(in/out), outside HomeBase movement ==&gt; AS</li>
-<li>The time gaps of two activity &lt; IST ==&gt; AS</li>
-<li>Complement of AS ==&gt; IS</li>
-<li>QDA/LDA to classify the IS and AS<ul>
-<li>P(food | IS) = 0.01, P(drink | IS) = 0.01, P(sleep | IS) = 0.8,
-P(move | IS) = 0.1, P(digging | IS) = 0.08</li>
-<li>P(food | AS) = 0.3, P(drink | AS) = 0.3, P(sleep | AS) = 0.01,
-P(move | AS) = 0.3, P(digging | AS) = 0.09</li>
-</ul>
-</li>
-</ul>
-<ol class="arabic" start="2">
-<li><p class="first">Second Step: Find the Optimal IST(Inactive State Threshold), so as to
-calculate AS numbers, AS Durations. Inspiration by:</p>
-<ul class="simple">
-<li>Events:</li>
-<li>IST vs AS numbers:</li>
-</ul>
-</li>
-<li><p class="first">Third Step: Use Markov chain to model the transition between events:</p>
-<div class="math">
-\[P(food_{t+1} | drink_{t})\]</div>
-</li>
-<li><p class="first">Fourth Step: Use Hidden Markov to model the transition between events
-for different stages</p>
-</li>
-</ol>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">states</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;AS&#39;</span><span class="p">,</span> <span class="s1">&#39;IS&#39;</span><span class="p">)</span>
-
-<span class="n">observations</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;food&#39;</span><span class="p">,</span> <span class="s1">&#39;water&#39;</span><span class="p">,</span> <span class="s1">&#39;sleep&#39;</span><span class="p">,</span><span class="s1">&#39;movement&#39;</span><span class="p">,</span><span class="s1">&#39;digging&#39;</span><span class="p">)</span>
-
-<span class="n">start_probability</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AS&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="o">/</span><span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;IS&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="o">/</span><span class="mi">24</span><span class="p">}</span><span class="c1">#based on time</span>
-
-<span class="n">transition_probability</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="s1">&#39;AS&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;IS&#39;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;AS&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
-   <span class="s1">&#39;IS&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;IS&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s1">&#39;AS&#39;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">},</span>
-   <span class="p">}</span>
-
-<span class="n">emission_probability</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="s1">&#39;IS&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;food&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;water&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;sleep&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;movement&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;digging&#39;</span><span class="p">:</span> <span class="mf">0.08</span><span class="p">},</span>
-   <span class="s1">&#39;AS&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;food&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;water&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;sleep&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;movement&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;digging&#39;</span><span class="p">:</span> <span class="mf">0.09</span><span class="p">},</span>
-   <span class="p">}</span>
-</pre></div>
 </div>
-</div>
-<div class="section" id="testing-framework-outline">
-<h2>Testing Framework Outline<a class="headerlink" href="#testing-framework-outline" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Main idea: check the reasonability of IST to be the number we choosed
-and the AS probability or Transition probability by testing:</li>
-<li>Examples:<ul>
-<li>For each mice, The AS numbers for Night Time bins &lt; The AS numbers
-of Daytime Bins.</li>
-<li>P(IS|Food) &lt; P(AS|Food)</li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="section" id="additional-remarks">
-<h2>Additional Remarks:<a class="headerlink" href="#additional-remarks" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Improvement on the definition of AS/IS: whether inside HomeBase
-movement count as AS as well?</li>
-<li>latent variables?</li>
-</ul>
+<div class="section" id="remarks">
+<h2>Remarks:<a class="headerlink" href="#remarks" title="Permalink to this headline">¶</a></h2>
+<p>Testing for each function should be done by the person who wrote the function.</p>
 </div>
 <div class="section" id="references">
 <h2>References:<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://scikit-learn.sourceforge.net/stable/modules/hmm.html">http://scikit-learn.sourceforge.net/stable/modules/hmm.html</a></p>
 <p><a class="reference external" href="https://github.com/hmmlearn/hmmlearn">https://github.com/hmmlearn/hmmlearn</a></p>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Hidden_Markov_model">https://en.wikipedia.org/wiki/Hidden_Markov_model</a></p>
+</div>
+<div class="section" id="project-details">
+<h2>Project Details:<a class="headerlink" href="#project-details" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Data Preprocessing: Hongfei</li>
+<li>Modeling: Jianglong</li>
+<li>Simlation: Chenyu</li>
+<li>Evaluation of length of small time interval chosen: Weiyan, Lynn, Mingyung</li>
+<li>Final Report writeup: Weiyan, Lynn, Mingyung</li>
+</ul>
 </div>
 </div>
 
@@ -181,12 +124,11 @@ movement count as AS as well?</li>
 <li><a class="reference internal" href="#">Dynamics of AS Patterns</a><ul>
 <li><a class="reference internal" href="#statement-of-problem">Statement of Problem</a></li>
 <li><a class="reference internal" href="#statement-of-statistical-problems">Statement of Statistical Problems</a></li>
-<li><a class="reference internal" href="#exploratory-analysis">Exploratory Analysis</a></li>
 <li><a class="reference internal" href="#data-requirements-description">Data Requirements Description</a></li>
 <li><a class="reference internal" href="#methodology-approach-description">Methodology/ Approach Description</a></li>
-<li><a class="reference internal" href="#testing-framework-outline">Testing Framework Outline</a></li>
-<li><a class="reference internal" href="#additional-remarks">Additional Remarks:</a></li>
+<li><a class="reference internal" href="#remarks">Remarks:</a></li>
 <li><a class="reference internal" href="#references">References:</a></li>
+<li><a class="reference internal" href="#project-details">Project Details:</a></li>
 </ul>
 </li>
 </ul>

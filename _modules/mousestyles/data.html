@@ -455,6 +455,146 @@
                                  <span class="s1">&#39;recordingStartTimeEndTime&#39;</span><span class="p">,</span>
                                  <span class="n">file_name</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="distances"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances">[docs]</a><span class="k">def</span> <span class="nf">distances</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a numpy array object of project movement data</span>
+<span class="sd">    for the specified combination of strain, mouse and day.</span>
+
+<span class="sd">    At regular timesteps, defined by the step parameter,</span>
+<span class="sd">    compute the euclidian distance between the positions</span>
+<span class="sd">    of the mouse at two consecutive times.</span>
+
+<span class="sd">    More specifically:</span>
+
+<span class="sd">    - let delta_t be the step parameter.</span>
+<span class="sd">    - let $t_n$ be the sequance of non negative numbers such</span>
+<span class="sd">      that $t_0 = 0$ and $t_(n+1) = t_n + delta_t$. The sequence</span>
+<span class="sd">      is defined for all $n$ such that $n&gt;=0$ and $t_n &lt;= time$</span>
+<span class="sd">      of the experiment</span>
+<span class="sd">    - let $d_n$ be the sequence of non negative numbers such</span>
+<span class="sd">      that $d_0 = 0$ and $d_n$ equals the position of the mouse</span>
+<span class="sd">      at a particular day at time $t_n$. $d_n$ is then defined</span>
+<span class="sd">      on the same set of integers as the sequence $t_n$.</span>
+<span class="sd">    - The function returns the sequence $d_n$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain: int</span>
+<span class="sd">        nonnegative integer indicating the strain number</span>
+<span class="sd">    mouse: int</span>
+<span class="sd">        nonnegative integer indicating the mouse number</span>
+<span class="sd">    day: int</span>
+<span class="sd">        nonnegative integer indicating the day number</span>
+<span class="sd">    step: float</span>
+<span class="sd">        positive float defining the time between two observations</span>
+<span class="sd">        default corresponds to 1 second</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    movement : numpy array</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; dist = distances(0, 0, 0, step=1e2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">movement</span> <span class="o">=</span> <span class="n">load_movement</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="c1"># Compute distance between samples</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">movement</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">movement</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t_final</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Aggregate distances according to step</span>
+    <span class="n">aggregate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">t_final</span><span class="o">/</span><span class="n">step</span><span class="p">))</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)):</span>
+        <span class="k">while</span> <span class="n">time</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">*</span><span class="n">step</span><span class="p">:</span>
+            <span class="n">aggregate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">aggregate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="distances_bymouse"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances_bymouse">[docs]</a><span class="k">def</span> <span class="nf">distances_bymouse</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggregates &#39;distances&#39; for all days of recorded data for</span>
+<span class="sd">    one particular mouse.</span>
+
+<span class="sd">    More specifically:</span>
+
+<span class="sd">    - let $d^1,...,d^D$ be the sequence of distances for one particular</span>
+<span class="sd">      mouse for days $1$ to $D$.</span>
+<span class="sd">    - The function returns the concatenation of the $d^i$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain: int</span>
+<span class="sd">        nonnegative integer indicating the strain number</span>
+<span class="sd">    mouse: int</span>
+<span class="sd">        nonnegative integer indicating the mouse number</span>
+<span class="sd">    step: float</span>
+<span class="sd">        positive float defining the time between two observations</span>
+<span class="sd">        default corresponds to 1 second</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    movement : numpy array</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; dist = distances_bymouse(0, 0, step=1e2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">distances</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span>
+                                           <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">))</span>
+            <span class="n">day</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;day </span><span class="si">%s</span><span class="s1"> done.&#39;</span> <span class="o">%</span> <span class="n">day</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="distances_bystrain"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances_bystrain">[docs]</a><span class="k">def</span> <span class="nf">distances_bystrain</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggregates distances_bymouse for all mice in one given</span>
+<span class="sd">    strain.</span>
+
+<span class="sd">    More specifically:</span>
+
+<span class="sd">    - let $d^1,...,d^M$ be the sequence of distances for one particular</span>
+<span class="sd">      strain for mouses $1$ to $M$.</span>
+<span class="sd">    - The function returns the sequence concatenation of the $d^i$.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain: int</span>
+<span class="sd">        nonnegative integer indicating the strain number</span>
+<span class="sd">    step: float</span>
+<span class="sd">        positive float defining the time between two observations</span>
+<span class="sd">        default corresponds to 1 second</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    movement : numpy array</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; dist = distances_bystrain(0, step=1e2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mouse</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">while</span> <span class="n">dist</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">distances_bymouse</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span>
+                                 <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+        <span class="n">mouse</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;mouse </span><span class="si">%s</span><span class="s1"> done.&#39;</span> <span class="o">%</span> <span class="n">mouse</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

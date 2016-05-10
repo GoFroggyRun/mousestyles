@@ -42,6 +42,127 @@
   <div class="section" id="module-mousestyles.data">
 <span id="data"></span><h1>Data<a class="headerlink" href="#module-mousestyles.data" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="mousestyles.data.distances">
+<code class="descclassname">mousestyles.data.</code><code class="descname">distances</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>step=50</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a numpy array object of project movement data
+for the specified combination of strain, mouse and day.</p>
+<p>At regular timesteps, defined by the step parameter,
+compute the euclidian distance between the positions
+of the mouse at two consecutive times.</p>
+<p>More specifically:</p>
+<ul class="simple">
+<li>let delta_t be the step parameter.</li>
+<li>let <span class="math">\(t_n\)</span> be the sequance of non negative numbers such
+that <span class="math">\(t_0 = 0\)</span> and <span class="math">\(t_(n+1) = t_n + delta_t\)</span>. The sequence
+is defined for all <span class="math">\(n\)</span> such that <span class="math">\(n&gt;=0\)</span> and <span class="math">\(t_n &lt;= time\)</span>
+of the experiment</li>
+<li>let <span class="math">\(d_n\)</span> be the sequence of non negative numbers such
+that <span class="math">\(d_0 = 0\)</span> and <span class="math">\(d_n\)</span> equals the position of the mouse
+at a particular day at time <span class="math">\(t_n\)</span>. <span class="math">\(d_n\)</span> is then defined
+on the same set of integers as the sequence <span class="math">\(t_n\)</span>.</li>
+<li>The function returns the sequence <span class="math">\(d_n\)</span>.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; nonnegative integer indicating the day number</li>
+<li><strong>step</strong> (<em>float</em>) &#8211; positive float defining the time between two observations
+default corresponds to 1 second</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>movement</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">distances</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="n">e2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.distances_bymouse">
+<code class="descclassname">mousestyles.data.</code><code class="descname">distances_bymouse</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#distances_bymouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.distances_bymouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregates &#8216;distances&#8217; for all days of recorded data for
+one particular mouse.</p>
+<p>More specifically:</p>
+<ul class="simple">
+<li>let <span class="math">\(d^1,...,d^D\)</span> be the sequence of distances for one particular
+mouse for days <span class="math">\(1\)</span> to <span class="math">\(D\)</span>.</li>
+<li>The function returns the concatenation of the <span class="math">\(d^i\)</span>.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>step</strong> (<em>float</em>) &#8211; positive float defining the time between two observations
+default corresponds to 1 second</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>movement</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">distances_bymouse</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="n">e2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.distances_bystrain">
+<code class="descclassname">mousestyles.data.</code><code class="descname">distances_bystrain</code><span class="sig-paren">(</span><em>strain</em>, <em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#distances_bystrain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.distances_bystrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregates distances_bymouse for all mice in one given
+strain.</p>
+<p>More specifically:</p>
+<ul class="simple">
+<li>let <span class="math">\(d^1,...,d^M\)</span> be the sequence of distances for one particular
+strain for mouses <span class="math">\(1\)</span> to <span class="math">\(M\)</span>.</li>
+<li>The function returns the sequence concatenation of the <span class="math">\(d^i\)</span>.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>step</strong> (<em>float</em>) &#8211; positive float defining the time between two observations
+default corresponds to 1 second</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>movement</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">distances_bystrain</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="n">e2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="mousestyles.data.load_all_features">
 <code class="descclassname">mousestyles.data.</code><code class="descname">load_all_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#load_all_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.load_all_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a (21131, 13) size pandas.DataFrame object corresponding to
