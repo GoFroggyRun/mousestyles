@@ -1,0 +1,517 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.dynamics &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.dynamics</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span> <span class="nn">mousestyles</span> <span class="kn">import</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="create_time_matrix"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.create_time_matrix">[docs]</a><span class="k">def</span> <span class="nf">create_time_matrix</span><span class="p">(</span><span class="n">combined_gap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">time_gap</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">days_index</span><span class="o">=</span><span class="mi">137</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Return a time matrix for estimate the MLE parobability.</span>
+<span class="sd">    The rows are 137 mousedays. The columns are time series</span>
+<span class="sd">    in a day. The data are the mouse activity at that time.</span>
+<span class="sd">    0 represents IS, 1 represents eating, 2 represents</span>
+<span class="sd">    drinking, 3 represents others activity in AS.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    combined_gap: nonnegative float or int</span>
+<span class="sd">        The threshold for combining small intervals. If next start time</span>
+<span class="sd">        minus last stop time is smaller than combined_gap than combined</span>
+<span class="sd">        these two intervals.</span>
+<span class="sd">    time_gap: positive float or int</span>
+<span class="sd">        The time gap for create the columns time series</span>
+<span class="sd">    days_index: nonnegative int</span>
+<span class="sd">        The number of days to process, from day 0 to day days_index.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    time: Pandas.DataFrame</span>
+<span class="sd">        a matrix represents the activity for a certain</span>
+<span class="sd">        mouse day and a certain time.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; time = create_time_matrix(combined_gap=4, time_gap=1).iloc[0, 0:10]</span>
+<span class="sd">    &gt;&gt;&gt; strain    0</span>
+<span class="sd">        mouse     0</span>
+<span class="sd">        day       0</span>
+<span class="sd">        48007     0</span>
+<span class="sd">        48008     0</span>
+<span class="sd">        48009     0</span>
+<span class="sd">        48010     0</span>
+<span class="sd">        48011     0</span>
+<span class="sd">        48012     0</span>
+<span class="sd">        48013     0</span>
+<span class="sd">        Name: 0, dtype: float64</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs</span>
+    <span class="n">condition_combined_gap</span> <span class="o">=</span> <span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="n">combined_gap</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span>
+                              <span class="nb">type</span><span class="p">(</span><span class="n">combined_gap</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">combined_gap</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">condition_time_gap</span> <span class="o">=</span> <span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="n">time_gap</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">time_gap</span><span class="p">)</span> <span class="o">==</span>
+                           <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">time_gap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">condition_days_index</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">days_index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">and</span> <span class="n">days_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_time_gap</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;time_gap should be nonnegative int or float&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_combined_gap</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;combined_gap should be nonnegative int or float&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_days_index</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;days_index should be nonnegative int&quot;</span><span class="p">)</span>
+
+    <span class="n">intervals_AS</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_intervals</span><span class="p">(</span><span class="s1">&#39;AS&#39;</span><span class="p">)</span>
+    <span class="n">intervals_F</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_intervals</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+    <span class="n">intervals_W</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_intervals</span><span class="p">(</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
+    <span class="n">intervals_IS</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_intervals</span><span class="p">(</span><span class="s1">&#39;IS&#39;</span><span class="p">)</span>
+    <span class="c1"># 137 days totally</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intervals_AS</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span>
+                    <span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    <span class="c1"># set time range for columns</span>
+    <span class="n">initial</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">intervals_IS</span><span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">]))</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">intervals_IS</span><span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">initial</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">time_gap</span><span class="p">)</span>
+    <span class="c1"># result matrix</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">days</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)))</span>
+    <span class="c1"># we set 0 as IS, 1 as F, 2 as W, 3 as Others</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">days</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intervals_W</span><span class="p">[(</span><span class="n">intervals_W</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span>
+                                 <span class="p">(</span><span class="n">intervals_W</span><span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+                                 <span class="p">(</span><span class="n">intervals_W</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">])]</span><span class="o">.</span>
+                     <span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intervals_F</span><span class="p">[(</span><span class="n">intervals_F</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span>
+                                 <span class="p">(</span><span class="n">intervals_F</span><span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+                                 <span class="p">(</span><span class="n">intervals_F</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">])]</span><span class="o">.</span>
+                     <span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">AS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intervals_AS</span><span class="p">[(</span><span class="n">intervals_AS</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span>
+                                   <span class="p">(</span><span class="n">intervals_AS</span><span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+                                   <span class="p">(</span><span class="n">intervals_AS</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">days</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">])]</span><span class="o">.</span>
+                      <span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">W</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">W</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span>
+                                   <span class="n">combined_gap</span><span class="p">)))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">stop_W</span> <span class="o">=</span> <span class="n">W</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">start_W</span> <span class="o">=</span> <span class="n">W</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span>
+                                   <span class="n">combined_gap</span><span class="p">)))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">stop_F</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">start_F</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">AS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">AS</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">AS</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span>
+                                   <span class="n">combined_gap</span><span class="p">)))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">stop_AS</span> <span class="o">=</span> <span class="n">AS</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">start_AS</span> <span class="o">=</span> <span class="n">AS</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">start_AS</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span>
+                                  <span class="n">stop_AS</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">start_F</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span>
+                                      <span class="n">stop_F</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># food</span>
+                <span class="k">elif</span> <span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">start_W</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span>
+                                        <span class="n">stop_W</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># water</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># others</span>
+        <span class="c1"># give you the precent of matrix has been processed</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">days</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;has been processed&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">days_index</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># format data frame</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;strain&#39;</span><span class="p">,</span> <span class="s1">&#39;mouse&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">])</span>
+    <span class="n">time_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">title</span><span class="p">,</span> <span class="n">matrix</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">time_matrix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_prob_matrix_list"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.get_prob_matrix_list">[docs]</a><span class="k">def</span> <span class="nf">get_prob_matrix_list</span><span class="p">(</span><span class="n">time_df</span><span class="p">,</span> <span class="n">interval_length</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    returns a list of probability transition matrices</span>
+<span class="sd">    that will be later used to characterize and simu-</span>
+<span class="sd">    late the behavior dynamics of different strains of</span>
+<span class="sd">    mice. The data used as input is the pandas DataFrame</span>
+<span class="sd">    generated by function create_time_matrix with de-</span>
+<span class="sd">    fault parameters. The output is a list of numpy</span>
+<span class="sd">    arrays, each being a transition matrix characterizing</span>
+<span class="sd">    one small time interval. The interval length could</span>
+<span class="sd">    be chosen.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time_df: Pandas.DataFrame</span>
+<span class="sd">        a huge data frame containing info on strain, mouse</span>
+<span class="sd">        no., mouse day, and different states at chosen time</span>
+<span class="sd">        points.</span>
+<span class="sd">    interval_length: int</span>
+<span class="sd">        an integer specifying the desired length of each</span>
+<span class="sd">        small time interval.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matrix_list: list</span>
+<span class="sd">        a list of the mle estimations of the probability tran-</span>
+<span class="sd">        sition matrices for each small time interval stored in</span>
+<span class="sd">        the format of numpy array. Each element of this list</span>
+<span class="sd">        is a numpy array matrix.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; row_i = np.hstack((np.zeros(13), np.ones(10),</span>
+<span class="sd">                            np.ones(10)*2, np.ones(10)*3))</span>
+<span class="sd">    &gt;&gt;&gt; time_df_eg = np.vstack((row_i, row_i,row_i))</span>
+<span class="sd">    &gt;&gt;&gt; time_df_eg = pd.DataFrame(time_df_eg)</span>
+<span class="sd">    &gt;&gt;&gt; mat_list = get_prob_matrix_list(time_df_eg,</span>
+<span class="sd">                                        interval_length=10)</span>
+<span class="sd">    &gt;&gt;&gt; mat_list[0]</span>
+<span class="sd">    &gt;&gt;&gt; array([[ 1.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.]])</span>
+<span class="sd">    &gt;&gt;&gt; mat_list[1]</span>
+<span class="sd">    &gt;&gt;&gt; array([[ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  1.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.]])</span>
+<span class="sd">    &gt;&gt;&gt; mat_list[2]</span>
+<span class="sd">    &gt;&gt;&gt; array([[ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  1.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.]])</span>
+<span class="sd">    &gt;&gt;&gt; mat_list[3]</span>
+<span class="sd">    &gt;&gt;&gt; array([[ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  1.]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs</span>
+    <span class="n">condition_time_df</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">time_df</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="n">condition_interval_length</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">interval_length</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">and</span>
+                                 <span class="n">interval_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_time_df</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;time_df should be pandas DataFrame&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_interval_length</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;interval_length should be positive int&quot;</span><span class="p">)</span>
+
+    <span class="n">time_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">time_df</span><span class="p">)[:,</span> <span class="mi">3</span><span class="p">:]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">time_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">interval_length</span><span class="p">)</span>
+    <span class="n">matrix_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">*</span> <span class="n">interval_length</span><span class="p">),</span> <span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">interval_length</span><span class="p">)]</span>
+        <span class="n">small_time_array</span> <span class="o">=</span> <span class="n">time_array</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">small_time_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">small_time_array</span><span class="p">)</span>
+        <span class="n">small_time_str_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>
+                               <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">small_time_list</span><span class="p">]</span>
+        <span class="n">matrix_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_prob_matrix_small_interval</span><span class="p">(</span><span class="n">small_time_str_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matrix_list</span></div>
+
+
+<div class="viewcode-block" id="get_prob_matrix_small_interval"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.get_prob_matrix_small_interval">[docs]</a><span class="k">def</span> <span class="nf">get_prob_matrix_small_interval</span><span class="p">(</span><span class="n">string_list</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    return the MLE estimate of the probability matrix</span>
+<span class="sd">    of the markov chain model. The data used as input</span>
+<span class="sd">    is a list of strings that contains the information</span>
+<span class="sd">    regarding the transition of states of the mouse be-</span>
+<span class="sd">    havior. The output is a matrix stored in the format</span>
+<span class="sd">    of numpy array, where the i,j th term indicates the</span>
+<span class="sd">    probability of transiting from state i to state j.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    string_list: list</span>
+<span class="sd">        a list of strings of the states in the given</span>
+<span class="sd">        time slot.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M: numpy.ndarray</span>
+<span class="sd">        the MLE estimation of the probability tran-</span>
+<span class="sd">        sition matrix. Each entry M_ij represents the</span>
+<span class="sd">        probability of transiting from state i to state</span>
+<span class="sd">        j.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; time_list = [&#39;002&#39;, &#39;001&#39;, &#39;012&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; get_prob_matrix_small_interval(time_list)</span>
+<span class="sd">    &gt;&gt;&gt; array([[ 0.4,  0.4,  0.2,  0. ],</span>
+<span class="sd">               [ 0. ,  0. ,  1. ,  0. ],</span>
+<span class="sd">               [ 0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">               [ 0. ,  0. ,  0. ,  0. ]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs</span>
+    <span class="n">condition_string_list</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">string_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">condition_list_item</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">string_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">string_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_string_list</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;string_list should be a list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_list_item</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;items in string_list should be str&quot;</span><span class="p">)</span>
+
+    <span class="n">Mat_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">ijth</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">Mat_prob</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">string</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">ijth</span><span class="p">)</span> <span class="k">for</span> <span class="n">string</span>
+                                 <span class="ow">in</span> <span class="n">string_list</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">Mat_prob</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Mat_prob</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Mat_prob</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">Mat_prob</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="k">return</span> <span class="n">Mat_prob</span></div>
+
+
+<div class="viewcode-block" id="mcmc_simulation"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.mcmc_simulation">[docs]</a><span class="k">def</span> <span class="nf">mcmc_simulation</span><span class="p">(</span><span class="n">mat_list</span><span class="p">,</span> <span class="n">n_per_int</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    This function gives the Monte Carlo simulation</span>
+<span class="sd">    of the stochastic process modeling the dynamic</span>
+<span class="sd">    changes of states of the mice behavior. The in-</span>
+<span class="sd">    put of this function is a list of probability</span>
+<span class="sd">    transition matrices and an integer indicates</span>
+<span class="sd">    how many outputs for each matrix. This number</span>
+<span class="sd">    is related to the interval_length parameter in</span>
+<span class="sd">    function get_prob_matrix_list. The output is an</span>
+<span class="sd">    array of numbers, each indicates one state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mat_list: List</span>
+<span class="sd">        a list of numpy arrays storing the probabi-</span>
+<span class="sd">        lity transition matrices for each small time</span>
+<span class="sd">        interval chosen.</span>
+<span class="sd">    n_per_int: int</span>
+<span class="sd">        an integer specifying the desired output</span>
+<span class="sd">        length of each probability transition matrix.</span>
+<span class="sd">        This is the same as the parameter</span>
+<span class="sd">        interval_length used in the function</span>
+<span class="sd">        get_prob_matrix_small_interval</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    simu_result: numpy.array</span>
+<span class="sd">        an array of integers indicating the simulated</span>
+<span class="sd">        states given a list of probability transition</span>
+<span class="sd">        matrices.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; mat0 = np.zeros(16).reshape(4, 4)</span>
+<span class="sd">    &gt;&gt;&gt; np.fill_diagonal(mat0, val=1)</span>
+<span class="sd">    &gt;&gt;&gt; mat1 = np.zeros(16).reshape(4, 4)</span>
+<span class="sd">    &gt;&gt;&gt; mat1[0, 1] = 1</span>
+<span class="sd">    &gt;&gt;&gt; mat1[1, 0] = 1</span>
+<span class="sd">    &gt;&gt;&gt; mat1[2, 2] = 1</span>
+<span class="sd">    &gt;&gt;&gt; mat1[3, 3] = 1</span>
+<span class="sd">    &gt;&gt;&gt; mat_list_example = [mat0, mat1]</span>
+<span class="sd">    &gt;&gt;&gt; mcmc_simulation(mat_list_example, 10)</span>
+<span class="sd">    &gt;&gt;&gt; array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
+<span class="sd">                1, 0, 1, 0, 1, 0, 1, 0, 1, 0])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs</span>
+    <span class="n">condition_mat_list</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mat_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">condition_list_item</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mat_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="n">condition_n_per_int</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">n_per_int</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">and</span> <span class="n">n_per_int</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_mat_list</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mat_list should be a list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_list_item</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;items in mat_list should be numpy array&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_n_per_int</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;n_per_int should be positive int&quot;</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mat_list</span><span class="p">)</span>
+    <span class="n">simu_result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">n_per_int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_per_int</span><span class="p">):</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">n_per_int</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">simu_result</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">state_i</span> <span class="o">=</span> <span class="n">simu_result</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="n">prob_trans</span> <span class="o">=</span> <span class="n">mat_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">state_i</span><span class="p">),</span> <span class="p">:]</span>
+            <span class="n">prob_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">prob_trans</span><span class="p">)</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span>
+            <span class="n">state_j</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rand</span> <span class="o">&gt;</span> <span class="n">prob_trans</span><span class="p">)</span>
+            <span class="n">simu_result</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">state_j</span><span class="p">)</span>
+    <span class="n">simu_result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">simu_result</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">simu_result</span></div>
+
+
+<div class="viewcode-block" id="get_score"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.get_score">[docs]</a><span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="n">true_day</span><span class="p">,</span> <span class="n">simulated_day</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns the evaluation score for the simulted day</span>
+<span class="sd">    that will be later used to choose the best time</span>
+<span class="sd">    interval for different strains. The input data</span>
+<span class="sd">    should be two numpy arrays and one list, the two arrays</span>
+<span class="sd">    are possibly with different lengths, one being the</span>
+<span class="sd">    activities for one particular day of one particular</span>
+<span class="sd">    mouse, the other array is our simulated day for this</span>
+<span class="sd">    mouse from the mcmc_simulation function. And the list</span>
+<span class="sd">    is the weight for different status. We should give different</span>
+<span class="sd">    rewards for making correct simulations on various status.</span>
+<span class="sd">    For example, the average mouse day have 21200 timestamps.</span>
+<span class="sd">    10000 of them are IS, 1000 are EAT, 200 are drink, and the</span>
+<span class="sd">    left 10000 are OTHERS. So we should weigh more on drink and</span>
+<span class="sd">    eat, their ratio is 10000:1000:200:10000 = 1:0.1:0.02:0.1.</span>
+<span class="sd">    So I took the inverse of them to be 1:10:50:1.</span>
+<span class="sd">    The output will be one number between 0 and max(weight),</span>
+<span class="sd">    indicating the similiary of the true day of a mouse and</span>
+<span class="sd">    a simulated day of the same mouse. We will use</span>
+<span class="sd">    this function to measure the performance of the</span>
+<span class="sd">    simulation and then choose the appropriate time</span>
+<span class="sd">    interval.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    true_day: numpy.array</span>
+<span class="sd">        a numpy.array containing the activities for one</span>
+<span class="sd">        particular mouse on a specific day</span>
+<span class="sd">    simulated_day: numpy.array</span>
+<span class="sd">        a numpy.array containing the simulated activities</span>
+<span class="sd">        for this particular mouse.</span>
+<span class="sd">    weight: list</span>
+<span class="sd">        a list with positive numbers showing the rewards</span>
+<span class="sd">        for making the right predictions of various status.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    score: float</span>
+<span class="sd">        a float from 0 to max(weight), indicating the similarity of</span>
+<span class="sd">        the simulated data with the actual value, and therefore,</span>
+<span class="sd">        the performance of the simulation, with max(weight) being the</span>
+<span class="sd">        most similar, and 0 being the least similar.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; true_day_1 = np.zeros(13)</span>
+<span class="sd">    &gt;&gt;&gt; simulated_day_1 = np.ones(13)</span>
+<span class="sd">    &gt;&gt;&gt; get_score(true_day_1, simulated_day_1)</span>
+<span class="sd">    &gt;&gt;&gt; 0.0</span>
+<span class="sd">    &gt;&gt;&gt; true_day_2 = np.ones(13)</span>
+<span class="sd">    &gt;&gt;&gt; simulated_day_2 = np.ones(13)</span>
+<span class="sd">    &gt;&gt;&gt; get_score(true_day_2, simulated_day_2)</span>
+<span class="sd">    &gt;&gt;&gt; 10.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs</span>
+    <span class="n">condition_true_day</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">true_day</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)))</span>
+    <span class="n">condition_simulated_day</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">simulated_day</span><span class="p">,</span>
+                               <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)))</span>
+    <span class="n">condition_weight</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_true_day</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;true_day should be numpy array&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_simulated_day</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;simulated_day should be numpy array&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_weight</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;weight should be list&quot;</span><span class="p">)</span>
+
+    <span class="n">len_weight</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">len_weight</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of weight should be 4&quot;</span><span class="p">)</span>
+
+    <span class="c1"># check all the weights are positive</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">weight</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All the weights should be positive&quot;</span><span class="p">)</span>
+
+    <span class="c1"># make sure these two arrays have the same length</span>
+    <span class="n">len_true</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">true_day</span><span class="p">)</span>
+    <span class="n">len_simulated</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">simulated_day</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">len_true</span> <span class="o">&gt;</span> <span class="n">len_simulated</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of simulated_day is smaller than true_day&quot;</span><span class="p">)</span>
+    <span class="n">simulated_same_length</span> <span class="o">=</span> <span class="n">simulated_day</span><span class="p">[:</span><span class="n">len_true</span><span class="p">]</span>
+
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">len_true</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">true_day</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">simulated_same_length</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">true_day</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="n">weight</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">status</span><span class="p">)]</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="n">len_true</span>
+    <span class="k">return</span> <span class="n">score</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.path_diversity package &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="next" title="mousestyles.visualization package" href="mousestyles.visualization.html" />
+    <link rel="prev" title="mousestyles.dynamics package" href="mousestyles.dynamics.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mousestyles-path-diversity-package">
+<h1>mousestyles.path_diversity package<a class="headerlink" href="#mousestyles-path-diversity-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.path_diversity.clean_movements">
+<span id="mousestyles-path-diversity-clean-movements-module"></span><h2>mousestyles.path_diversity.clean_movements module<a class="headerlink" href="#module-mousestyles.path_diversity.clean_movements" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.clean_movements.clean_movements">
+<code class="descclassname">mousestyles.path_diversity.clean_movements.</code><code class="descname">clean_movements</code><span class="sig-paren">(</span><em>movements</em>, <em>keep_index=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/clean_movements.html#clean_movements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.clean_movements.clean_movements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of cleaned movement objects.</p>
+<p>For each element of the input <cite>movements</cite> object, detects the existence of
+adjacent rows which have i) same x,y-coordinates, or ii) same timestamps.
+For case i), and removes the duplicated rows except for the first.
+For case ii), raises value error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movements</strong> (<em>list</em>) &#8211; each element is pandas.DataFrame containing
+CT, CX, CY coordinates.
+Should have length greater than 1.</li>
+<li><strong>keep_index</strong> (<em>boolean</em>) &#8211; whether or not keep the original index.
+Deafalt is False.
+If false, cleaned movement object is re-indexed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cleaned-movements</strong> &#8211; each element is cleaned movement object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">strain_nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mouse_nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">day_nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">movements</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="n">strain_num</span><span class="p">,</span> <span class="n">mouse_num</span><span class="p">,</span> <span class="n">day_num</span><span class="p">)</span>
+<span class="go">                 for strain_num, mouse_num, day_num in</span>
+<span class="go">                 zip(strain_nums, mouse_nums, day_nums)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cleaned_movements</span> <span class="o">=</span> <span class="n">clean_movements</span><span class="p">(</span><span class="n">movements</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.path_diversity.filter_path">
+<span id="mousestyles-path-diversity-filter-path-module"></span><h2>mousestyles.path_diversity.filter_path module<a class="headerlink" href="#module-mousestyles.path_diversity.filter_path" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.filter_path.filter_paths">
+<code class="descclassname">mousestyles.path_diversity.filter_path.</code><code class="descname">filter_paths</code><span class="sig-paren">(</span><em>movement</em>, <em>paths</em>, <em>time_threshold</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/filter_path.html#filter_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.filter_path.filter_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list object containing start and end indices for
+movements lasting equal to or longer than the specified time
+threshold</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status
+for the unique combination of strain, mouse and day</li>
+<li><strong>paths</strong> (<em>list</em>) &#8211; a list containing the indices for all paths</li>
+<li><strong>time_threshold</strong> (<em>float</em>) &#8211; positive number indicating the time threshold</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>paths index</strong> (<em>a list containing the indices for all paths</em>)</li>
+<li><em>that the spending times are larger than a time threshold</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span> <span class="o">=</span> <span class="n">path_index</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filter_paths</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="go">[[26754, 26897], [28538, 28627]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.path_diversity.get_dist_speed">
+<span id="mousestyles-path-diversity-get-dist-speed-module"></span><h2>mousestyles.path_diversity.get_dist_speed module<a class="headerlink" href="#module-mousestyles.path_diversity.get_dist_speed" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.get_dist_speed.get_dist_speed">
+<code class="descclassname">mousestyles.path_diversity.get_dist_speed.</code><code class="descname">get_dist_speed</code><span class="sig-paren">(</span><em>movement</em>, <em>start</em>, <em>end</em>, <em>return_array=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/get_dist_speed.html#get_dist_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.get_dist_speed.get_dist_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list containing distance(s) covered in a path and
+average speed(s) within a path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status for the unique
+combination of strain, mouse, and day</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; positive integer indicating the starting index of a path</li>
+<li><strong>end</strong> (<em>int</em>) &#8211; positive integer indicating the end index of a path</li>
+<li><strong>return_array</strong> (<em>bool</em>) &#8211; boolean indicating whether an array of distances and
+average speeds are returned or the summation of those
+distances and speeds</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>dist</strong> (<em>distance(s) travelled along a path</em>)</li>
+<li><strong>speed</strong> (<em>average speed(s) along a path</em>)</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span><span class="p">,</span> <span class="n">speed</span> <span class="o">=</span> <span class="n">get_dist_speed</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<span class="go">[0.0, 0.17999999999999972, 0.19446593532030554]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+<span class="go">[0.0, 0.9999999999983815, 0.055246004352409776]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span><span class="p">,</span> <span class="n">speed</span> <span class="o">=</span> <span class="n">get_dist_speed</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">return_array</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<span class="go">0.37446593532030525</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+<span class="go">0.096661315260887087</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.path_diversity.path_features">
+<span id="mousestyles-path-diversity-path-features-module"></span><h2>mousestyles.path_diversity.path_features module<a class="headerlink" href="#module-mousestyles.path_diversity.path_features" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.path_features.angle_between">
+<code class="descclassname">mousestyles.path_diversity.path_features.</code><code class="descname">angle_between</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/path_features.html#angle_between"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.path_features.angle_between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the angle in radians between vectors <cite>v1</cite> and <cite>v2</cite>.
+Both vectors must have same length.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v2</strong> (<em>v1,</em>) &#8211; Vectors whose angle would be calculated.
+Should have same lengths.
+Should not be zero vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>angle</strong> &#8211; nan if either of <cite>v1</cite> or <cite>v2</cite> is zero vector,</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy float object</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">angle_between</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">angle_between</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="go">1.5707963267948966</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">angle_between</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">3.1415926535897931</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.path_diversity.path_features.compute_accelerations">
+<code class="descclassname">mousestyles.path_diversity.path_features.</code><code class="descname">compute_accelerations</code><span class="sig-paren">(</span><em>speeds</em>, <em>timestamps</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/path_features.html#compute_accelerations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.path_features.compute_accelerations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the accelerations along the path.
+Each element of the list is the ratio of the speed to the time difference.
+The length of the list is equal to the length of speeds minus 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>speeds</strong> (<em>list</em>) &#8211; the traveled distances along the path. Expecting the output of
+compute_distances.</li>
+<li><strong>timestamps</strong> (<em>list</em>) &#8211; the time difference within the path.
+Its length must be equal to the length of speeds plus 1.
+Should not contain same time in adjacent rows;
+otherwise output would contain inf.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>accel</strong> &#8211; contains the speeds along the path.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_accelerations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="go">[0.5, -1.0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.path_diversity.path_features.compute_angles">
+<code class="descclassname">mousestyles.path_diversity.path_features.</code><code class="descname">compute_angles</code><span class="sig-paren">(</span><em>path_obj</em>, <em>radian=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/path_features.html#compute_angles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.path_features.compute_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the angles in the path.
+Each element of the list is the angle between the adjacent vectors in the
+path. The length of the list is equal to the length of speeds minus 2.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path_obj</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status.
+Must have length greater than 3.</li>
+<li><strong>radian</strong> (<em>boolean</em>) &#8211; True for the output in radians. False for in turns (i.e. 360 for a
+full turn).
+Default is False.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>angles</strong> &#8211; contains the angles in the path. The first and last elements are None.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;t&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">],</span> <span class="s1">&#39;x&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>\
+<span class="go">&#39;y&#39;:[0, 0, 1], &#39;isHB&#39;:[True, True, False]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compute_angles</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="go">[None, 90.0, None]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.path_diversity">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.path_diversity" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.path_index">
+<code class="descclassname">mousestyles.path_diversity.</code><code class="descname">path_index</code><span class="sig-paren">(</span><em>movement</em>, <em>stop_threshold</em>, <em>min_path_length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity.html#path_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.path_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list object containing start and end indices
+for a specific movement. Each element in the list is
+a list containing two indices: the first element is
+the start index and the second element is the end index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status
+for the unique combination of strain, mouse and day</li>
+<li><strong>stop_threshold</strong> (<em>float</em>) &#8211; positive number indicating the path cutoff criteria
+if the time difference between two observations is
+less than this threhold, they will be in the same path</li>
+<li><strong>min_path_length</strong> (<em>int</em>) &#8211; positive integer indicating how many observations in
+a path</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>paths index</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a list containing the indices for all paths</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span> <span class="o">=</span> <span class="n">path_index</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span>
+<span class="go">[[0, 2], [6, 8], [107, 113], [129, 131], [144, 152]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles.path_diversity package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.clean_movements">mousestyles.path_diversity.clean_movements module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.filter_path">mousestyles.path_diversity.filter_path module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.get_dist_speed">mousestyles.path_diversity.get_dist_speed module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.path_features">mousestyles.path_diversity.path_features module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.dynamics.html" title="previous chapter">mousestyles.dynamics package</a></li>
+      <li>Next: <a href="mousestyles.visualization.html" title="next chapter">mousestyles.visualization package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/mousestyles.path_diversity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/api/mousestyles.path_diversity.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

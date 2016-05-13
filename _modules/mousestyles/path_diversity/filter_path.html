@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.path_diversity.filter_path &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="mousestyles.path_diversity" href="../path_diversity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.path_diversity.filter_path</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+
+<div class="viewcode-block" id="filter_paths"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.filter_path.filter_paths">[docs]</a><span class="k">def</span> <span class="nf">filter_paths</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">time_threshold</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Return a list object containing start and end indices for</span>
+<span class="sd">    movements lasting equal to or longer than the specified time</span>
+<span class="sd">    threshold</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    movement : pandas.DataFrame</span>
+<span class="sd">        CT, CX, CY coordinates and homebase status</span>
+<span class="sd">        for the unique combination of strain, mouse and day</span>
+<span class="sd">    paths: list</span>
+<span class="sd">        a list containing the indices for all paths</span>
+<span class="sd">    time_threshold : float</span>
+<span class="sd">        positive number indicating the time threshold</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    paths index : a list containing the indices for all paths</span>
+<span class="sd">    that the spending times are larger than a time threshold</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; movement = data.load_movement(1, 2, 1)</span>
+<span class="sd">    &gt;&gt;&gt; paths = path_index(movement, 1, 1)</span>
+<span class="sd">    &gt;&gt;&gt; filter_paths(movement, paths, 20)</span>
+<span class="sd">    [[26754, 26897], [28538, 28627]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check if all inputs are positive integers</span>
+    <span class="n">conditions_value</span> <span class="o">=</span> <span class="n">time_threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">conditions_value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input values need to be positive&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Variable that store paths equal to or larger than time threshold</span>
+    <span class="n">pass_paths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Pull out time variable</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Run through each path and check whether the time spending</span>
+    <span class="c1"># on the path is equal to or larger than the time threshold</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">path</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">time_threshold</span><span class="p">:</span>
+            <span class="n">pass_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">pass_paths</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../path_diversity.html">mousestyles.path_diversity</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

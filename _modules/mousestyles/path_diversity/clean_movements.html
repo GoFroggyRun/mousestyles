@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.path_diversity.clean_movements &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="mousestyles.path_diversity" href="../path_diversity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.path_diversity.clean_movements</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="clean_movements"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.clean_movements.clean_movements">[docs]</a><span class="k">def</span> <span class="nf">clean_movements</span><span class="p">(</span><span class="n">movements</span><span class="p">,</span> <span class="n">keep_index</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of cleaned movement objects.</span>
+
+<span class="sd">    For each element of the input `movements` object, detects the existence of</span>
+<span class="sd">    adjacent rows which have i) same x,y-coordinates, or ii) same timestamps.</span>
+<span class="sd">    For case i), and removes the duplicated rows except for the first.</span>
+<span class="sd">    For case ii), raises value error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    movements : list</span>
+<span class="sd">        each element is pandas.DataFrame containing</span>
+<span class="sd">        CT, CX, CY coordinates.</span>
+<span class="sd">        Should have length greater than 1.</span>
+
+<span class="sd">    keep_index : boolean</span>
+<span class="sd">        whether or not keep the original index.</span>
+<span class="sd">        Deafalt is False.</span>
+<span class="sd">        If false, cleaned movement object is re-indexed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cleaned-movements : list</span>
+<span class="sd">        each element is cleaned movement object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; strain_nums = [0,0,1,1,2,2]</span>
+<span class="sd">    &gt;&gt;&gt; mouse_nums = [0,0,1,1,2,2]</span>
+<span class="sd">    &gt;&gt;&gt; day_nums = [0,11,0,11,0,11]</span>
+<span class="sd">    &gt;&gt;&gt; movements = [data.load_movement(strain_num, mouse_num, day_num)</span>
+<span class="sd">                     for strain_num, mouse_num, day_num in</span>
+<span class="sd">                     zip(strain_nums, mouse_nums, day_nums)]</span>
+<span class="sd">    &gt;&gt;&gt; cleaned_movements = clean_movements(movements)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">movements</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;movements must be a list&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">movements</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;movements must contain at least 1 movement object&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keep_index</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;keep_index must be bool&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">testing_input_movement</span><span class="p">(</span><span class="n">one_movement</span><span class="p">):</span>
+        <span class="c1"># test for each element of `movements`</span>
+        <span class="c1"># 1) must be pandas DataFrame</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">one_movement</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># 2) must have columns named `x`, `y`, `t`</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">one_movement</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">issuperset</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">]):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="c1"># 3) must have length greater than 1</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">one_movement</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">detect_same_loc</span><span class="p">(</span><span class="n">one_movement</span><span class="p">):</span>
+        <span class="c1"># returns indices which have same x,y-coordinates as the previous</span>
+        <span class="n">x_bool</span> <span class="o">=</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">y_bool</span> <span class="o">=</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">same_loc_bool</span> <span class="o">=</span> <span class="n">x_bool</span> <span class="o">&amp;</span> <span class="n">y_bool</span>
+        <span class="n">same_loc</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">same_loc_bool</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">same_loc_bool</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">same_loc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">detect_same_time</span><span class="p">(</span><span class="n">one_movement</span><span class="p">):</span>
+        <span class="c1"># returns indices which have same timestamp as the previous</span>
+        <span class="n">time_bool</span> <span class="o">=</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">same_time</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_bool</span><span class="p">))</span>
+                     <span class="k">if</span> <span class="n">time_bool</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">same_time</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">drop_same_loc</span><span class="p">(</span><span class="n">one_movement</span><span class="p">,</span> <span class="n">same_loc</span><span class="p">):</span>
+        <span class="c1"># based on `same_loc` drops the duplicated rows</span>
+        <span class="n">new_one_movement</span> <span class="o">=</span> <span class="n">one_movement</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">same_loc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">keep_index</span><span class="p">:</span>
+            <span class="n">new_one_movement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_one_movement</span><span class="p">))</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">new_one_movement</span><span class="p">)</span>
+
+    <span class="c1"># testing each element of `movements` obj.</span>
+    <span class="n">test_outs</span> <span class="o">=</span> <span class="p">[</span><span class="n">testing_input_movement</span><span class="p">(</span><span class="n">one_movement</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">one_movement</span> <span class="ow">in</span> <span class="n">movements</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="bp">True</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">test_outs</span> <span class="k">if</span> <span class="n">test</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;each movement object must be pandas DataFrame&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="bp">True</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">test_outs</span> <span class="k">if</span> <span class="n">test</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;the keys of each movement object must contain &#39;x&#39;, &#39;y&#39;, &#39;t&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="bp">True</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">test_outs</span> <span class="k">if</span> <span class="n">test</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;each movement object must contain at least 2 rows&quot;</span><span class="p">)</span>
+
+    <span class="n">same_locs</span> <span class="o">=</span> <span class="p">[</span><span class="n">detect_same_loc</span><span class="p">(</span><span class="n">one_movement</span><span class="p">)</span> <span class="k">for</span> <span class="n">one_movement</span> <span class="ow">in</span> <span class="n">movements</span><span class="p">]</span>
+    <span class="n">same_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">detect_same_time</span><span class="p">(</span><span class="n">one_movement</span><span class="p">)</span> <span class="k">for</span> <span class="n">one_movement</span> <span class="ow">in</span> <span class="n">movements</span><span class="p">]</span>
+
+    <span class="c1"># if any of one movement contains same timestamps in adjacent rows, raise</span>
+    <span class="c1"># error.</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">same_time</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">same_time</span> <span class="ow">in</span> <span class="n">same_times</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;some movement contains same timestamps in adjacent rows&quot;</span><span class="p">)</span>
+
+    <span class="n">cleaned_movements</span> <span class="o">=</span> <span class="p">[</span><span class="n">drop_same_loc</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">same_loc</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">movement</span><span class="p">,</span> <span class="n">same_loc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">movements</span><span class="p">,</span> <span class="n">same_locs</span><span class="p">)]</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">cleaned_movements</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../path_diversity.html">mousestyles.path_diversity</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.est_power_param &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.est_power_param</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">mousestyles</span> <span class="kn">import</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="getdistance"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.est_power_param.getdistance">[docs]</a><span class="k">def</span> <span class="nf">getdistance</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the distance of each two consecutive points among coordinates</span>
+<span class="sd">    which is bigger than 1cm(truncated).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain : int</span>
+<span class="sd">    the strain number of the mouse</span>
+<span class="sd">    mouse  : int</span>
+<span class="sd">    the mouse number in its strain</span>
+<span class="sd">    day    :  int</span>
+<span class="sd">    the day number</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cut_dist : an array of number</span>
+<span class="sd">    The vector of truncated distance.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; getdistance (0, 0, 0)</span>
+<span class="sd">    array([ 1.00648944,  1.02094319,  1.0178885 , ...,  1.00099351,</span>
+<span class="sd">    1.01191156,  1.00423354])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">xcood</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+    <span class="n">ycood</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+    <span class="n">distance_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xcood</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ycood</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">msk</span> <span class="o">=</span> <span class="n">distance_vector</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">distance_vector</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fit_powerlaw"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.est_power_param.fit_powerlaw">[docs]</a><span class="k">def</span> <span class="nf">fit_powerlaw</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the estimator of truncated power law.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain : int</span>
+<span class="sd">        the strain number of the mouse</span>
+<span class="sd">    mouse  : int</span>
+<span class="sd">        the mouse number in its strain</span>
+<span class="sd">    day    :  int</span>
+<span class="sd">        the day number</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    estimator : a float number</span>
+<span class="sd">        The estimator of truncated power law.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; fit_powerlaw (0, 0, 0)</span>
+<span class="sd">    9.4748705008269827</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">getdistance</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">ret_mle</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> \
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))))</span>
+    <span class="k">return</span> <span class="n">ret_mle</span></div>
+
+
+<div class="viewcode-block" id="fit_exponential"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.est_power_param.fit_exponential">[docs]</a><span class="k">def</span> <span class="nf">fit_exponential</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the estimator of truncated exponential.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain : int</span>
+<span class="sd">        the strain number of the mouse</span>
+<span class="sd">    mouse  : int</span>
+<span class="sd">        the mouse number in its strain</span>
+<span class="sd">    day :  int</span>
+<span class="sd">        the day number</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    estimator : a float number</span>
+<span class="sd">        The estimator of truncated exponential distribution.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; fit_exponential (0, 0, 0)</span>
+<span class="sd">    7.385844980814098</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">getdistance</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">ret_mle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ret_mle</span></div>
+
+
+<div class="viewcode-block" id="fit_dist_all"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.est_power_param.fit_dist_all">[docs]</a><span class="k">def</span> <span class="nf">fit_dist_all</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the estimators of truncated power law and exponential for each</span>
+<span class="sd">    mouse day.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    estimator : a float number</span>
+<span class="sd">        The estimator of truncated exponential distribution.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; fit()</span>
+<span class="sd">    7.385844980814098</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">esti_df</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;strain&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;mouse&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">temp1</span> <span class="o">=</span> <span class="n">fit_powerlaw</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="n">temp2</span> <span class="o">=</span> <span class="n">fit_exponential</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="n">esti_df</span><span class="p">[</span><span class="s2">&quot;strain&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">esti_df</span><span class="p">[</span><span class="s2">&quot;mouse&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">esti_df</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">]</span> <span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                    <span class="n">esti_df</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]</span> <span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp1</span><span class="p">)</span>
+                    <span class="n">esti_df</span><span class="p">[</span><span class="s2">&quot;exp&quot;</span><span class="p">]</span> <span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp2</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="nb">next</span>
+    <span class="n">estimation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">esti_df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;strain&quot;</span><span class="p">,</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">estimation</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

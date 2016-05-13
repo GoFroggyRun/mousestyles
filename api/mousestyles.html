@@ -1,0 +1,884 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles package &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="API reference" href="index.html" />
+    <link rel="next" title="mousestyles.behavior package" href="mousestyles.behavior.html" />
+    <link rel="prev" title="API reference" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mousestyles-package">
+<h1>mousestyles package<a class="headerlink" href="#mousestyles-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.behavior.html">mousestyles.behavior package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.classification.html">mousestyles.classification package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.classification.html#module-mousestyles.classification">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.data.html">mousestyles.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.data.html#module-mousestyles.data.utils">mousestyles.data.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.data.html#module-mousestyles.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.distributions.html">mousestyles.distributions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.distributions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.distributions.html#module-mousestyles.distributions.kolmogorov_test">mousestyles.distributions.kolmogorov_test module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.distributions.html#module-mousestyles.distributions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.dynamics.html">mousestyles.dynamics package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.dynamics.html#module-mousestyles.dynamics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.path_diversity.html">mousestyles.path_diversity package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.clean_movements">mousestyles.path_diversity.clean_movements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.filter_path">mousestyles.path_diversity.filter_path module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.get_dist_speed">mousestyles.path_diversity.get_dist_speed module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.path_features">mousestyles.path_diversity.path_features module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.visualization.html">mousestyles.visualization package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.distribution_plot">mousestyles.visualization.distribution_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.path_diversity_plotting">mousestyles.visualization.path_diversity_plotting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_path">mousestyles.visualization.plot_path module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.GLRT_distribution">
+<span id="mousestyles-glrt-distribution-module"></span><h2>mousestyles.GLRT_distribution module<a class="headerlink" href="#module-mousestyles.GLRT_distribution" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.GLRT_distribution.hypo_exp_null">
+<code class="descclassname">mousestyles.GLRT_distribution.</code><code class="descname">hypo_exp_null</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>law_est=0</em>, <em>exp_est=0</em>, <em>seed=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/GLRT_distribution.html#hypo_exp_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.GLRT_distribution.hypo_exp_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the outcome from GLRT with null hypothesis law distribution.</p>
+<p>This function also used the Generalized Likelihood Ratio Test to test
+goodness of fit: in other words, which distribution is more likely.</p>
+<p>In this function, we choose the exponential distributin to be the null
+and powerlaw distribution to be the alternative. We derived the
+test statistics by theory and pluged in MLE as our estimation of
+best parameters.</p>
+<p>After we calculated the paramters, we need to find the rejection
+region, critical value or pvalue. To get a more general test, we
+want to use pvalue, instead of critical value under certain
+significance level.</p>
+<p>To find the p-value, we use simulation methods, and all random
+numbers are drawn from previous functions. Therefore, although
+p value should be a constant given data, it is not a constant in
+our function, if we did not set the seed.</p>
+<p>In general, in this function, if the p value is too small, then we
+will reject the null, and we say exponential is not a better fit
+compared to exponential distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+<li><strong>law_est</strong> (<em>double (optional)</em>) &#8211; the estimated parameter in law distribution</li>
+<li><strong>exp_est</strong> (<em>double (optional)</em>) &#8211; the estimated parameter in exponential distribution</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the probablity under null reject.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">p_value</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hypo_exp_null</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.GLRT_distribution.hypo_powerLaw_null">
+<code class="descclassname">mousestyles.GLRT_distribution.</code><code class="descname">hypo_powerLaw_null</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>law_est=0</em>, <em>seed=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/GLRT_distribution.html#hypo_powerLaw_null"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.GLRT_distribution.hypo_powerLaw_null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the outcome from GLRT with null hypothesis law distribution.</p>
+<p>This function used the Generalized Likelihood Ratio Test to test the
+goodness of fit: in other words, which distribution is more likely.</p>
+<p>In this function, we choose the powerLaw distributin to be the null
+and exponential distribution to be the alternative. We derived the
+test statistics by theory and pluged in MLE as our estimation of
+best parameters.</p>
+<p>After we calculated the paramters, we need to find the rejection
+region, critical value or pvalue. To get a more general test, we
+want to use pvalue, instead of critical value under certain
+significance level.</p>
+<p>To find the p-value, we use simulation methods, and all random
+numbers are drawn from previous functions. Therefore, although
+p value should be a constant given data, it is not a constant in
+our function, if we did not set the seed.</p>
+<p>In general, in this function, if the p value is too small, then we
+will reject the null, and we say powerlaw is not a better fit
+compared to exponential distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+<li><strong>law_est</strong> (<em>double (optional)</em>) &#8211; the estimated parameter in law distribution</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the probablity under null reject.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">p_value</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hypo_law_null</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">0.0070000000000000001</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.GLRT_distribution.random_exp">
+<code class="descclassname">mousestyles.GLRT_distribution.</code><code class="descname">random_exp</code><span class="sig-paren">(</span><em>n</em>, <em>l</em>, <em>seed=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/GLRT_distribution.html#random_exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.GLRT_distribution.random_exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random generate points of truncated exponential.</p>
+<p>The method we generate is to use the memorylessness property
+of exponential distribution. As the survival function of
+exponential distribution is always the same, for truncated
+exponential distribution, it is just the same to draw from
+regular exponential distribtion and shift the truncated
+value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<em>int</em>) &#8211; number of points</li>
+<li><strong>l</strong> (<em>int</em>) &#8211; exponential parameter lambda</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>points</strong> &#8211; n points have the target distribution.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a vector of float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">random_exp</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([ 1.07592496,  1.19789646,  1.19759663,  1.03993227])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.GLRT_distribution.random_powerlaw">
+<code class="descclassname">mousestyles.GLRT_distribution.</code><code class="descname">random_powerlaw</code><span class="sig-paren">(</span><em>n</em>, <em>a</em>, <em>seed=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/GLRT_distribution.html#random_powerlaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.GLRT_distribution.random_powerlaw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random generate points of truncated power law.</p>
+<p>The method we generate is to inverse Cumulative Density Function
+of truncated powerlaw function, and put random number draw from
+Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> (<em>int</em>) &#8211; number of points</li>
+<li><strong>a</strong> (<em>int&gt;1</em>) &#8211; power law parameter alpha</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>points</strong> &#8211; n points have the target distribution.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a vector of float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">random_powerlaw</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([  1.18097435,   1.04584078,   1.4650779 ,  36.03967524])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.distribution">
+<span id="mousestyles-distribution-module"></span><h2>mousestyles.distribution module<a class="headerlink" href="#module-mousestyles.distribution" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.distribution.exp_pdf">
+<code class="descclassname">mousestyles.distribution.</code><code class="descname">exp_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distribution.html#exp_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distribution.exp_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The probability density function of truncated exponential.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; x in formula p(x)=lambda*exp(-lambda*x).</li>
+<li><strong>l</strong> (<em>int</em>) &#8211; lambda in formula p(x)=lambda*exp(-lambda*x).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>probability density</strong> &#8211; The probability density of power law at x.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exp_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">0.36787944117144233</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.distribution.powerlaw_pdf">
+<code class="descclassname">mousestyles.distribution.</code><code class="descname">powerlaw_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>a</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distribution.html#powerlaw_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distribution.powerlaw_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The probability density function of truncated power law.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; x in formula p(x)=(alpha-1)*x^(-alpha).</li>
+<li><strong>a</strong> (<em>int&gt;1</em>) &#8211; alpha in formula p(x)=(alpha-1)*x^(-alpha).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>probability density</strong> &#8211; The probability density of power law at x.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">powerlaw_pdf</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">0.25</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.est_power_param">
+<span id="mousestyles-est-power-param-module"></span><h2>mousestyles.est_power_param module<a class="headerlink" href="#module-mousestyles.est_power_param" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.est_power_param.fit_dist_all">
+<code class="descclassname">mousestyles.est_power_param.</code><code class="descname">fit_dist_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/est_power_param.html#fit_dist_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.est_power_param.fit_dist_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimators of truncated power law and exponential for each
+mouse day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>estimator</strong> &#8211; The estimator of truncated exponential distribution.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">a float number</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fit</span><span class="p">()</span>
+<span class="go">7.385844980814098</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.est_power_param.fit_exponential">
+<code class="descclassname">mousestyles.est_power_param.</code><code class="descname">fit_exponential</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/est_power_param.html#fit_exponential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.est_power_param.fit_exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimator of truncated exponential.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>estimator</strong> &#8211; The estimator of truncated exponential distribution.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fit_exponential</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">7.385844980814098</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.est_power_param.fit_powerlaw">
+<code class="descclassname">mousestyles.est_power_param.</code><code class="descname">fit_powerlaw</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/est_power_param.html#fit_powerlaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.est_power_param.fit_powerlaw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimator of truncated power law.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>estimator</strong> &#8211; The estimator of truncated power law.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fit_powerlaw</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">9.4748705008269827</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.est_power_param.getdistance">
+<code class="descclassname">mousestyles.est_power_param.</code><code class="descname">getdistance</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/est_power_param.html#getdistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.est_power_param.getdistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance of each two consecutive points among coordinates
+which is bigger than 1cm(truncated).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; </li>
+<li><strong>strain number of the mouse</strong> (<em>the</em>) &#8211; </li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; </li>
+<li><strong>mouse number in its strain</strong> (<em>the</em>) &#8211; </li>
+<li><strong>day</strong> (<em>int</em>) &#8211; </li>
+<li><strong>day number</strong> (<em>the</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>cut_dist</strong> (<em>an array of number</em>)</li>
+<li><em>The vector of truncated distance.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">getdistance</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">array([ 1.00648944,  1.02094319,  1.0178885 , ...,  1.00099351,</span>
+<span class="go">1.01191156,  1.00423354])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.intervals">
+<span id="mousestyles-intervals-module"></span><h2>mousestyles.intervals module<a class="headerlink" href="#module-mousestyles.intervals" title="Permalink to this headline">¶</a></h2>
+<p>Finite Union of Intervals</p>
+<p>Implements a class to handle finite (disjoint) unions of intervals.</p>
+<ul class="simple">
+<li>assumes that intervals are always closed and that the union is disjoint</li>
+<li>open intervals remaining at the end of any operations (eg. complement)</li>
+<li>are always made closed.  e.g. [0,1]^C = [-np.inf,0] [1,np.inf]</li>
+<li>end intervals being unbounded is handled using -np.inf and np.inf</li>
+<li>does some okay handling for point intervals [a,a]</li>
+</ul>
+<p>Darren Rhea, 2012; Chris Hillar revised, April 30, 2013;
+Ram Mehta revised, 2013; Copyright (c) 2013, All rights reserved;
+Chris Hillar revised, 2015</p>
+<dl class="class">
+<dt id="mousestyles.intervals.Intervals">
+<em class="property">class </em><code class="descclassname">mousestyles.intervals.</code><code class="descname">Intervals</code><span class="sig-paren">(</span><em>intervals=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Finite Union of Intervals [ai,bi] backed by sorted lists.</p>
+<dl class="docutils">
+<dt>parameters</dt>
+<dd>intervals: (M x 2) numpy np.double array</dd>
+</dl>
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.ASs">
+<code class="descname">ASs</code><span class="sig-paren">(</span><em>ISDT=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.ASs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.ASs" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns new object of Active States given self as Events</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.ISs">
+<code class="descname">ISs</code><span class="sig-paren">(</span><em>ISDT=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.ISs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.ISs" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns new object of Inactive States given self as Events</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.complement">
+<code class="descname">complement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>New Intervals object which is the complement of self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.connect_gaps">
+<code class="descname">connect_gaps</code><span class="sig-paren">(</span><em>eps=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.connect_gaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.connect_gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>connects consecutive intervals separated by lengths &lt;= eps</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.connect_gaps_by_rule">
+<code class="descname">connect_gaps_by_rule</code><span class="sig-paren">(</span><em>rule</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.connect_gaps_by_rule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.connect_gaps_by_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new object with gaps connected when rule returns True.
+parameters</p>
+<blockquote>
+<div>rule: Callable that takes parameters start_time and end_time.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if x is in the Finite Union of Intervals.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.index_of_first_intersection">
+<code class="descname">index_of_first_intersection</code><span class="sig-paren">(</span><em>x</em>, <em>find_nearest=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.index_of_first_intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.index_of_first_intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds interval nearest to given number x and containing x
+if find_nearest=False: doesn&#8217;t require x to be in the interval</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>F</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>New Intervals object which is the intersection of self and
+Intervals F.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.intersect_with_interval">
+<code class="descname">intersect_with_interval</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.intersect_with_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.intersect_with_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns (not a copy) Intervals object which is the intersection
+of self and [a, b]
+(faster than intersect)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename='Intervals_save.npz'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.measure">
+<code class="descname">measure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.measure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.measure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.num">
+<code class="descname">num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.num" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename='Intervals_save'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.subordinate_to_array">
+<code class="descname">subordinate_to_array</code><span class="sig-paren">(</span><em>arr</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.subordinate_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.subordinate_to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a new Intervals object with only intervals containing
+elements of arr
+(NOTE: arr is assumed sorted)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.symmetric_difference">
+<code class="descname">symmetric_difference</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.symmetric_difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.symmetric_difference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.trim">
+<code class="descname">trim</code><span class="sig-paren">(</span><em>eps=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.trim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.trim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes intervals with lengths &lt;= eps.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.intervals.Intervals.union">
+<code class="descname">union</code><span class="sig-paren">(</span><em>F</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.union" title="Permalink to this definition">¶</a></dt>
+<dd><p>New Intervals object which is the union of self and
+Intervals F.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.intervals.binary_from_intervals">
+<code class="descclassname">mousestyles.intervals.</code><code class="descname">binary_from_intervals</code><span class="sig-paren">(</span><em>intervals</em>, <em>length=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#binary_from_intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.binary_from_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>From an intervals object produce a binary sequence of size length</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.intervals.intervals_from_binary">
+<code class="descclassname">mousestyles.intervals.</code><code class="descname">intervals_from_binary</code><span class="sig-paren">(</span><em>bin_array</em>, <em>times</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#intervals_from_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.intervals_from_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a one dimensional bin_array of 0s and 1s,
+returns a Intervals object of times corresponding to consecutives 1s</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.intervals.timestamps_to_interval">
+<code class="descclassname">mousestyles.intervals.</code><code class="descname">timestamps_to_interval</code><span class="sig-paren">(</span><em>array</em>, <em>eps=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#timestamps_to_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.timestamps_to_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>given a 1D array with event timestamps, returns an interval centered
+on timestamp and eps wide.
+default 0.01 is half of minimum HCM sampling rate</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.mww">
+<span id="mousestyles-mww-module"></span><h2>mousestyles.mww module<a class="headerlink" href="#module-mousestyles.mww" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.mww.MWW_allmice">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">MWW_allmice</code><span class="sig-paren">(</span><em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#MWW_allmice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.MWW_allmice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregates MWW_mice data for all available strains of mice.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>step</strong> (<em>time interval length used to compute distances. Default is 1s.</em>) &#8211; See data.distances_bymouse for more information.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>mww_values</strong> (<em>MWW_mice outputs for each strain.</em>) &#8211; mww_values[i] corresponds to the ith strain.</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8212;</em></li>
+<li><em>&gt;&gt;&gt; mww_values = MWW_allmice()</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.mww.MWW_mice">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">MWW_mice</code><span class="sig-paren">(</span><em>strain</em>, <em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#MWW_mice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.MWW_mice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare distributions of distances among mice of the same strain.
+Use p-values of the Mann–Whitney U test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>integer</em>) &#8211; Number of the strain.</li>
+<li><strong>step</strong> (<em>floeat</em>) &#8211; Time interval length used to compute distances. Default is 1s.
+See data.distances_bymouse for more information.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>cor</strong> (<em>pvalues of the Mann–Whitney U test for each couple of distances</em>) &#8211; samples among mice of the corresponding strain.</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8212;</em></li>
+<li><em>&gt;&gt;&gt; cor = MWW_mice(0)</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.mww.MWW_strains">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">MWW_strains</code><span class="sig-paren">(</span><em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#MWW_strains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.MWW_strains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare distributions of distances among strains. Proceed as if
+the mice in each strain are i.i.d. samples, and compare the p-values
+of the Mann–Whitney U test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>step</strong> (<em>time interval length used to compute distances. Default is 1s.</em>) &#8211; See data.distances_bymouse for more information.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>cor</strong> (<em>pvalues of the Mann–Whitney U test for each couple of distances</em>) &#8211; samples among strains of mice.</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8212;</em></li>
+<li><em>&gt;&gt;&gt; cor = MWW_strains()</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.mww.get_pvalues">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">get_pvalues</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#get_pvalues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.get_pvalues" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a bunch of sampled distributions and compute the
+p-values of the two sided Mann Whitney U test for each couple of samples.</p>
+<p>The Mann–Whitney U test is a test for assessing whether two independent
+samples come from the same distribution. The null hypothesis for this test
+is that the two groups have the same distribution, while the alternative
+hypothesis is that one group has larger (or smaller) values than the other.</p>
+<p>Null hypothesis H0: P(X&gt;Y)=P(Y&gt;X).
+Alternative H1: not H0.</p>
+<p>The Mann-Whitney U test is similar to the Wilcoxon test, but can be used to
+compare multiple samples that aren’t necessarily paired.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>m</strong> (<em>list of numpy arrays</em>) &#8211; Sampled distributions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul>
+<li><strong>cor</strong> (<em>2 dimensional array of pvalues.</em>) &#8211; cor[i,j] is the p-value of the MWW test between the samples i and j.</li>
+<li><em>Notes</em></li>
+<li><em>&#8212;&#8212;</em></li>
+<li><em>A p-value &lt; 0.05 means that there is strong evidence to reject the null</em></li>
+<li><em>hypothesis.</em></li>
+<li><em>References</em></li>
+<li><em>&#8212;&#8212;&#8212;&#8211;</em> &#8211;<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Mann–Whitney U test:</dt>
+<dd><a class="reference external" href="http://tqmp.org/RegularArticles/vol04-1/p013/p013.pdf">http://tqmp.org/RegularArticles/vol04-1/p013/p013.pdf</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Non parametric tests</dt>
+<dd><a class="reference external" href="http://www.mit.edu/~6.s085/notes/lecture5.pdf">http://www.mit.edu/~6.s085/notes/lecture5.pdf</a></dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8212;</em></li>
+<li><em>&gt;&gt;&gt; cor = get_pvalues([np.array([1, 2, 3]), np.array([1, 1, 2])])</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.mww.plot_cor">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">plot_cor</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#plot_cor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.plot_cor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the p-values outputed by the Mann–Whitney U test using
+a correlation matrix representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>MWW_allmice output</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>plot</strong> (<em>correlation matrix</em>)</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8211;</em></li>
+<li><em>&gt;&gt;&gt; strains = MWW_strains()</em></li>
+<li><em>&gt;&gt;&gt; plot_cor(strains)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.mww.plot_cor_multi">
+<code class="descclassname">mousestyles.mww.</code><code class="descname">plot_cor_multi</code><span class="sig-paren">(</span><em>mww_values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#plot_cor_multi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.plot_cor_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vectorized version of plot_cor. Plot several correlation
+matrices side by side using plot_cor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>MWW_allmice output</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>plot</strong> (<em>correlation matrix</em>)</li>
+<li><em>Examples</em></li>
+<li><em>&#8212;&#8212;&#8211;</em></li>
+<li><em>&gt;&gt;&gt; allmice = MWW_allmice()</em></li>
+<li><em>&gt;&gt;&gt; plot_cor_multi(allmice)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="mousestyles-pca-hcm-data-module">
+<h2>mousestyles.pca_hcm_data module<a class="headerlink" href="#mousestyles-pca-hcm-data-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mousestyles-strain-classification-module">
+<h2>mousestyles.strain_classification module<a class="headerlink" href="#mousestyles-strain-classification-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">mousestyles</span></code> is the final project for UC Berkeley&#8217;s 2016 Masters Capstone
+Project class.  It is based on ideas, code, and data from the Tecott Lab
+at UCSF.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.GLRT_distribution">mousestyles.GLRT_distribution module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.distribution">mousestyles.distribution module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.est_power_param">mousestyles.est_power_param module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.intervals">mousestyles.intervals module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.mww">mousestyles.mww module</a></li>
+<li><a class="reference internal" href="#mousestyles-pca-hcm-data-module">mousestyles.pca_hcm_data module</a></li>
+<li><a class="reference internal" href="#mousestyles-strain-classification-module">mousestyles.strain_classification module</a></li>
+<li><a class="reference internal" href="#module-mousestyles">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">API reference</a></li>
+      <li>Next: <a href="mousestyles.behavior.html" title="next chapter">mousestyles.behavior package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/mousestyles.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/api/mousestyles.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.distributions package &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="next" title="mousestyles.dynamics package" href="mousestyles.dynamics.html" />
+    <link rel="prev" title="mousestyles.data package" href="mousestyles.data.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mousestyles-distributions-package">
+<h1>mousestyles.distributions package<a class="headerlink" href="#mousestyles-distributions-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.distributions.kolmogorov_test">
+<span id="mousestyles-distributions-kolmogorov-test-module"></span><h2>mousestyles.distributions.kolmogorov_test module<a class="headerlink" href="#module-mousestyles.distributions.kolmogorov_test" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.distributions.kolmogorov_test.get_travel_distances">
+<code class="descclassname">mousestyles.distributions.kolmogorov_test.</code><code class="descname">get_travel_distances</code><span class="sig-paren">(</span><em>strain=0</em>, <em>mouse=0</em>, <em>day=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distributions/kolmogorov_test.html#get_travel_distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distributions.kolmogorov_test.get_travel_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get distances travelled in 20ms for this strain, this mouse,
+on this day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int {0, 1, 2}</em>) &#8211; The strain of mouse to test</li>
+<li><strong>mouse</strong> (<em>int {0, 1, 2, 3}</em>) &#8211; The mouse twin id with in the strain</li>
+<li><strong>day</strong> (<em>int {0, 1, ..., 11}</em>) &#8211; The day to calculate the distance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>x</strong> (<em>np.ndarray shape (n, 1)</em>) &#8211; The distances travelled in 20ms for this mouse on this day, truncated
+at 1cm (i.e. only record mouse movement when it moves more than 1cm)</li>
+<li><em>Examples</em></li>
+<li><strong>&gt;&gt;&gt; get_travel_distances(0, 0, 0)[</strong> (<em>3]</em>)</li>
+<li><em>array([ 1.00648944,  1.02094319,  1.0178885 ])</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.distributions.kolmogorov_test.perform_kstest">
+<code class="descclassname">mousestyles.distributions.kolmogorov_test.</code><code class="descname">perform_kstest</code><span class="sig-paren">(</span><em>x</em>, <em>distribution=&lt;scipy.stats._continuous_distns.pareto_gen object&gt;</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distributions/kolmogorov_test.html#perform_kstest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distributions.kolmogorov_test.perform_kstest" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function fits a distribution to data, and then test the
+fit of the distribution using Kolmogorov-Smirnov test.</p>
+<p>The Kolmogorov-Smirnov test constructs the test statistic, which is defined
+as sup <a href="#id1"><span class="problematic" id="id2">|F_n(x) - F(x)|</span></a>, for F_n is the sample CDF, and F is the
+theoretical CDF. This statistics can be considered as a measure of
+distance between the sample distribution and the theoretical distribution.
+The smaller it is, the more similar the two distributions.</p>
+<p>We first estimate the parameter using MLE, then by minimizing the KS test
+statistic.</p>
+<p>The Pareto distribution is sometimes known as the Power Law distribution,
+with the PDF:  b / x**(b + 1) for x &gt;= 1, b &gt; 0.
+The truncated exponential distribution is the same as the rescaled
+exponential distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>np.ndarray (n,)</em>) &#8211; The sample data to test the distribution</li>
+<li><strong>distribution</strong> (<em>A Scipy Stats Continuous Distribution</em>) &#8211; {stats.pareto, stats.expon, stats.gamma}
+The distribution to test against. Currently support pareto, expon, and
+gamma, but any one-sided continuous distribution in Scipy.stats should
+work.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; If True, will print out testing result</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul>
+<li><p class="first"><strong>params</strong> (<em>np.ndarray shape (p,)</em>) &#8211; The optimal parameter for the distribution. Optimal in the sense of
+minimizing K-S statistics.</p>
+</li>
+<li><p class="first"><em>The function also print out the Kolmogorov-Smirnov test result for three</em></p>
+</li>
+<li><p class="first"><em>cases</em></p>
+</li>
+<li><p class="first"><em>1. When comparing the empirical distribution against the distribution with</em></p>
+</li>
+<li><p class="first"><em>parameters estimated with MLE</em></p>
+</li>
+<li><p class="first"><em>2. When comparing the empirical distribution against the distribution with</em></p>
+</li>
+<li><p class="first"><em>parameters estimated by explicitely minimizing KS statistics</em></p>
+</li>
+<li><p class="first"><em>3. When comparing a resample with replacement of the empirical distribution</em></p>
+</li>
+<li><p class="first"><em>against the Pareto in 2.</em></p>
+</li>
+<li><p class="first"><em>A p-value &gt; 0.05 means we fail to reject the Null hypothesis that the</em></p>
+</li>
+<li><p class="first"><em>empirical distribution follow the specified distribution.</em></p>
+</li>
+<li><p class="first"><em>Notes</em></p>
+</li>
+<li><p class="first"><em>&#8212;&#8212;</em></p>
+</li>
+<li><p class="first"><em>The MLE often does not fit the data very well. We instead minimizing the</em></p>
+</li>
+<li><p class="first"><em>K-S distance, and obtain a better fit (as seen by the PDF and CDF</em></p>
+</li>
+<li><p class="first"><em>similarity between sample data and the fit)</em></p>
+</li>
+<li><p class="first"><em>References</em></p>
+</li>
+<li><p class="first"><em>&#8212;&#8212;&#8212;&#8211;</em> &#8211;</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>Kolmogorov-Smirnov test:</dt>
+<dd><p class="first last"><a class="reference external" href="https://en.wikipedia.org/wiki/Kolmogorov-Smirnov_test">https://en.wikipedia.org/wiki/Kolmogorov-Smirnov_test</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Pareto Distribution (also known as power law distribution)</dt>
+<dd><p class="first last"><a class="reference external" href="https://en.wikipedia.org/wiki/Pareto_distribution">https://en.wikipedia.org/wiki/Pareto_distribution</a></p>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><p class="first"><em>Examples</em></p>
+</li>
+<li><p class="first"><em>&#8212;&#8212;&#8212;</em></p>
+</li>
+<li><p class="first"><em>&gt;&gt;&gt; x = get_travel_distances(0, 0, 0)</em></p>
+</li>
+<li><p class="first"><em>&gt;&gt;&gt; res = perform_kstest(x, verbose=False)</em></p>
+</li>
+<li><p class="first"><em>&gt;&gt;&gt; np.allclose(res, np.array([3.67593246, 0.62795748, 0.37224205]))</em></p>
+</li>
+<li><p class="first"><em>True</em></p>
+</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.distributions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.distributions" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles.distributions package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.distributions.kolmogorov_test">mousestyles.distributions.kolmogorov_test module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.distributions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.data.html" title="previous chapter">mousestyles.data package</a></li>
+      <li>Next: <a href="mousestyles.dynamics.html" title="next chapter">mousestyles.dynamics package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/mousestyles.distributions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/api/mousestyles.distributions.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

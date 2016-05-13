@@ -55,7 +55,7 @@
 <span class="n">INTERVAL_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AS&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;IS&quot;</span><span class="p">,</span> <span class="s2">&quot;M_AS&quot;</span><span class="p">,</span> <span class="s2">&quot;M_IS&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="load_all_features"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_all_features">[docs]</a><span class="k">def</span> <span class="nf">load_all_features</span><span class="p">():</span>
+<div class="viewcode-block" id="load_all_features"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_all_features">[docs]</a><span class="k">def</span> <span class="nf">load_all_features</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a (21131, 13) size pandas.DataFrame object corresponding to</span>
 <span class="sd">    9 features over each mouse&#39;s 2-hour time bin. The first four columns</span>
@@ -108,10 +108,13 @@
     <span class="n">all_features_df</span> <span class="o">=</span> <span class="n">data_frames</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">other_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_frames</span><span class="p">]</span>
     <span class="n">other_features</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">all_features_df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">other_features</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">other_features</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># fix for data inconsistency</span>
+    <span class="n">final_df</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_df</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">5</span>
+    <span class="k">return</span> <span class="n">final_df</span></div>
 
 
-<div class="viewcode-block" id="load_mouseday_features"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_mouseday_features">[docs]</a><span class="k">def</span> <span class="nf">load_mouseday_features</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="load_mouseday_features"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_mouseday_features">[docs]</a><span class="k">def</span> <span class="nf">load_mouseday_features</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a (1921, 3+11*n) size pandas.DataFrame object corresponding to</span>
 <span class="sd">    each 2-hour time bin of the n inputted features over each mouse.</span>
@@ -203,7 +206,7 @@
     <span class="k">return</span> <span class="n">data_all</span></div>
 
 
-<div class="viewcode-block" id="load_intervals"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_intervals">[docs]</a><span class="k">def</span> <span class="nf">load_intervals</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+<div class="viewcode-block" id="load_intervals"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_intervals">[docs]</a><span class="k">def</span> <span class="nf">load_intervals</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a pandas.DataFrame object of project interval data</span>
 <span class="sd">    for the specified feature.</span>
@@ -256,12 +259,12 @@
         <span class="n">dt_sub</span><span class="p">[</span><span class="s2">&quot;stop&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dt</span><span class="p">,</span> <span class="n">dt_sub</span><span class="p">])</span>
     <span class="c1"># sort based on strain, mouse and day</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">sort</span><span class="p">([</span><span class="s2">&quot;strain&quot;</span><span class="p">,</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">])</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;strain&quot;</span><span class="p">,</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">])</span>
     <span class="n">dt</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">dt</span></div>
 
 
-<div class="viewcode-block" id="load_movement"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_movement">[docs]</a><span class="k">def</span> <span class="nf">load_movement</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+<div class="viewcode-block" id="load_movement"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_movement">[docs]</a><span class="k">def</span> <span class="nf">load_movement</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a pandas.DataFrame object of project movement data</span>
 <span class="sd">    for the specified combination of strain, mouse and day.</span>
@@ -363,7 +366,7 @@
     <span class="k">return</span> <span class="n">times</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">ints</span><span class="o">.</span><span class="n">contains</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="load_movement_and_intervals"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_movement_and_intervals">[docs]</a><span class="k">def</span> <span class="nf">load_movement_and_intervals</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span>
+<div class="viewcode-block" id="load_movement_and_intervals"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_movement_and_intervals">[docs]</a><span class="k">def</span> <span class="nf">load_movement_and_intervals</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span>
                                 <span class="n">features</span><span class="o">=</span><span class="n">INTERVAL_FEATURES</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a pandas.DataFrame object of project movement and interval</span>
@@ -426,7 +429,7 @@
     <span class="k">return</span> <span class="n">movements</span></div>
 
 
-<div class="viewcode-block" id="load_start_time_end_time"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.load_start_time_end_time">[docs]</a><span class="k">def</span> <span class="nf">load_start_time_end_time</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+<div class="viewcode-block" id="load_start_time_end_time"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_start_time_end_time">[docs]</a><span class="k">def</span> <span class="nf">load_start_time_end_time</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the start and end times recorded</span>
 <span class="sd">    for the mouse-day. The first number indicates</span>
@@ -457,7 +460,7 @@
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="distances"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances">[docs]</a><span class="k">def</span> <span class="nf">distances</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<div class="viewcode-block" id="distances"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.distances">[docs]</a><span class="k">def</span> <span class="nf">distances</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a numpy array object of project movement data</span>
 <span class="sd">    for the specified combination of strain, mouse and day.</span>
@@ -503,18 +506,18 @@
     <span class="c1"># Compute distance between samples</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">movement</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">movement</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">time</span> <span class="o">=</span> <span class="n">movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">t_final</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">t_final</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
     <span class="c1"># Aggregate distances according to step</span>
-    <span class="n">aggregate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">t_final</span><span class="o">/</span><span class="n">step</span><span class="p">))</span>
+    <span class="n">aggregate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">t_final</span> <span class="o">/</span> <span class="n">step</span><span class="p">))</span>
     <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)):</span>
-        <span class="k">while</span> <span class="n">time</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">*</span><span class="n">step</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">time</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">step</span><span class="p">:</span>
             <span class="n">aggregate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">aggregate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span></div>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">aggregate</span></div>
 
 
-<div class="viewcode-block" id="distances_bymouse"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances_bymouse">[docs]</a><span class="k">def</span> <span class="nf">distances_bymouse</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="distances_bymouse"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.distances_bymouse">[docs]</a><span class="k">def</span> <span class="nf">distances_bymouse</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Aggregates &#39;distances&#39; for all days of recorded data for</span>
 <span class="sd">    one particular mouse.</span>
@@ -554,10 +557,10 @@
                 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;day </span><span class="si">%s</span><span class="s1"> done.&#39;</span> <span class="o">%</span> <span class="n">day</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">break</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="distances_bystrain"><a class="viewcode-back" href="../../api/data.html#mousestyles.data.distances_bystrain">[docs]</a><span class="k">def</span> <span class="nf">distances_bystrain</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="distances_bystrain"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.distances_bystrain">[docs]</a><span class="k">def</span> <span class="nf">distances_bystrain</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Aggregates distances_bymouse for all mice in one given</span>
 <span class="sd">    strain.</span>
@@ -594,7 +597,17 @@
         <span class="n">mouse</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;mouse </span><span class="si">%s</span><span class="s1"> done.&#39;</span> <span class="o">%</span> <span class="n">mouse</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="load_time_matrix_dynamics"><a class="viewcode-back" href="../../api/mousestyles.data.html#mousestyles.data.load_time_matrix_dynamics">[docs]</a><span class="k">def</span> <span class="nf">load_time_matrix_dynamics</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the time matrix for dynamics pattern project</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+           <span class="n">data_dir</span><span class="p">,</span>
+           <span class="s1">&#39;time_matrix.csv&#39;</span><span class="p">))</span></div>
 </pre></div>
 
           </div>

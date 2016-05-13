@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.path_diversity.path_features &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="mousestyles.path_diversity" href="../path_diversity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.path_diversity.path_features</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="compute_accelerations"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.path_features.compute_accelerations">[docs]</a><span class="k">def</span> <span class="nf">compute_accelerations</span><span class="p">(</span><span class="n">speeds</span><span class="p">,</span> <span class="n">timestamps</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of the accelerations along the path.</span>
+<span class="sd">    Each element of the list is the ratio of the speed to the time difference.</span>
+<span class="sd">    The length of the list is equal to the length of speeds minus 1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    speeds : list</span>
+<span class="sd">        the traveled distances along the path. Expecting the output of</span>
+<span class="sd">        compute_distances.</span>
+
+<span class="sd">    timestamps : list</span>
+<span class="sd">        the time difference within the path.</span>
+<span class="sd">        Its length must be equal to the length of speeds plus 1.</span>
+<span class="sd">        Should not contain same time in adjacent rows;</span>
+<span class="sd">        otherwise output would contain inf.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    accel : list</span>
+<span class="sd">        contains the speeds along the path.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; compute_accelerations([1, 2, 0], [3, 4, 5, 6])</span>
+<span class="sd">    [0.5, -1.0]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">speeds</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;speeds and timestamps must be lists&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">speeds</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">timestamps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;lengths of speeds must be the length of timestamps minus 1&quot;</span><span class="p">)</span>
+
+    <span class="n">speeds_diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">speeds</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">speeds</span><span class="p">)],</span> <span class="n">speeds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
+    <span class="n">time_diffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">timestamps</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">timestamps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+                  <span class="n">timestamps</span><span class="p">[</span><span class="mi">2</span><span class="p">:])]</span>
+
+    <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;timestamps should not contain same times in i th and i+2 th rows.&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">time_diffs</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_diffs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+
+    <span class="n">accel</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">/</span> <span class="n">t</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">speeds_diff</span><span class="p">,</span> <span class="n">time_diffs</span><span class="p">)]</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">accel</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="angle_between"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.path_features.angle_between">[docs]</a><span class="k">def</span> <span class="nf">angle_between</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns the angle in radians between vectors `v1` and `v2`.</span>
+<span class="sd">    Both vectors must have same length.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    v1, v2 : lists</span>
+<span class="sd">        Vectors whose angle would be calculated.</span>
+<span class="sd">        Should have same lengths.</span>
+<span class="sd">        Should not be zero vector.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    angle : numpy float object</span>
+<span class="sd">        nan if either of `v1` or `v2` is zero vector,</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; angle_between([1, 0],[1, 0])</span>
+<span class="sd">    0.0</span>
+<span class="sd">    &gt;&gt;&gt; angle_between([1, 0],[0, 1])</span>
+<span class="sd">    1.5707963267948966</span>
+<span class="sd">    &gt;&gt;&gt; angle_between([1, 0],[-1, 0])</span>
+<span class="sd">    3.1415926535897931</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;v1 and v2 must be lists&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;both vectors must have same lengths&quot;</span><span class="p">)</span>
+
+    <span class="n">norm_v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+    <span class="n">norm_v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">([</span><span class="n">norm_v1</span><span class="p">,</span> <span class="n">norm_v2</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;both vectors must have norms greater than 0&#39;</span><span class="p">)</span>
+
+    <span class="n">v1_u</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">/</span> <span class="n">norm_v1</span>
+    <span class="n">v2_u</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">/</span> <span class="n">norm_v2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1_u</span><span class="p">,</span> <span class="n">v2_u</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="compute_angles"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.path_features.compute_angles">[docs]</a><span class="k">def</span> <span class="nf">compute_angles</span><span class="p">(</span><span class="n">path_obj</span><span class="p">,</span> <span class="n">radian</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of the angles in the path.</span>
+<span class="sd">    Each element of the list is the angle between the adjacent vectors in the</span>
+<span class="sd">    path. The length of the list is equal to the length of speeds minus 2.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_obj : pandas.DataFrame</span>
+<span class="sd">        CT, CX, CY coordinates and homebase status.</span>
+<span class="sd">        Must have length greater than 3.</span>
+
+<span class="sd">    radian : boolean</span>
+<span class="sd">        True for the output in radians. False for in turns (i.e. 360 for a</span>
+<span class="sd">        full turn).</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    angles : list</span>
+<span class="sd">        contains the angles in the path. The first and last elements are None.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; path = pd.DataFrame({&#39;t&#39;:[2, 4.5, 10.5], &#39;x&#39;:[0, 1, 1],\</span>
+<span class="sd">    &#39;y&#39;:[0, 0, 1], &#39;isHB&#39;:[True, True, False]})</span>
+<span class="sd">    &gt;&gt;&gt; compute_angles(path)</span>
+<span class="sd">    [None, 90.0, None]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_obj</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;path_obj must be pandas DataFrame&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">path_obj</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">issuperset</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the keys of path_obj must contain &#39;x&#39;, &#39;y&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path_obj</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;path_obj must contain at least 3 rows&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radian</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;radian must be bool&quot;</span><span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">path_obj</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">path_obj</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_obj</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">path_obj</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">angle_between</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">v1</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span> <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span>
+              <span class="nb">zip</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">vectors</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)])]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">radian</span><span class="p">:</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">]</span>
+
+    <span class="c1"># the first and last elements should be None</span>
+    <span class="n">angles</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">angles</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../path_diversity.html">mousestyles.path_diversity</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

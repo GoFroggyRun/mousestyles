@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.visualization package &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="prev" title="mousestyles.path_diversity package" href="mousestyles.path_diversity.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mousestyles-visualization-package">
+<h1>mousestyles.visualization package<a class="headerlink" href="#mousestyles-visualization-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.visualization.distribution_plot">
+<span id="mousestyles-visualization-distribution-plot-module"></span><h2>mousestyles.visualization.distribution_plot module<a class="headerlink" href="#module-mousestyles.visualization.distribution_plot" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.visualization.distribution_plot.plot_exponential">
+<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_exponential</code><span class="sig-paren">(</span><em>estimation</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_exponential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the histogram of all estimators of exponential
+to check the distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>estimation</strong> (<em>dataframe</em>) &#8211; dataframe of strain, mouse, day and the estimator</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>plot</strong> &#8211; The histogram of all estimators of exponential.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">histogram</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.visualization.distribution_plot.plot_fitted">
+<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_fitted</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_fitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_fitted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plot of one single mouse day
+-histogram of distance
+-fitted power law
+-fitted exponential</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>plot</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1 histogram + 2 fitted curve</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.visualization.distribution_plot.plot_powerlaw">
+<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_powerlaw</code><span class="sig-paren">(</span><em>estimation</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_powerlaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_powerlaw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the histogram of all estimators of power law
+to check the distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>estimation</strong> (<em>dataframe</em>) &#8211; dataframe of strain, mouse, day and the estimator</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>plot</strong> &#8211; The histogram of all estimators of power law</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">histogram</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.visualization.path_diversity_plotting">
+<span id="mousestyles-visualization-path-diversity-plotting-module"></span><h2>mousestyles.visualization.path_diversity_plotting module<a class="headerlink" href="#module-mousestyles.visualization.path_diversity_plotting" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.visualization.path_diversity_plotting.plot_box">
+<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_box</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title='Box Plot of Distribution'</em>, <em>width=4</em>, <em>height=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a box plot of the desired metric (path length, speed, angle, etc)
+per mouse, day or strain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_of_arrays</strong> (<em>list</em>) &#8211; each element of the list is a numpy array containing data on the
+metric to be plotted per mouse, day, or strain.Data is typically
+generated from another function in the package.</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; desired title of the plot</li>
+<li><strong>width</strong> (<em>int</em>) &#8211; first argument in figure size specifying width of plot</li>
+<li><strong>height</strong> (<em>int</em>) &#8211; second argument in figure size specifying height of plot</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>box plot</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">box plot of the desired metric combinations</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.visualization.path_diversity_plotting.plot_hist">
+<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_hist</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title='Histogram of Distribution'</em>, <em>xlab='X Values'</em>, <em>ylab='Y Values'</em>, <em>leg=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a histogram of the desired metric (path length, speed, angle, etc)
+per mouse, day, or strain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_of_arrays</strong> (<em>list</em>) &#8211; each element of the list is a numpy array containing data on the
+metric to be plotted per mouse, day, or strain.Data typically
+generated from another function in the package.</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; desired title of the plot</li>
+<li><strong>xlab</strong> (<em>str</em>) &#8211; desired x axis label of the plot</li>
+<li><strong>ylab</strong> (<em>str</em>) &#8211; desired y axis label of the plot</li>
+<li><strong>leg</strong> (<em>bool</em>) &#8211; indicates whether a legend for the plot is desired</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>hist plot</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">histogram of the desired metric combinations</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.visualization.plot_path">
+<span id="mousestyles-visualization-plot-path-module"></span><h2>mousestyles.visualization.plot_path module<a class="headerlink" href="#module-mousestyles.visualization.plot_path" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.visualization.plot_path.plot_path">
+<code class="descclassname">mousestyles.visualization.plot_path.</code><code class="descname">plot_path</code><span class="sig-paren">(</span><em>movement, paths, title='example plot of path', alpha=0.1, linewidth=1.0, xlim=[-16.24, 3.76], ylim=[0.9, 43.5]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_path.html#plot_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_path.plot_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the lines along paths.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CX, CY coordinates. Must have length greater than 1.</li>
+<li><strong>paths</strong> (<em>list</em>) &#8211; a list containing the indices for all paths.</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; the title of the plot. Default is &#8216;example plot of path&#8217;</li>
+<li><strong>alpha</strong> (<em>numeric</em>) &#8211; graphical parameter which determines strongness of each
+line. Default is .1.</li>
+<li><strong>linewidth</strong> (<em>numeric</em>) &#8211; graphical parameter which determines the width of each
+line. Default is 1.</li>
+<li><strong>ylim</strong> (<em>xlim,</em>) &#8211; list of length 2 indicating the end points of the plot.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Drawing the plot of the path.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sep</span> <span class="o">=</span> <span class="n">path_index</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_path</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">sep</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.visualization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.visualization" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles.visualization package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization.distribution_plot">mousestyles.visualization.distribution_plot module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization.path_diversity_plotting">mousestyles.visualization.path_diversity_plotting module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization.plot_path">mousestyles.visualization.plot_path module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.path_diversity.html" title="previous chapter">mousestyles.path_diversity package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/mousestyles.visualization.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/api/mousestyles.visualization.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

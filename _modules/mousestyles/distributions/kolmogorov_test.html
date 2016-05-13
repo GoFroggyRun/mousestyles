@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.distributions.kolmogorov_test &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.distributions.kolmogorov_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span><span class="p">,</span> <span class="n">optimize</span>
+<span class="kn">from</span> <span class="nn">mousestyles.data</span> <span class="kn">import</span> <span class="n">load_movement</span>
+
+
+<div class="viewcode-block" id="get_travel_distances"><a class="viewcode-back" href="../../../api/mousestyles.distributions.html#mousestyles.distributions.kolmogorov_test.get_travel_distances">[docs]</a><span class="k">def</span> <span class="nf">get_travel_distances</span><span class="p">(</span><span class="n">strain</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mouse</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get distances travelled in 20ms for this strain, this mouse,</span>
+<span class="sd">    on this day.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain: int {0, 1, 2}</span>
+<span class="sd">        The strain of mouse to test</span>
+<span class="sd">    mouse: int {0, 1, 2, 3}</span>
+<span class="sd">        The mouse twin id with in the strain</span>
+<span class="sd">    day: int {0, 1, ..., 11}</span>
+<span class="sd">        The day to calculate the distance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x: np.ndarray shape (n, 1)</span>
+<span class="sd">        The distances travelled in 20ms for this mouse on this day, truncated</span>
+<span class="sd">        at 1cm (i.e. only record mouse movement when it moves more than 1cm)</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">    &gt;&gt;&gt; get_travel_distances(0, 0, 0)[:3]</span>
+<span class="sd">    array([ 1.00648944,  1.02094319,  1.0178885 ])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_movement</span><span class="p">(</span><span class="n">strain</span><span class="o">=</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="o">=</span><span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">df</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="perform_kstest"><a class="viewcode-back" href="../../../api/mousestyles.distributions.html#mousestyles.distributions.kolmogorov_test.perform_kstest">[docs]</a><span class="k">def</span> <span class="nf">perform_kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">pareto</span><span class="p">,</span>
+                   <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function fits a distribution to data, and then test the</span>
+<span class="sd">    fit of the distribution using Kolmogorov-Smirnov test.</span>
+
+<span class="sd">    The Kolmogorov-Smirnov test constructs the test statistic, which is defined</span>
+<span class="sd">    as \sup |F_n(x) - F(x)|, for F_n is the sample CDF, and F is the</span>
+<span class="sd">    theoretical CDF. This statistics can be considered as a measure of</span>
+<span class="sd">    distance between the sample distribution and the theoretical distribution.</span>
+<span class="sd">    The smaller it is, the more similar the two distributions.</span>
+
+<span class="sd">    We first estimate the parameter using MLE, then by minimizing the KS test</span>
+<span class="sd">    statistic.</span>
+
+<span class="sd">    The Pareto distribution is sometimes known as the Power Law distribution,</span>
+<span class="sd">    with the PDF:  b / x**(b + 1) for x &gt;= 1, b &gt; 0.</span>
+<span class="sd">    The truncated exponential distribution is the same as the rescaled</span>
+<span class="sd">    exponential distribution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x: np.ndarray (n,)</span>
+<span class="sd">        The sample data to test the distribution</span>
+<span class="sd">    distribution: A Scipy Stats Continuous Distribution</span>
+<span class="sd">        {stats.pareto, stats.expon, stats.gamma}</span>
+<span class="sd">        The distribution to test against. Currently support pareto, expon, and</span>
+<span class="sd">        gamma, but any one-sided continuous distribution in Scipy.stats should</span>
+<span class="sd">        work.</span>
+<span class="sd">    verbose: boolean</span>
+<span class="sd">        If True, will print out testing result</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    params: np.ndarray shape (p,)</span>
+<span class="sd">        The optimal parameter for the distribution. Optimal in the sense of</span>
+<span class="sd">        minimizing K-S statistics.</span>
+<span class="sd">    The function also print out the Kolmogorov-Smirnov test result for three</span>
+<span class="sd">    cases</span>
+<span class="sd">    1. When comparing the empirical distribution against the distribution with</span>
+<span class="sd">    parameters estimated with MLE</span>
+<span class="sd">    2. When comparing the empirical distribution against the distribution with</span>
+<span class="sd">    parameters estimated by explicitely minimizing KS statistics</span>
+<span class="sd">    3. When comparing a resample with replacement of the empirical distribution</span>
+<span class="sd">    against the Pareto in 2.</span>
+<span class="sd">    A p-value &gt; 0.05 means we fail to reject the Null hypothesis that the</span>
+<span class="sd">    empirical distribution follow the specified distribution.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    The MLE often does not fit the data very well. We instead minimizing the</span>
+<span class="sd">    K-S distance, and obtain a better fit (as seen by the PDF and CDF</span>
+<span class="sd">    similarity between sample data and the fit)</span>
+
+<span class="sd">    References:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        1. Kolmogorov-Smirnov test:</span>
+<span class="sd">            https://en.wikipedia.org/wiki/Kolmogorov-Smirnov_test</span>
+<span class="sd">        2. Pareto Distribution (also known as power law distribution)</span>
+<span class="sd">            https://en.wikipedia.org/wiki/Pareto_distribution</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">    ---------</span>
+<span class="sd">    &gt;&gt;&gt; x = get_travel_distances(0, 0, 0)</span>
+<span class="sd">    &gt;&gt;&gt; res = perform_kstest(x, verbose=False)</span>
+<span class="sd">    &gt;&gt;&gt; np.allclose(res, np.array([3.67593246, 0.62795748, 0.37224205]))</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dist_name</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">name</span>
+    <span class="c1"># Fit the parameters by MLE</span>
+    <span class="n">mle_params</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Fit the Parameter by explicitely minimize KS-Statistics, and perform</span>
+    <span class="c1"># K-S test. First define helper function to minimize</span>
+    <span class="k">def</span> <span class="nf">calculate_ks_statistics</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">params</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Define good initial parameters to help optimizer find optimal values</span>
+    <span class="k">if</span> <span class="n">dist_name</span> <span class="o">==</span> <span class="s2">&quot;pareto&quot;</span><span class="p">:</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="n">mle_params</span>
+
+    <span class="n">opt_params</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">fmin</span><span class="p">(</span><span class="n">calculate_ks_statistics</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">init_params</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;1. Testing {} distribution with MLE parameters&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">dist_name</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">mle_params</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;2. Testing {} distribution with optimal parameters&quot;</span><span class="o">.</span>
+              <span class="n">format</span><span class="p">(</span><span class="n">dist_name</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">opt_params</span><span class="p">))</span>
+        <span class="c1"># Resample x, and test again</span>
+        <span class="n">x_bag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;3. Similar to 2., but on a resample of x&quot;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x_bag</span><span class="p">,</span> <span class="n">dist_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">opt_params</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">opt_params</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

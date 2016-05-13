@@ -1,0 +1,7 @@
+mousestyles
+===========
+
+.. toctree::
+   :maxdepth: 4
+
+   mousestyles

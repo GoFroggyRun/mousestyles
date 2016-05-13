@@ -1,0 +1,380 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.dynamics package &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="next" title="mousestyles.path_diversity package" href="mousestyles.path_diversity.html" />
+    <link rel="prev" title="mousestyles.distributions package" href="mousestyles.distributions.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mousestyles-dynamics-package">
+<h1>mousestyles.dynamics package<a class="headerlink" href="#mousestyles-dynamics-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-mousestyles.dynamics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.dynamics" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.dynamics.create_time_matrix">
+<code class="descclassname">mousestyles.dynamics.</code><code class="descname">create_time_matrix</code><span class="sig-paren">(</span><em>combined_gap=4</em>, <em>time_gap=1</em>, <em>days_index=137</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/dynamics.html#create_time_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.dynamics.create_time_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a time matrix for estimate the MLE parobability.
+The rows are 137 mousedays. The columns are time series
+in a day. The data are the mouse activity at that time.
+0 represents IS, 1 represents eating, 2 represents
+drinking, 3 represents others activity in AS.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>combined_gap</strong> (<em>nonnegative float or int</em>) &#8211; The threshold for combining small intervals. If next start time
+minus last stop time is smaller than combined_gap than combined
+these two intervals.</li>
+<li><strong>time_gap</strong> (<em>positive float or int</em>) &#8211; The time gap for create the columns time series</li>
+<li><strong>days_index</strong> (<em>nonnegative int</em>) &#8211; The number of days to process, from day 0 to day days_index.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>time</strong> &#8211; a matrix represents the activity for a certain
+mouse day and a certain time.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="n">create_time_matrix</span><span class="p">(</span><span class="n">combined_gap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">time_gap</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">strain</span>    <span class="mi">0</span>
+<span class="go">    mouse     0</span>
+<span class="go">    day       0</span>
+<span class="go">    48007     0</span>
+<span class="go">    48008     0</span>
+<span class="go">    48009     0</span>
+<span class="go">    48010     0</span>
+<span class="go">    48011     0</span>
+<span class="go">    48012     0</span>
+<span class="go">    48013     0</span>
+<span class="go">    Name: 0, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.dynamics.get_prob_matrix_list">
+<code class="descclassname">mousestyles.dynamics.</code><code class="descname">get_prob_matrix_list</code><span class="sig-paren">(</span><em>time_df</em>, <em>interval_length=1000</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/dynamics.html#get_prob_matrix_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.dynamics.get_prob_matrix_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of probability transition matrices
+that will be later used to characterize and simu-
+late the behavior dynamics of different strains of
+mice. The data used as input is the pandas DataFrame
+generated by function create_time_matrix with de-
+fault parameters. The output is a list of numpy
+arrays, each being a transition matrix characterizing
+one small time interval. The interval length could
+be chosen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>time_df</strong> (<em>Pandas.DataFrame</em>) &#8211; a huge data frame containing info on strain, mouse
+no., mouse day, and different states at chosen time
+points.</li>
+<li><strong>interval_length</strong> (<em>int</em>) &#8211; an integer specifying the desired length of each
+small time interval.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>matrix_list</strong> &#8211; a list of the mle estimations of the probability tran-
+sition matrices for each small time interval stored in
+the format of numpy array. Each element of this list
+is a numpy array matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">row_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="go">                        np.ones(10)*2, np.ones(10)*3))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time_df_eg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">row_i</span><span class="p">,</span> <span class="n">row_i</span><span class="p">,</span><span class="n">row_i</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time_df_eg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">time_df_eg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list</span> <span class="o">=</span> <span class="n">get_prob_matrix_list</span><span class="p">(</span><span class="n">time_df_eg</span><span class="p">,</span>
+<span class="go">                                    interval_length=10)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
+<span class="go">           [ 0.,  1.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  1.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  0.],</span>
+<span class="go">           [ 0.,  0.,  0.,  1.]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.dynamics.get_prob_matrix_small_interval">
+<code class="descclassname">mousestyles.dynamics.</code><code class="descname">get_prob_matrix_small_interval</code><span class="sig-paren">(</span><em>string_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/dynamics.html#get_prob_matrix_small_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.dynamics.get_prob_matrix_small_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the MLE estimate of the probability matrix
+of the markov chain model. The data used as input
+is a list of strings that contains the information
+regarding the transition of states of the mouse be-
+havior. The output is a matrix stored in the format
+of numpy array, where the i,j th term indicates the
+probability of transiting from state i to state j.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string_list</strong> (<em>list</em>) &#8211; a list of strings of the states in the given
+time slot.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>M</strong> &#8211; the MLE estimation of the probability tran-
+sition matrix. Each entry M_ij represents the
+probability of transiting from state i to state
+j.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;002&#39;</span><span class="p">,</span> <span class="s1">&#39;001&#39;</span><span class="p">,</span> <span class="s1">&#39;012&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_prob_matrix_small_interval</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([[</span> <span class="mf">0.4</span><span class="p">,</span>  <span class="mf">0.4</span><span class="p">,</span>  <span class="mf">0.2</span><span class="p">,</span>  <span class="mf">0.</span> <span class="p">],</span>
+<span class="go">           [ 0. ,  0. ,  1. ,  0. ],</span>
+<span class="go">           [ 0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">           [ 0. ,  0. ,  0. ,  0. ]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.dynamics.get_score">
+<code class="descclassname">mousestyles.dynamics.</code><code class="descname">get_score</code><span class="sig-paren">(</span><em>true_day, simulated_day, weight=[1, 10, 50, 1]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/dynamics.html#get_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.dynamics.get_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the evaluation score for the simulted day
+that will be later used to choose the best time
+interval for different strains. The input data
+should be two numpy arrays and one list, the two arrays
+are possibly with different lengths, one being the
+activities for one particular day of one particular
+mouse, the other array is our simulated day for this
+mouse from the mcmc_simulation function. And the list
+is the weight for different status. We should give different
+rewards for making correct simulations on various status.
+For example, the average mouse day have 21200 timestamps.
+10000 of them are IS, 1000 are EAT, 200 are drink, and the
+left 10000 are OTHERS. So we should weigh more on drink and
+eat, their ratio is 10000:1000:200:10000 = 1:0.1:0.02:0.1.
+So I took the inverse of them to be 1:10:50:1.
+The output will be one number between 0 and max(weight),
+indicating the similiary of the true day of a mouse and
+a simulated day of the same mouse. We will use
+this function to measure the performance of the
+simulation and then choose the appropriate time
+interval.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>true_day</strong> (<em>numpy.array</em>) &#8211; a numpy.array containing the activities for one
+particular mouse on a specific day</li>
+<li><strong>simulated_day</strong> (<em>numpy.array</em>) &#8211; a numpy.array containing the simulated activities
+for this particular mouse.</li>
+<li><strong>weight</strong> (<em>list</em>) &#8211; a list with positive numbers showing the rewards
+for making the right predictions of various status.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>score</strong> &#8211; a float from 0 to max(weight), indicating the similarity of
+the simulated data with the actual value, and therefore,
+the performance of the simulation, with max(weight) being the
+most similar, and 0 being the least similar.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">true_day_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulated_day_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_score</span><span class="p">(</span><span class="n">true_day_1</span><span class="p">,</span> <span class="n">simulated_day_1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">true_day_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulated_day_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_score</span><span class="p">(</span><span class="n">true_day_2</span><span class="p">,</span> <span class="n">simulated_day_2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">10.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.dynamics.mcmc_simulation">
+<code class="descclassname">mousestyles.dynamics.</code><code class="descname">mcmc_simulation</code><span class="sig-paren">(</span><em>mat_list</em>, <em>n_per_int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/dynamics.html#mcmc_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.dynamics.mcmc_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gives the Monte Carlo simulation
+of the stochastic process modeling the dynamic
+changes of states of the mice behavior. The in-
+put of this function is a list of probability
+transition matrices and an integer indicates
+how many outputs for each matrix. This number
+is related to the interval_length parameter in
+function get_prob_matrix_list. The output is an
+array of numbers, each indicates one state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mat_list</strong> (<em>List</em>) &#8211; a list of numpy arrays storing the probabi-
+lity transition matrices for each small time
+interval chosen.</li>
+<li><strong>n_per_int</strong> (<em>int</em>) &#8211; an integer specifying the desired output
+length of each probability transition matrix.
+This is the same as the parameter
+interval_length used in the function
+get_prob_matrix_small_interval</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>simu_result</strong> &#8211; an array of integers indicating the simulated
+states given a list of probability transition
+matrices.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.array</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mat0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">mat0</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat1</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat_list_example</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat0</span><span class="p">,</span> <span class="n">mat1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcmc_simulation</span><span class="p">(</span><span class="n">mat_list_example</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+<span class="go">            1, 0, 1, 0, 1, 0, 1, 0, 1, 0])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles.dynamics package</a><ul>
+<li><a class="reference internal" href="#module-mousestyles.dynamics">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.distributions.html" title="previous chapter">mousestyles.distributions package</a></li>
+      <li>Next: <a href="mousestyles.path_diversity.html" title="next chapter">mousestyles.path_diversity package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/mousestyles.dynamics.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/api/mousestyles.dynamics.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

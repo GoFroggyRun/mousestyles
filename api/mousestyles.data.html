@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Data &mdash; mousestyles 0.1 documentation</title>
+    <title>mousestyles.data package &mdash; mousestyles 0.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,9 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
-    <link rel="up" title="API reference" href="index.html" />
-    <link rel="prev" title="API reference" href="index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="next" title="mousestyles.distributions package" href="mousestyles.distributions.html" />
+    <link rel="prev" title="mousestyles.classification package" href="mousestyles.classification.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,8 +40,111 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-mousestyles.data">
-<span id="data"></span><h1>Data<a class="headerlink" href="#module-mousestyles.data" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mousestyles-data-package">
+<h1>mousestyles.data package<a class="headerlink" href="#mousestyles-data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.data.utils">
+<span id="mousestyles-data-utils-module"></span><h2>mousestyles.data.utils module<a class="headerlink" href="#module-mousestyles.data.utils" title="Permalink to this headline">¶</a></h2>
+<p>Data utilities.</p>
+<dl class="function">
+<dt id="mousestyles.data.utils.day_to_mouse_average">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">day_to_mouse_average</code><span class="sig-paren">(</span><em>features</em>, <em>labels</em>, <em>num_strains=16</em>, <em>stdev=False</em>, <em>stderr=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#day_to_mouse_average"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.day_to_mouse_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>first three columns of labels are strain num, mouse number, day number
+features is an M x N matrix of mouse day x features</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">new data matrix with a mean and stdev/stderr for each mouse over
+mouse days</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.idx_restrict_to_rectangles">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">idx_restrict_to_rectangles</code><span class="sig-paren">(</span><em>TXY, rects=[(0, 0)], xlims=(0, 1), ylims=(0, 1), xbins=2, ybins=4, eps=0.01</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#idx_restrict_to_rectangles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.idx_restrict_to_rectangles" title="Permalink to this definition">¶</a></dt>
+<dd><p>given (3 x T) TXY with 0th row array of times [ASSUMED SORTED] and rows
+1,2 are x,y coords</p>
+<p>returns new interval array which is E minus those things occuring
+outside of given rectangle</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.map_xbins_ybins_to_cage">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">map_xbins_ybins_to_cage</code><span class="sig-paren">(</span><em>rectangle=(0</em>, <em>0)</em>, <em>xbins=2</em>, <em>ybins=4</em>, <em>YLower=1.0</em>, <em>YUpper=43.0</em>, <em>XUpper=3.75</em>, <em>XLower=-16.25</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#map_xbins_ybins_to_cage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.map_xbins_ybins_to_cage" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts a rectangle in xbins x ybins to corresponding rectangle in
+Cage coordinates</p>
+<p>format is [[p1, p2], [p3, p4]] where
+pi = (cage_height_location, cage_length_location)</p>
+<p># ??? -chris
+### THIS GIVES WRONG CAGE LOCATIONS for top bottom left right
+# # # xbins ybins do NOT reflect cage geometry perfectly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.mouse_to_strain_average">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">mouse_to_strain_average</code><span class="sig-paren">(</span><em>features</em>, <em>labels</em>, <em>num_strains=16</em>, <em>stdev=False</em>, <em>stderr=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#mouse_to_strain_average"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.mouse_to_strain_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>first two columns of M x N data matrix are strain num (1 - num_strains),
+mouse number
+other columns are features</p>
+<p>Returns: new data matrix with a mean and stdev/stderr for each strain
+over mice</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.pull_locom_tseries_subset">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">pull_locom_tseries_subset</code><span class="sig-paren">(</span><em>M</em>, <em>start_time=0</em>, <em>stop_time=300</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#pull_locom_tseries_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.pull_locom_tseries_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>given an (m x n) numpy array M where the 0th row is array of times
+[ASSUMED SORTED]</p>
+<p>returns a new array (copy) that is a subset of M corresp to
+start_time, stop_time</p>
+<p>returns [] if times are not in array</p>
+<dl class="docutils">
+<dt>(the difficulty is that if mouse does not move nothing gets registered</dt>
+<dd>so we should artificially create start_time, stop_time movement events
+at boundries)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.split_data_in_half_randomly">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">split_data_in_half_randomly</code><span class="sig-paren">(</span><em>features</em>, <em>labels</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#split_data_in_half_randomly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.split_data_in_half_randomly" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>given an array of the form:</dt>
+<dd>features = M x A x B x C x ...</dd>
+</dl>
+<p>where M is the number of mouse days</p>
+<dl class="docutils">
+<dt>and an array labels for this data of the form:</dt>
+<dd>labels = M x 2</dd>
+</dl>
+<p>where labels[:, 0] are strain numbers and the labels[:, 1] are
+mice numbers</p>
+<dl class="docutils">
+<dt>returns</dt>
+<dd>bootstrap_data_1 = a random half of the mouse days
+bootstrap_labels_1
+bootstrap_data_2 = the other half
+bootstrap_labels_2</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.data.utils.total_time_rectangle_bins">
+<code class="descclassname">mousestyles.data.utils.</code><code class="descname">total_time_rectangle_bins</code><span class="sig-paren">(</span><em>M</em>, <em>xlims=(0</em>, <em>1)</em>, <em>ylims=(0</em>, <em>1)</em>, <em>xbins=5</em>, <em>ybins=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data/utils.html#total_time_rectangle_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.utils.total_time_rectangle_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>given an (3 x n) numpy array M where the 0th row is array of times
+[ASSUMED SORTED]</p>
+<p>returns a new (xbins x ybins) array (copy) that contains PDF of location
+over time</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.data" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="mousestyles.data.distances">
 <code class="descclassname">mousestyles.data.</code><code class="descname">distances</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>step=50</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.distances" title="Permalink to this definition">¶</a></dt>
@@ -369,6 +473,13 @@ the interval for which all sensors are active.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="mousestyles.data.load_time_matrix_dynamics">
+<code class="descclassname">mousestyles.data.</code><code class="descname">load_time_matrix_dynamics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/data.html#load_time_matrix_dynamics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.data.load_time_matrix_dynamics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the time matrix for dynamics pattern project</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -376,12 +487,25 @@ the interval for which all sensors are active.</p>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mousestyles.data package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.data.utils">mousestyles.data.utils module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API reference</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">API reference</a></li>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.classification.html" title="previous chapter">mousestyles.classification package</a></li>
+      <li>Next: <a href="mousestyles.distributions.html" title="next chapter">mousestyles.distributions package</a></li>
+  </ul></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -389,7 +513,7 @@ the interval for which all sensors are active.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/data.txt"
+      <li><a href="../_sources/api/mousestyles.data.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -415,7 +539,7 @@ the interval for which all sensors are active.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../_sources/api/data.txt"
+      <a href="../_sources/api/mousestyles.data.txt"
           rel="nofollow">Page source</a>
     </div>
 

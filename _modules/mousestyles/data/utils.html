@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.data.utils &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="mousestyles.data" href="../data.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.data.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Data utilities.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="day_to_mouse_average"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.day_to_mouse_average">[docs]</a><span class="k">def</span> <span class="nf">day_to_mouse_average</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">num_strains</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                         <span class="n">stdev</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    first three columns of labels are strain num, mouse number, day number</span>
+<span class="sd">    features is an M x N matrix of mouse day x features</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        new data matrix with a mean and stdev/stderr for each mouse over</span>
+<span class="sd">        mouse days</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">features</span><span class="p">])</span>
+    <span class="n">tot_data_avgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">tot_data_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">tot_data_stderr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">strain</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_strains</span><span class="p">):</span>
+        <span class="n">mice</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">tmp_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">strain</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tmp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">tmp_data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">mice</span><span class="p">:</span>
+                <span class="n">mice</span><span class="p">[</span><span class="n">tmp_data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">mice</span><span class="p">[</span><span class="n">tmp_data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">data_avgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">mice</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">data_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">mice</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">data_stderr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">mice</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mice</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">mouse_arr</span> <span class="o">=</span> <span class="n">tmp_data</span><span class="p">[</span><span class="n">tmp_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">num</span><span class="p">,</span> <span class="mi">0</span><span class="p">:]</span>
+            <span class="n">mouse_avg</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">mouse_std</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># standard error for plot</span>
+            <span class="n">mouse_stderr</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mouse_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">data_avgs</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">data_avgs</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">mouse_avg</span>
+
+            <span class="n">data_std</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">data_std</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">mouse_std</span>
+
+            <span class="n">data_stderr</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mouse_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">data_stderr</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">mouse_stderr</span>
+
+        <span class="n">tot_data_avgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">tot_data_avgs</span><span class="p">,</span> <span class="n">data_avgs</span><span class="p">])</span>          <span class="c1"># not ordered</span>
+        <span class="n">tot_data_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">tot_data_std</span><span class="p">,</span> <span class="n">data_std</span><span class="p">])</span>
+        <span class="n">tot_data_stderr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">tot_data_stderr</span><span class="p">,</span> <span class="n">data_stderr</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">stdev</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tot_data_avgs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">tot_data_std</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="n">stderr</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tot_data_avgs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">tot_data_stderr</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">tot_data_avgs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span></div>
+
+
+<div class="viewcode-block" id="mouse_to_strain_average"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.mouse_to_strain_average">[docs]</a><span class="k">def</span> <span class="nf">mouse_to_strain_average</span><span class="p">(</span>
+        <span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">num_strains</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">stdev</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    first two columns of M x N data matrix are strain num (1 - num_strains),</span>
+<span class="sd">    mouse number</span>
+<span class="sd">    other columns are features</span>
+
+<span class="sd">    Returns: new data matrix with a mean and stdev/stderr for each strain</span>
+<span class="sd">    over mice</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">features</span><span class="p">])</span>
+    <span class="n">tot_data_avgs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_strains</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">tot_data_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_strains</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">tot_data_stderr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_strains</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">strain</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_strains</span><span class="p">):</span>
+        <span class="n">tmp_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">strain</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span>
+        <span class="n">tot_data_avgs</span><span class="p">[</span><span class="n">strain</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">tot_data_std</span><span class="p">[</span><span class="n">strain</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_data</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">tot_data_stderr</span><span class="p">[</span><span class="n">strain</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_data</span><span class="o">.</span><span class="n">std</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tmp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># standard error for plot</span>
+
+    <span class="k">if</span> <span class="n">stdev</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tot_data_avgs</span><span class="p">,</span> <span class="n">tot_data_std</span>
+    <span class="k">elif</span> <span class="n">stderr</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tot_data_avgs</span><span class="p">,</span> <span class="n">tot_data_stderr</span>
+
+    <span class="k">return</span> <span class="n">tot_data_avgs</span></div>
+
+
+<div class="viewcode-block" id="split_data_in_half_randomly"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.split_data_in_half_randomly">[docs]</a><span class="k">def</span> <span class="nf">split_data_in_half_randomly</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; given an array of the form:</span>
+<span class="sd">            features = M x A x B x C x ...</span>
+<span class="sd">        where M is the number of mouse days</span>
+
+<span class="sd">        and an array labels for this data of the form:</span>
+<span class="sd">            labels = M x 2</span>
+<span class="sd">        where labels[:, 0] are strain numbers and the labels[:, 1] are</span>
+<span class="sd">        mice numbers</span>
+
+<span class="sd">        returns</span>
+<span class="sd">            bootstrap_data_1 = a random half of the mouse days</span>
+<span class="sd">            bootstrap_labels_1</span>
+<span class="sd">            bootstrap_data_2 = the other half</span>
+<span class="sd">            bootstrap_labels_2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_perm_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">all_perm_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">strains</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">strain</span> <span class="ow">in</span> <span class="n">strains</span><span class="p">:</span>
+        <span class="n">sub_data</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">labels</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">strain</span><span class="p">]</span>
+        <span class="n">sub_labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">labels</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">strain</span><span class="p">]</span>
+        <span class="n">mice_nums</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_data</span><span class="p">)):</span>
+            <span class="n">mice_nums</span><span class="p">[</span><span class="n">sub_labels</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">mouse</span> <span class="ow">in</span> <span class="n">mice_nums</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># print strain, mouse</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">sub_data</span><span class="p">[</span><span class="n">sub_labels</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">mouse</span><span class="p">]</span>
+            <span class="n">tmp_l</span> <span class="o">=</span> <span class="n">sub_labels</span><span class="p">[</span><span class="n">sub_labels</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">mouse</span><span class="p">]</span>
+            <span class="c1"># print tmp, tmp_l</span>
+            <span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
+            <span class="n">all_perm_data</span><span class="p">[</span><span class="n">c</span><span class="p">:</span><span class="n">c</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">perm</span><span class="p">]</span>
+            <span class="n">all_perm_labels</span><span class="p">[</span><span class="n">c</span><span class="p">:</span><span class="n">c</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_l</span><span class="p">)]</span> <span class="o">=</span> <span class="n">tmp_l</span><span class="p">[</span><span class="n">perm</span><span class="p">]</span>
+            <span class="n">c</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">all_perm_data</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="n">all_perm_labels</span><span class="p">[</span>
+        <span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">all_perm_data</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">all_perm_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="pull_locom_tseries_subset"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.pull_locom_tseries_subset">[docs]</a><span class="k">def</span> <span class="nf">pull_locom_tseries_subset</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop_time</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    given an (m x n) numpy array M where the 0th row is array of times</span>
+<span class="sd">    [ASSUMED SORTED]</span>
+
+<span class="sd">    returns a new array (copy) that is a subset of M corresp to</span>
+<span class="sd">    start_time, stop_time</span>
+
+<span class="sd">    returns [] if times are not in array</span>
+
+<span class="sd">    (the difficulty is that if mouse does not move nothing gets registered</span>
+<span class="sd">     so we should artificially create start_time, stop_time movement events</span>
+<span class="sd">     at boundries)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">idx_start</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span>
+    <span class="n">idx_stop</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">stop_time</span><span class="p">)</span>
+    <span class="n">new_M</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="n">idx_start</span><span class="p">:</span><span class="n">idx_stop</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">idx_stop</span> <span class="o">!=</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">idx_start</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">idx_start</span><span class="p">]</span> <span class="o">!=</span> <span class="n">start_time</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">idx_start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_time</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">new_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">v</span><span class="p">,</span> <span class="n">new_M</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">idx_stop</span><span class="p">]</span> <span class="o">!=</span> <span class="n">stop_time</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">idx_stop</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">idx_stop</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># find last time registered</span>
+            <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">stop_time</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">new_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">new_M</span><span class="p">,</span> <span class="n">v</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">idx_stop</span><span class="p">]</span> <span class="o">==</span> <span class="n">stop_time</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="n">idx_stop</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">new_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">new_M</span><span class="p">,</span> <span class="n">v</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">new_M</span></div>
+
+
+<div class="viewcode-block" id="total_time_rectangle_bins"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.total_time_rectangle_bins">[docs]</a><span class="k">def</span> <span class="nf">total_time_rectangle_bins</span><span class="p">(</span>
+        <span class="n">M</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ylims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">xbins</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ybins</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    given an (3 x n) numpy array M where the 0th row is array of times</span>
+<span class="sd">    [ASSUMED SORTED]</span>
+
+<span class="sd">    returns a new (xbins x ybins) array (copy) that contains PDF of location</span>
+<span class="sd">    over time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">xlims</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ylims</span>
+    <span class="n">meshx</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">xbins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">xbins</span>
+    <span class="n">meshy</span> <span class="o">=</span> <span class="n">ymin</span> <span class="o">+</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ybins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">ybins</span>
+
+    <span class="n">Cnts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ybins</span><span class="p">,</span> <span class="n">xbins</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Cnts</span>
+
+    <span class="n">bin_idx</span> <span class="o">=</span> <span class="n">meshx</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">bin_idy</span> <span class="o">=</span> <span class="n">meshy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bin_idx</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">xbins</span><span class="p">:</span>
+            <span class="n">bin_idx</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">bin_idy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">ybins</span><span class="p">:</span>
+            <span class="n">bin_idy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">Cnts</span><span class="p">[</span><span class="n">ybins</span> <span class="o">-</span> <span class="n">bin_idy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bin_idx</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Cnts</span></div>
+
+
+<div class="viewcode-block" id="idx_restrict_to_rectangles"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.idx_restrict_to_rectangles">[docs]</a><span class="k">def</span> <span class="nf">idx_restrict_to_rectangles</span><span class="p">(</span><span class="n">TXY</span><span class="p">,</span> <span class="n">rects</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="n">xlims</span><span class="o">=</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ylims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">xbins</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ybins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">eps</span><span class="o">=.</span><span class="mo">01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    given (3 x T) TXY with 0th row array of times [ASSUMED SORTED] and rows</span>
+<span class="sd">    1,2 are x,y coords</span>
+
+<span class="sd">    returns new interval array which is E minus those things occuring</span>
+<span class="sd">    outside of given rectangle</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_movements</span> <span class="o">=</span> <span class="n">TXY</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">idx_F_bout</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_movements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>  <span class="c1"># when at rectangles</span>
+    <span class="n">tmp_sum</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">rect</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
+        <span class="n">tl</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">bl</span><span class="p">,</span> <span class="n">br</span> <span class="o">=</span> <span class="n">map_xbins_ybins_to_cage</span><span class="p">(</span>
+            <span class="n">rectangle</span><span class="o">=</span><span class="n">rect</span><span class="p">,</span> <span class="n">xbins</span><span class="o">=</span><span class="n">xbins</span><span class="p">,</span> <span class="n">ybins</span><span class="o">=</span><span class="n">ybins</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_movements</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">TXY</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">TXY</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">TXY</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tl</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">TXY</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">bl</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="n">idx_F_bout</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="c1"># print (&quot;indexed %d move events &quot; % (sum(idx_F_bout) - tmp_sum))</span>
+        <span class="n">tmp_sum</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">idx_F_bout</span><span class="p">)</span>
+
+    <span class="c1"># print (&quot;Total move events: %d&quot; % num_movements)</span>
+    <span class="c1"># print (&quot;indexing %d/%d (%1.1f percent) movements at rectangles&quot; %</span>
+    <span class="c1"># (sum(idx_F_bout), num_movements, 100. * sum(idx_F_bout) / num_movements))</span>
+
+    <span class="k">return</span> <span class="n">idx_F_bout</span></div>
+
+
+<div class="viewcode-block" id="map_xbins_ybins_to_cage"><a class="viewcode-back" href="../../../api/mousestyles.data.html#mousestyles.data.utils.map_xbins_ybins_to_cage">[docs]</a><span class="k">def</span> <span class="nf">map_xbins_ybins_to_cage</span><span class="p">(</span><span class="n">rectangle</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xbins</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ybins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                            <span class="n">YLower</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">YUpper</span><span class="o">=</span><span class="mf">43.0</span><span class="p">,</span> <span class="n">XUpper</span><span class="o">=</span><span class="mf">3.75</span><span class="p">,</span>
+                            <span class="n">XLower</span><span class="o">=-</span><span class="mf">16.25</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    converts a rectangle in xbins x ybins to corresponding rectangle in</span>
+<span class="sd">    Cage coordinates</span>
+
+<span class="sd">    format is [[p1, p2], [p3, p4]] where</span>
+<span class="sd">    pi = (cage_height_location, cage_length_location)</span>
+
+<span class="sd">    # ??? -chris</span>
+<span class="sd">    ### THIS GIVES WRONG CAGE LOCATIONS for top bottom left right</span>
+<span class="sd">    # # # xbins ybins do NOT reflect cage geometry perfectly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">XUpper</span> <span class="o">-</span> <span class="n">XLower</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">YUpper</span> <span class="o">-</span> <span class="n">YLower</span>
+
+    <span class="n">delta_x</span> <span class="o">=</span> <span class="n">L</span> <span class="o">/</span> <span class="n">xbins</span>
+    <span class="n">delta_y</span> <span class="o">=</span> <span class="n">H</span> <span class="o">/</span> <span class="n">ybins</span>
+
+    <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">rectangle</span>
+    <span class="n">coord_y</span> <span class="o">=</span> <span class="n">YUpper</span> <span class="o">-</span> <span class="n">delta_y</span> <span class="o">*</span> <span class="n">h</span>
+    <span class="n">coord_x</span> <span class="o">=</span> <span class="n">XLower</span> <span class="o">+</span> <span class="n">delta_x</span> <span class="o">*</span> <span class="n">l</span>
+
+    <span class="k">return</span> <span class="p">((</span><span class="n">coord_x</span><span class="p">,</span> <span class="n">coord_y</span><span class="p">),</span> <span class="p">(</span><span class="n">coord_x</span> <span class="o">+</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">coord_y</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">coord_x</span><span class="p">,</span> <span class="n">coord_y</span> <span class="o">-</span> <span class="n">delta_y</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">coord_x</span> <span class="o">+</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">coord_y</span> <span class="o">-</span> <span class="n">delta_y</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../data.html">mousestyles.data</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
