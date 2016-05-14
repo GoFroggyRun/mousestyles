@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Ultradian Analysis &mdash; mousestyles 0.1 documentation</title>
+    <title>Ultradian and Circadian Analysis &mdash; mousestyles 0.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -40,102 +40,108 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="ultradian-analysis">
-<span id="ultradian"></span><h1>Ultradian Analysis<a class="headerlink" href="#ultradian-analysis" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="ultradian-and-circadian-analysis">
+<span id="ultradian"></span><h1>Ultradian and Circadian Analysis<a class="headerlink" href="#ultradian-and-circadian-analysis" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="statement-of-problem">
 <h2>Statement of problem<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
-<p>Ultradian rhythm is widely observed in mammalian behavioral patterns.
-Ultradian analysis aims to find the time-specific patterns in behavioral
-records, without specifying the length of cycle in advance (but need to be
-within 1 hour to 1 day). Typical ultradian period for rats includes 4, 12 and
-24 hours. For example, we expect rats to be inactive in the nighttime.
-Ingestions and movements mostly happened in the daytime. It would be
-informative to study the ultradian cycle of the behavior of mouse and we need
-to answer the following questions for this study:</p>
-<p>What is the variable of interest for the periodic patterns?</p>
-<ul class="simple">
-<li>Summary of activity: Food and water ingestion, distance traveled , movement
-intensity, AS probability.</li>
-<li>Spatial variable: Spatially discrete the data to cells each with its primary
-functions such as food cell, water cell, etc. Examine ultradian cycle of the
-spatial probability densities of the occupancy time in each cells.</li>
-</ul>
-<p>How to subset the data?</p>
-<ul class="simple">
-<li>Basic subset: 16 strains.</li>
-<li>Strains may not be the primary influence for the variation of ultradian
-rhythms. We may look into the cycle for each mouse and detect the most
-important factors influencing the ultradian rhythms.</li>
-</ul>
-<p>How to choose the frequency or period ?</p>
-<ul class="simple">
-<li>The Lomb-Scargle (LS) periodogram spectral analysis technique, a widely used
-tool in period detection and frequency analysis.</li>
-</ul>
-<p>What is the connection with other subprojects?</p>
-<ul class="simple">
-<li>Ultradian rhythms could be treated as one feature for clustering the 16
+<p>Ultradian and circadian rhythm are widely observed in mammalian
+behavioral patterns. The ultradian analysis aims to
+find the time-specific patterns in behavioral
+records, without specifying the length of the cycle in advance (but need to be
+within 1 hour to 1 day). The typical ultradian period includes 8 and 12 hours.
+The circadian rhythm refers to a roughly 24-hour cycle.
+For example, we expect the rats to be inactive in the nighttime
+and ingestions and movements mostly happened in the daytime.</p>
+<p>The variables of interests are the summary statistics of mouse activity
+including food (F) and water (W) ingestion, distance traveled (D), Active
+State probability (AS), movement inside the home base (M_IS) and
+movement outside the home base (M_AS). We may also consider spatial variables,
+for example, we can spatially discretize the data to cells containing the primary
+functions, like a food cell or a water cell, and examine the
+ultradian cycle of the spatial probability densities
+of the occupancy time in each cell.</p>
+<p>In this report, we assume strain to be the primary influence on the variation of
+ultradian rhythms across individual mice and examine the
+difference in rhythms across strains. Currently, we lack
+basic information such as weight, age, and gender. With more data available
+in the future, we may look into the cycle for each mouse and detect the most
+important factors influencing the ultradian rhythms.</p>
+<p>The ultradian and circadian analysis is closely related to other subprojects.
+Ultradian rhythms could be treated as one feature for clustering the 16
 strains. We may also subset the data using the results of the cluster and
-analysis the rhythm similarities and differences across clusters.</li>
-</ul>
+analyze the rhythm similarities and differences across clusters.</p>
 </div>
 <div class="section" id="statement-of-statistical-problem">
 <h2>Statement of statistical problem<a class="headerlink" href="#statement-of-statistical-problem" title="Permalink to this headline">¶</a></h2>
-<p>How to determine the optimal bin intervals for constructing the time series?</p>
-<ul class="simple">
-<li>The bin interval may vary according to the frequency. Bin interval
-examples: 5 min, 30 min, 1 hour etc. Need to look into the data.</li>
-</ul>
-<p>How to test the autocorrelation coefficient for the data and assess the model?</p>
-<ul class="simple">
-<li>Use the AIC to select best time lags for the time series model and
-the K statistics to test the goodness of fit.</li>
-</ul>
-<p>For longitudinal data analysis, how to build the model? Which is the fixed
-effect or random effect?</p>
-</div>
-<div class="section" id="exploratory-analysis">
-<h2>Exploratory Analysis<a class="headerlink" href="#exploratory-analysis" title="Permalink to this headline">¶</a></h2>
-<p>Data investigation</p>
-<ul class="simple">
-<li>Think about known/expected cycles - time to digest, IS/AS cycle,
-etc.</li>
-<li>Try to investigate cycles that are greater than 24 hours to avoid
-missing cycles.</li>
-<li>During the acclimatization period, investigate difference in
-cycles.</li>
-</ul>
-<p>Plots</p>
-<ul class="simple">
-<li>Plots for determining optimal bin intervals for constructing the
-time series.</li>
-<li>Plots for discovering the frequency or period.</li>
-<li>General time series plots for getting intuitions for each
-variables.</li>
-</ul>
-<p>Models</p>
-<ul class="simple">
-<li>Usage of Lomb-Scargle (LS) periodogram spectral analysis
-technique, a widely used tool in period detection and frequency
-analysis</li>
+<p>Our statistical problems are three parts: data preparation, choice of
+the frequency or period, and modeling of rhythm patterns.</p>
+<ul>
+<li><p class="first">Data preparation:</p>
+<p>Mouse behaviors are recorded based on time intervals
+or time points, like the beginning and ending time
+stamp of one food ingestion or the coordinates of mouse
+position at a particular time point. We aggregate the
+data based on given time bins and thus convert the raw data to time series.
+Then how to determine the optimal bin intervals for
+constructing the time series? Bin interval examples include
+5 min, 30 min, 1 hour, etc.</p>
+</li>
+<li><p class="first">Choice of the frequency or period:</p>
+<p>For ultradian rhythms, the significant period length may vary according to the
+variables of interests. The Lomb-Scargle (LS) periodogram spectral
+analysis technique, a widely used tool in period detection and frequency
+analysis, is applied.</p>
+</li>
+<li><p class="first">Modeling of rhythm patterns:</p>
+<p>We are not only interested in the period length of circadian and
+ultradian rhythms, but also the variation of features over time within the
+discovered circles. To model the time trajectory of features, we propose
+to use seasonal decomposition and mixed effects model.</p>
+</li>
 </ul>
 </div>
-<div class="section" id="data-requirements-description">
-<h2>Data Requirements Description<a class="headerlink" href="#data-requirements-description" title="Permalink to this headline">¶</a></h2>
-<p>Input: records for each strains (total of 16), each feature of interest (food,
+<div class="section" id="data-requirements">
+<h2>Data Requirements<a class="headerlink" href="#data-requirements" title="Permalink to this headline">¶</a></h2>
+<p>In order to retrieve the data needed for analyzing mouse ultradian behaviors, we
+get input from users, including features (water, food, active state, etc.),
+strain number, mouse number and time bin width. Also, we have another function
+called “aggregate movements” to track mice’s&nbsp;movements intensity based on time
+bins. They enable us to specify which mouse and which kind of features to study.
+After getting bin width from users, we allocate the time used by each feature
+into selected time intervals. For example, if “30 minutes” is selected to be
+bin width and “food” is selected to be the feature, then the eating time intervals
+are separated are relocated into 30-minute long bins. For one mouse day, using
+30-minute time bin gives 48 records as a result in total.</p>
+<p>For eating and drinking behavior, instead of using time consumption as intensity,
+we choose to use food or water consumption amount by acquiring food/water
+consuming data, and assuming the food/water expended during feeding is
+proportional to the time used. For calculating the movements data, we figured
+out the position change by generating Euclidean distances first and then
+distributing them into different time bins.</p>
+<p>The output is a pandas time series, with time index representing time
+intervals and values including feature data (such as food/water consumption,
+active state time as well as movement distance).</p>
+<ul class="simple">
+<li>Input:
+records for each strain (total of 16), each feature of interest (food,
 water, distance, active_state probability, ...), in a duration of 12 days
-(excluding 4 acclimation days).</p>
-<p>Processed: using one-minute time bins of movement records to binary score the
+(excluding 4 acclimation days).</li>
+<li>Processed:
+using one-minute time bins of movement records to binary score the
 activity into 0 (IS: inactive state) and 1 (AS: active state); using
 thirty-minute bins of food records to calculate the amount of chows consumed by
 mice; using LS periodogram technique to select the appropriate time bins for
-above.</p>
-<p>Output: different patterned visualization for each feature, with the
-appropriate time bins that presents the most significant ultradian pattern.</p>
+above.</li>
+<li>Output:
+different patterned visualization for each feature, with the
+appropriate time bins that present the most significant ultradian pattern.</li>
+</ul>
 </div>
 <div class="section" id="methodology-approach-description">
 <h2>Methodology/Approach Description<a class="headerlink" href="#methodology-approach-description" title="Permalink to this headline">¶</a></h2>
-<p>Seasonal decomposition. Seasonal decomposition is a very common method used in
+<div class="section" id="seasonal-decomposition">
+<h3>Seasonal decomposition<a class="headerlink" href="#seasonal-decomposition" title="Permalink to this headline">¶</a></h3>
+<p>Seasonal decomposition is a very common method used in
 time series analysis. One of the main objectives for a decomposition is to
 estimate seasonal effects that can be used to create and present seasonally
 adjusted values.</p>
@@ -156,29 +162,208 @@ adjusted values.</p>
 <span class="mf">4.</span> <span class="n">Determine</span> <span class="n">the</span> <span class="s2">&quot;random&quot;</span> <span class="n">term</span>
 </pre></div>
 </div>
-<p>Longitudinal data analysis.</p>
-<ul class="simple">
-<li>Attempts for mixed models<ul>
-<li>The mixed model is frequently used for longitudinal analysis.
-We should specify the random effects and fixed effects first,
-such as the IS/AS condition, the purpose of the active: like
-food or water and any other important features. Then we can use
-linear mixed model to get the pattern of the movements in
-different time period.</li>
-<li>Statsmodels.api package can be used to decompose the dataset we
-have.</li>
-</ul>
+<p>The following plot shows the seasonal variation of AS using circadian
+period. The difference between strains in rhythm patterns is evident.</p>
+<p>Seasonal variation of AS probability (circadian, 24 hours). There appear to be
+significant patterns within each group. Strain0 tend to have two active stages
+every day, while strain1 will only have one active stage that lasts about
+5 hours. The pattern in strain3 is not as strong as other strains, for that
+different mice seem to have larger variations. Nevertheless, the behavior with
+periods of 24 hours can be more regularly distributed than other periods showed
+below.</p>
+<p>(<a class="reference external" href="../report/plots/plot_24H_seasonal_AS.py">Source code</a>)</p>
+</div>
+<div class="section" id="lomb-scargle-period-test">
+<h3>Lomb-Scargle Period Test<a class="headerlink" href="#lomb-scargle-period-test" title="Permalink to this headline">¶</a></h3>
+<p>Similar to Fourier analysis, the Lomb-Scargle periodogram is a common tool in
+the frequency analysis of unequally spaced data equivalent to least-squares
+fitting of sine waves. Basically, we want to fit sine waves of the form:</p>
+<div class="math">
+\[y=a\cos\omega t+b\sin\omega t\]</div>
+<p>While standard fitting procedures require the solution of a set of linear
+equations for each sampled frequency, the Lomb-Scargle method provides an
+analytic solution and is therefore both convenient to use and efficient. In this
+case, we want to test whether each mouse/strain has a significant cycle less
+than 24 hours.</p>
+<p>For the mouse behavior data, we use Lomb-Scargle method on different strain
+and mouse&#8217;s data to find the best possible periods with highest p-values.
+The function can be used on specific strains and specific mice, as well as
+just certain strains without specifying mouse number. We use the <span class="math">\(O(N\log N)\)</span>
+fast implementation of Lomb-Scargle from the gatspy package, but the LS power
+around <span class="math">\(0\)</span> period is a little bit noisy. The other algorithm can give smooth results
+around <span class="math">\(0\)</span> point but suffer <span class="math">\(O(N^2)\)</span> time complexity. Also, we need to add small uniformly
+distributed noise on the regularly sampled time sequence to avoid singular matrix
+problems.</p>
+<p>The function can give the LS power as well as the P values for the corresponding periods,
+with respect to the time bins chosen to combine the data. There will also be stars and
+horizontal lines indicating the p-values of significance. Three stars
+will be p-values in [0,0.001], two stars will be p-values in
+[0.001,0.01], one star will be p-values in [0.01,0.05]. The horizontal
+line is the LS power that has p-value of 0.05.</p>
+<p>Below are the ultradian analysis results found by combining seasonal decomposition
+with best periods returned by Lomb Scargle periodogram. Here we use features &#8220;AS&#8221;
+(active state probability) and &#8220;M_IS&#8221; (movement time inside home base) as two examples,
+because other features like food, water, movement distance, movement time outside
+home base all have similar LS plot to &#8220;AS&#8221; and we show them in Appendix. &#8220;M_IS&#8221;
+shows a rather different pattern.</p>
+<p>(<a class="reference external" href="../report/plots/plot_LSSeasonal.py">Source code</a>)</p>
+</div>
+<div class="section" id="longitudinal-data-analysis">
+<h3>Longitudinal data analysis<a class="headerlink" href="#longitudinal-data-analysis" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Attempts for mixed models</p>
+<p>The mixed model is frequently used for longitudinal analysis. We should
+specify the random effects and fixed effects first. Since it is ultradian
+analysis, we only need to focus on the hour factor and their cycle which
+we can get from the previous LS test. The random effect is the mouse id.
+We have four different mice in one strain and only want to compare the
+different patterns among these three strains. So if we set the random
+effect to be mouse id, the effects from different mouses will be
+cancelled out and we can also test the significance of these effects.
+The response variable will be one of the six features listed before.
+After that we can use the mixed model to get the pattern of the
+movements in different time period.</p>
+</li>
+<li><p class="first">Build the model</p>
+<p>Take <cite>Food</cite> feature as an example. Here strain0 is a dummy variable
+indicating whether the mouse belongs to strain 0 or not and similarly
+for strain1. strain0hour and strain1hour indicate the interaction
+terms, which we add in order to figure out whether the strain and
+hour have some interaction effect in the Food feature.(<cite>i denote ith
+strain, j denote the jth mouse</cite>)</p>
 </li>
 </ul>
-<p>Autocorrelation analysis.</p>
-<ul class="simple">
-<li>Implement numpy.correlate functions to investigate autocorrelation
-in several variables for features of interest (food, water,
-distance, active_state probability ...)</li>
-<li>Explore different kinds of autocorrelation models (spatial
-analysis, regression analysis) on variables generated by other
-subprojects.</li>
+<div class="math">
+\[Food_{ij} = f(strain0_{ij} , strain1_{ij} , hour_{ij} , cycle_{ij}) + interactions + \beta_j mouse\]</div>
+<ul>
+<li><p class="first">Perform significance test</p>
+<p>Here we have two purposes. The first is to figure out if the effects from
+different mouses are significant. The second is to figure out if the
+patterns for different strains are significantly different. To test the
+first one, we just need to use the t-test and get the p-value from the
+result by using the <cite>statsmodels.formula.api</cite> package. package. For the
+second one, we can perform the likelihood ratio test on the interaction terms.</p>
+</li>
 </ul>
+<p>First, we look at the summary of the full model (also take the Food feature
+as an example). To get this result, we fit the second-degree function. Since
+the cycles from the previous study are very similar between strains, we did
+not include it here. We can see that the effects of the mouse from the same
+strain are not significant. However, the p-value here seems to indicate that
+the interaction terms is not as significant as the other factors. So we
+consider conducting the likelihood ratio test.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="16%" />
+<col width="24%" />
+<col width="18%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">factors</th>
+<th class="head">Coef.</th>
+<th class="head">Std.Err.</th>
+<th class="head">z</th>
+<th class="head">P&gt;|z|</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Intercept</td>
+<td>0.049</td>
+<td>0.008</td>
+<td>6.095</td>
+<td>0.000</td>
+</tr>
+<tr class="row-odd"><td>hour</td>
+<td>-0.005</td>
+<td>0.001</td>
+<td>14.961</td>
+<td>0.000</td>
+</tr>
+<tr class="row-even"><td>hour2</td>
+<td>-0.001</td>
+<td>0.000</td>
+<td>-18.767</td>
+<td>0.000</td>
+</tr>
+<tr class="row-odd"><td>strain0</td>
+<td>-0.027</td>
+<td>0.010</td>
+<td>-2.624</td>
+<td>0.009</td>
+</tr>
+<tr class="row-even"><td>strain1</td>
+<td>0.045</td>
+<td>0.010</td>
+<td>4.332</td>
+<td>0.000</td>
+</tr>
+<tr class="row-odd"><td>strain0:hour</td>
+<td>-0.002</td>
+<td>0.002</td>
+<td>-0.778</td>
+<td>0.437</td>
+</tr>
+<tr class="row-even"><td>strain1:hour</td>
+<td>-0.004</td>
+<td>0.000</td>
+<td>-1.76</td>
+<td>0.078</td>
+</tr>
+<tr class="row-odd"><td>strain0:hour2</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>2.019</td>
+<td>0.043</td>
+</tr>
+<tr class="row-even"><td>strain1:hour2</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>0.540</td>
+<td>0.589</td>
+</tr>
+<tr class="row-odd"><td>RE</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Secondly we did likelihood ratio test between the two models: full model and
+reduced interaction terms model. We found that the p values for 6 features below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="17%" />
+<col width="17%" />
+<col width="15%" />
+<col width="17%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Water</th>
+<th class="head">Food</th>
+<th class="head">AS</th>
+<th class="head">M_AS</th>
+<th class="head">M_IS</th>
+<th class="head">Distance</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>3.08e-9</td>
+<td>2.50e-9</td>
+<td>9.39e-12</td>
+<td>5.11e-5</td>
+<td>0.002</td>
+<td>1.53e-8</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that the Water, Food, AS, M_AS, Distance have significantly different
+patterns of different strains.</p>
+</div>
 </div>
 <div class="section" id="testing-framework-outline">
 <h2>Testing Framework Outline<a class="headerlink" href="#testing-framework-outline" title="Permalink to this headline">¶</a></h2>
@@ -192,16 +377,59 @@ three different models onto the certain period and get the patterns/ estimated
 coefficients for the model.</p>
 <p>Step 3: Compare the result with our hypothesis.</p>
 </div>
-<div class="section" id="reference">
-<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Lloyd, David, and Ernest L. Rossi, eds. Ultradian rhythms in life
-processes: An inquiry into fundamental principles of chronobiology
-and psychobiology. Springer Science &amp; Business Media, 2012.</li>
-<li>Stephenson, Richard, et al. &#8220;Sleep-Wake Behavior in the Rat Ultradian
-Rhythms in a Light-Dark Cycle and Continuous Bright Light.&#8221; Journal
-of biological rhythms 27.6 (2012): 490-501.</li>
-</ul>
+<div class="section" id="appendix">
+<h2>Appendix<a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h2>
+<div class="figure" id="id1">
+<img alt="alt tag" src="../_images/SeasonW.png" />
+<p class="caption"><span class="caption-text">Seasonal variation of other features (circadian). Strain0 and strain1 have
+more obvious patterns than strain3, which is consistent with the findings in
+longitudinal data analysis.</span></p>
+</div>
+<div class="figure" id="id2">
+<img alt="alt tag" src="../_images/SeasonF.png" />
+<p class="caption"><span class="caption-text">Seasonal variation of other features (circadian).</span></p>
+</div>
+<div class="figure" id="id3">
+<img alt="alt tag" src="../_images/SeasonDistance.png" />
+<p class="caption"><span class="caption-text">Seasonal variation of other features (circadian).</span></p>
+</div>
+<div class="figure" id="id4">
+<img alt="alt tag" src="../_images/SeasonM_AS.png" />
+<p class="caption"><span class="caption-text">Seasonal variation of other features (circadian).</span></p>
+</div>
+<div class="figure" id="id5">
+<img alt="alt tag" src="../_images/SeasonM_IS.png" />
+<p class="caption"><span class="caption-text">Seasonal variation of other features (circadian). Strain0 and strain1 have
+more obvious patterns than strain3, which is consistent with the findings in
+longitudinal data analysis.</span></p>
+</div>
+<div class="figure" id="id6">
+<img alt="alt tag" src="../_images/LSW.png" />
+<p class="caption"><span class="caption-text">Lomb scargle plot for different features. Different strains have different
+ultradian periods, differing also in p-values. Here <span class="math">\(O(N\log N)\)</span>
+algorithms suffer an instability around 0 points while <span class="math">\(O(N^2)\)</span>
+algorithms can be more smooth. We here compare the significant ultradian
+periods between strains and ignore the highest LS power appearing near
+24 hours.</span></p>
+</div>
+<div class="figure">
+<img alt="alt tag" src="../_images/LSF.png" />
+</div>
+<div class="figure">
+<img alt="alt tag" src="../_images/LSDistance.png" />
+</div>
+<div class="figure">
+<img alt="alt tag" src="../_images/LSM_AS.png" />
+</div>
+<div class="figure" id="id7">
+<img alt="alt tag" src="../_images/LSM_IS.png" />
+<p class="caption"><span class="caption-text">Lomb scargle plot for different features. Different strains have different
+ultradian periods, differing also in p-values. Here <span class="math">\(O(N\log N)\)</span>
+algorithms suffer an instability around 0 points while <span class="math">\(O(N^2)\)</span>
+algorithms can be more smooth. We here compare the significant ultradian
+periods between strains and ignore the highest LS power appearing near
+24 hours.</span></p>
+</div>
 </div>
 </div>
 
@@ -213,14 +441,18 @@ of biological rhythms 27.6 (2012): 490-501.</li>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Ultradian Analysis</a><ul>
+<li><a class="reference internal" href="#">Ultradian and Circadian Analysis</a><ul>
 <li><a class="reference internal" href="#statement-of-problem">Statement of problem</a></li>
 <li><a class="reference internal" href="#statement-of-statistical-problem">Statement of statistical problem</a></li>
-<li><a class="reference internal" href="#exploratory-analysis">Exploratory Analysis</a></li>
-<li><a class="reference internal" href="#data-requirements-description">Data Requirements Description</a></li>
-<li><a class="reference internal" href="#methodology-approach-description">Methodology/Approach Description</a></li>
+<li><a class="reference internal" href="#data-requirements">Data Requirements</a></li>
+<li><a class="reference internal" href="#methodology-approach-description">Methodology/Approach Description</a><ul>
+<li><a class="reference internal" href="#seasonal-decomposition">Seasonal decomposition</a></li>
+<li><a class="reference internal" href="#lomb-scargle-period-test">Lomb-Scargle Period Test</a></li>
+<li><a class="reference internal" href="#longitudinal-data-analysis">Longitudinal data analysis</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#testing-framework-outline">Testing Framework Outline</a></li>
-<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a></li>
 </ul>
 </li>
 </ul>
