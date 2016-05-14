@@ -42,13 +42,348 @@
             
   <div class="section" id="mousestyles-classification-package">
 <h1>mousestyles.classification package<a class="headerlink" href="#mousestyles-classification-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.classification.classification">
+<span id="mousestyles-classification-classification-module"></span><h2>mousestyles.classification.classification module<a class="headerlink" href="#module-mousestyles.classification.classification" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.classification.classification.fit_gradient_boosting">
+<code class="descclassname">mousestyles.classification.classification.</code><code class="descname">fit_gradient_boosting</code><span class="sig-paren">(</span><em>train_y</em>, <em>train_x</em>, <em>test_x</em>, <em>n_estimators=None</em>, <em>learning_rate=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/classification.html#fit_gradient_boosting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.classification.fit_gradient_boosting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a DataFrame of Gradient Boosting results, containing
+prediction strain labels and printing the best model. The
+model&#8217;s parameters will be tuned by cross validation, and
+accepts user-defined parameters.
+:param train_y: labels of classification results, which are predicted strains.
+:type train_y: pandas.Series
+:param train_x: features used to predict strains in training set
+:type train_x: pandas.DataFrame
+:param test_x: features used to predict strains in testing set
+:type test_x: pandas.DataFrame
+:param n_estimators: tuning parameter of GradientBoosting, which is the number of</p>
+<blockquote>
+<div>boosting stages to perform</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>learning_rate</strong> (<em>list, optional</em>) &#8211; learning_rate shrinks the contribution of each tree
+learning_rate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>GradientBoosting results</strong> &#8211; Prediction strain labels</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.classification.fit_random_forest">
+<code class="descclassname">mousestyles.classification.classification.</code><code class="descname">fit_random_forest</code><span class="sig-paren">(</span><em>train_y</em>, <em>train_x</em>, <em>test_x</em>, <em>n_estimators=None</em>, <em>max_feature=None</em>, <em>importance_level=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/classification.html#fit_random_forest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.classification.fit_random_forest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a DataFrame of RandomForest results, containing prediction strain
+labels and printing the best model. The model&#8217;s parameters will be tuned by
+cross validation, and accepts user-defined parameters.
+:param train_y: labels of classification results, which are predicted strains.
+:type train_y: pandas.Series
+:param train_x: features used to predict strains in training set
+:type train_x: pandas.DataFrame
+:param test_x: features used to predict strains in testing set
+:type test_x: pandas.DataFrame
+:param n_estimators: tuning parameter of RandomForest, which is the number of</p>
+<blockquote>
+<div>trees in the forest</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_feature</strong> (<em>list, optional</em>) &#8211; tuning parameter of RandomForest, which is the number of
+features to consider when looking for the best split</li>
+<li><strong>importance_level</strong> (<em>int, optional</em>) &#8211; the minimum importance of features</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>RandomForest results</strong> &#8211; The first element is the dataframe of prediction strain labels.
+The second element is the list of tuples of score and important
+features larger than the importance level.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.classification.fit_svm">
+<code class="descclassname">mousestyles.classification.classification.</code><code class="descname">fit_svm</code><span class="sig-paren">(</span><em>train_y</em>, <em>train_x</em>, <em>test_x</em>, <em>c=None</em>, <em>gamma=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/classification.html#fit_svm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.classification.fit_svm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a DataFrame of svm results, containing
+prediction strain labels and printing the best model. The
+model&#8217;s parameters will be tuned by cross validation, and
+accepts user-defined parameters.
+:param train_y: labels of classification results, which are predicted strains.
+:type train_y: pandas.Series
+:param train_x: features used to predict strains in training set
+:type train_x: pandas.DataFrame
+:param test_x: features used to predict strains in testing set
+:type test_x: pandas.DataFrame
+:param c: tuning parameter of svm, which is penalty parameter of the error term
+:type c: list, optional
+:param gamma: tuning parameter of svm, which is kernel coefficient
+:type gamma: list, optional</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>svm results</strong> &#8211; Prediction strain labels</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.classification.get_summary">
+<code class="descclassname">mousestyles.classification.classification.</code><code class="descname">get_summary</code><span class="sig-paren">(</span><em>predict_labels</em>, <em>true_labels</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/classification.html#get_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.classification.get_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a DataFrame of classification result summary,
+including precision, recall, F1 measure in terms of different
+strains.
+:param predict_labels: prediction strain labels
+:type predict_labels: pandas.DataFrame
+:param true_labels: true strain labels, used to measure the prediction</p>
+<blockquote>
+<div>accuracy</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>classification result summary</strong> &#8211; 16 rows, for each strain 0-15
+Column 0: precision
+Column 1: recall
+Column 2: F-1 measure</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame, shape (16,3).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.classification.prep_data">
+<code class="descclassname">mousestyles.classification.classification.</code><code class="descname">prep_data</code><span class="sig-paren">(</span><em>strain</em>, <em>features</em>, <em>rseed=222</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/classification.html#prep_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.classification.prep_data" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a list of 4: [train_y, train_x, test_y, test_x]</dt>
+<dd>train_y: pandas.Series of strain labels in train data sets,
+train_x: pandas.DataFrame of features in train data sets,
+test_y: pandas.Series of strain labels in test data sets,
+test_x: pandas.DataFrame of features in train data sets</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>pandas.Series</em>) &#8211; classification labels</li>
+<li><strong>features</strong> (<em>pandas.DataFrame</em>) &#8211; classification features</li>
+<li><strong>rseed</strong> (<em>int, optional</em>) &#8211; random seed for shuffling the data set to separate train and test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>splitted data</strong> &#8211; A list of 4 as explained above</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.classification.clustering">
+<span id="mousestyles-classification-clustering-module"></span><h2>mousestyles.classification.clustering module<a class="headerlink" href="#module-mousestyles.classification.clustering" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.classification.clustering.cluster_in_strain">
+<code class="descclassname">mousestyles.classification.clustering.</code><code class="descname">cluster_in_strain</code><span class="sig-paren">(</span><em>labels_first</em>, <em>labels_second</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/clustering.html#cluster_in_strain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.clustering.cluster_in_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary object indicating the count of different
+clusters in each different strain (when put cluster labels as first)
+or the count of different strain in each clusters (when put strain
+labels as first).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>labels_first</strong> (<em>numpy arrary or list</em>) &#8211; A numpy arrary or list of integers representing which cluster
+the mice in, or representing which strain mice in.</li>
+<li><strong>labels_second</strong> (<em>numpy arrary or list</em>) &#8211; A numpy array or list of integers (0-15) representing which strain
+the mice in, or representing which cluster the mice in</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>count_data</strong> &#8211; A dictioanry object with key is the strain number and value is a list
+indicating the distribution of clusters, or the key is the cluster
+number and the value is a list indicating the distribution of each
+strain.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">count_1</span> <span class="o">=</span> <span class="n">cluster_in_strain</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.clustering.fit_hc">
+<code class="descclassname">mousestyles.classification.clustering.</code><code class="descname">fit_hc</code><span class="sig-paren">(</span><em>mouse_day_X, method, dist, num_clusters=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/clustering.html#fit_hc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.clustering.fit_hc" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a list of 2: [silhouettes, cluster_labels]</dt>
+<dd><p class="first">silhouettes: list of float,
+cluster_labels: list of list,</p>
+<blockquote class="last">
+<div>each sublist is the labels corresponding to the silhouette</div></blockquote>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mouse_day_X</strong> (<em>a 170 * M numpy array,</em>) &#8211; all columns corresponding to feature avg/std of a mouse over 16 days</li>
+<li><strong>method</strong> (<em>str,</em>) &#8211; method of calculating distance between clusters</li>
+<li><strong>dist</strong> (<em>str,</em>) &#8211; distance metric</li>
+<li><strong>num_clusters</strong> (<em>range</em>) &#8211; range of number of clusters</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>A list of 2</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[silhouettes, cluster_labels]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.clustering.get_optimal_fit_kmeans">
+<code class="descclassname">mousestyles.classification.clustering.</code><code class="descname">get_optimal_fit_kmeans</code><span class="sig-paren">(</span><em>mouse_X</em>, <em>num_clusters</em>, <em>raw=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/clustering.html#get_optimal_fit_kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.clustering.get_optimal_fit_kmeans" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a list of 2: [silhouettes, cluster_labels]</dt>
+<dd><p class="first">silhouettes: list of float,
+cluster_labels: list of list,</p>
+<blockquote class="last">
+<div>each sublist is the labels corresponding to the silhouette</div></blockquote>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mouse_X</strong> (<em>a 170 * M numpy array or 21131 * M numpy array,</em>) &#8211; all columns corresponding to feature avg/std of a mouse over 16 days
+or the raw data without averaging over days</li>
+<li><strong>num_clusters</strong> (<em>range or a list or a numpy array</em>) &#8211; range of number of clusters</li>
+<li><strong>raw</strong> (<em>a boolean with default is False</em>) &#8211; False if using the 170 * M array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>A list of 2</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[silhouettes, cluster_labels]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.clustering.get_optimal_hc_params">
+<code class="descclassname">mousestyles.classification.clustering.</code><code class="descname">get_optimal_hc_params</code><span class="sig-paren">(</span><em>mouse_day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/clustering.html#get_optimal_hc_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.clustering.get_optimal_hc_params" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a list of 2: [method, dist]</dt>
+<dd>method: {&#8216;ward&#8217;, &#8216;average&#8217;, &#8216;complete&#8217;}
+dist: {&#8216;cityblock&#8217;, &#8216;euclidean&#8217;, &#8216;chebychev&#8217;}</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mouse_day</strong> (<em>a 170 * M numpy array,</em>) &#8211; column 0 : strain,
+column 1: mouse,
+other columns corresponding to feature avg/std of a mouse over 16 days</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>method_distance</strong> &#8211; [method, dist]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.classification.clustering.prep_data">
+<code class="descclassname">mousestyles.classification.clustering.</code><code class="descname">prep_data</code><span class="sig-paren">(</span><em>mouse_data</em>, <em>melted=False</em>, <em>std=True</em>, <em>rescale=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification/clustering.html#prep_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.clustering.prep_data" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a ndarray data to be used in clustering algorithms:</dt>
+<dd><p class="first">column 0 : strain,
+column 1: mouse,
+other columns corresponding to feature avg/std of a mouse over 16 days</p>
+<blockquote class="last">
+<div>that may or may not be rescaled to the same unit as specified</div></blockquote>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mouse_data</strong> &#8211; <ol class="lowerroman">
+<li>a 21131 * (4 + ) pandas DataFrame,
+column 0 : strain,
+column 1: mouse,
+column 2: day,
+column 3: hour,
+other columns corresponding to features</li>
+</ol>
+<p>or
+(ii) a 1921 * (3 + ) pandas DataFrame,</p>
+<blockquote>
+<div>column 0: strain,
+column 1: mouse,
+column 2: day,
+other columns corresponding to features</div></blockquote>
+</li>
+<li><strong>melted</strong> (<em>bool,</em>) &#8211; False if the input mouse_data is of type (i)</li>
+<li><strong>std</strong> (<em>bool,</em>) &#8211; whether the standard deviation of each feature is returned</li>
+<li><strong>rescale</strong> (<em>bool,</em>) &#8211; whether each column is rescaled or not (rescale is performed by the
+column&#8217;s maximum)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The ndarray as specified</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.classification">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.classification" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="mousestyles.classification.dummy">
-<code class="descclassname">mousestyles.classification.</code><code class="descname">dummy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/classification.html#dummy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.classification.dummy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </div>
 </div>
 
@@ -61,6 +396,9 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">mousestyles.classification package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.classification.classification">mousestyles.classification.classification module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.classification.clustering">mousestyles.classification.clustering module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.classification">Module contents</a></li>
 </ul>
 </li>

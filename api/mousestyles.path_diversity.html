@@ -90,6 +90,45 @@ If false, cleaned movement object is re-indexed.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mousestyles.path_diversity.detect_noise">
+<span id="mousestyles-path-diversity-detect-noise-module"></span><h2>mousestyles.path_diversity.detect_noise module<a class="headerlink" href="#module-mousestyles.path_diversity.detect_noise" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.detect_noise.detect_noise">
+<code class="descclassname">mousestyles.path_diversity.detect_noise.</code><code class="descname">detect_noise</code><span class="sig-paren">(</span><em>movement</em>, <em>paths</em>, <em>angle_threshold</em>, <em>delta_t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/detect_noise.html#detect_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.detect_noise.detect_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list object containing boolean values at points
+where measurement noise is detected and will be passed to
+a smoothing function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status
+for the unique combination of strain, mouse and day</li>
+<li><strong>index</strong> (<em>paths</em>) &#8211; </li>
+<li><strong>angle_threshold</strong> (<em>float</em>) &#8211; positive number indicating the minimum turning angle to flag as noise</li>
+<li><strong>delta_t</strong> (<em>float</em>) &#8211; positive number indicating the delta_time interval</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>noise index</strong> (<em>a pandas series containing the indices at which</em>)</li>
+<li><em>noise, as defined by input parameters, is detected</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span> <span class="o">=</span> <span class="n">path_index</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">noise</span> <span class="o">=</span> <span class="n">detect_noise</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.path_diversity.filter_path">
 <span id="mousestyles-path-diversity-filter-path-module"></span><h2>mousestyles.path_diversity.filter_path module<a class="headerlink" href="#module-mousestyles.path_diversity.filter_path" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -281,6 +320,49 @@ Default is False.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mousestyles.path_diversity.smooth_noise">
+<span id="mousestyles-path-diversity-smooth-noise-module"></span><h2>mousestyles.path_diversity.smooth_noise module<a class="headerlink" href="#module-mousestyles.path_diversity.smooth_noise" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.path_diversity.smooth_noise.smooth_noise">
+<code class="descclassname">mousestyles.path_diversity.smooth_noise.</code><code class="descname">smooth_noise</code><span class="sig-paren">(</span><em>movement</em>, <em>paths</em>, <em>angle_threshold</em>, <em>delta_t</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/path_diversity/smooth_noise.html#smooth_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.path_diversity.smooth_noise.smooth_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new smoothed movement pandas DataFrame object containing
+CT, CX, CY coordinates.</p>
+<p>The inputted movement DataFrame is passed through a noise detection
+function. At points where noise is detected, as defined by the
+input parameters (i.e., angle_threshold and delta_t), this function
+returns a new movement DataFrame by averaging points where noise
+is detected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>movement</strong> (<em>pandas.DataFrame</em>) &#8211; CT, CX, CY coordinates and homebase status
+for the unique combination of strain, mouse and day</li>
+<li><strong>index</strong> (<em>paths</em>) &#8211; </li>
+<li><strong>angle_threshold</strong> (<em>float</em>) &#8211; positive number indicating the minimum turning angle to flag as noise</li>
+<li><strong>delta_t</strong> (<em>float</em>) &#8211; positive number indicating the delta_time interval</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>smoothed movement</strong> &#8211; CT, CX, CY coordinates and homebase status
+for the unique combination of strain, mouse and day</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">movement</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">load_movement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">paths</span> <span class="o">=</span> <span class="n">path_index</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smoothed_movement</span> <span class="o">=</span> <span class="n">smooth_noise</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.path_diversity">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.path_diversity" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -336,9 +418,11 @@ a path</li>
 <li><a class="reference internal" href="#">mousestyles.path_diversity package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-mousestyles.path_diversity.clean_movements">mousestyles.path_diversity.clean_movements module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.detect_noise">mousestyles.path_diversity.detect_noise module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.path_diversity.filter_path">mousestyles.path_diversity.filter_path module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.path_diversity.get_dist_speed">mousestyles.path_diversity.get_dist_speed module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.path_diversity.path_features">mousestyles.path_diversity.path_features module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.path_diversity.smooth_noise">mousestyles.path_diversity.smooth_noise module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.path_diversity">Module contents</a></li>
 </ul>
 </li>

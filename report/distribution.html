@@ -338,6 +338,29 @@ Small, next to 0.0005. This is a strong evidence that we should not think
 power law is a better fit than exponential. Thus, we conclude that we should
 use exponential to fit and do further research.</p>
 </div>
+<div class="section" id="mann-whitney-u-test-on-distances">
+<h2>Mann-Whitney U test on distances:<a class="headerlink" href="#mann-whitney-u-test-on-distances" title="Permalink to this headline">¶</a></h2>
+<p>Given the distribution of distances, we perform a hypothesis test on the distributions of these distances. The goal is to identify some similarity on mice in the same strain when only looking at the distances covered every second.</p>
+<p>To do so we chose a non parametric test since we only have access to sample distributions. The Kolmogorov Smirnov test is a very popular test used in this case but I chose to explore the Mann-Whitney U test instead for the following reasons:</p>
+<ul class="simple">
+<li>The KS test is sensitive to any differences in the two distributions. Substantial differences in shape, spread or median will result in a small P value. (see here for more details). Here we can feel that the distances have high variance. Therefore, the KS test would be too strict for our study.</li>
+<li>In contrast, the MW test is mostly sensitive to changes in the median, which is less sensitive of noise in the case of mice.</li>
+</ul>
+<p>The MannWhitney U test is a test for assessing whether two independent samples come from the same distribution. The null hypothesis for this test is that the two groups have the same distribution, while the alternative hypothesis is that one group has larger (or smaller) values than the other.</p>
+<ul class="simple">
+<li><span class="math">\(H_0$: $P(X&gt;Y)=P(Y&gt;X)\)</span></li>
+<li><span class="math">\(H_1$: $P(X&gt;Y)\neq P(Y&gt;X)\)</span></li>
+</ul>
+<div class="figure" id="id10">
+<img alt="alt tag" src="../_images/strains_cor.png" />
+<p class="caption"><span class="caption-text">MW U test p-values for different strains of mice. Dark blue is close to 1 and very light blue is close to zero.</span></p>
+</div>
+<div class="figure" id="id11">
+<img alt="alt tag" src="../_images/allmice_cor.png" />
+<p class="caption"><span class="caption-text">MW U test p-values for mice within the same strains. Dark blue is close to 1 and very light blue is close to zero.</span></p>
+</div>
+<p>From the figures above, we notice that in terms of p-values, strain 1 is closer to strain 0 than strain 2. But we also notice that the p-values are still very low, which means that there is evidence for rejecting <span class="math">\(H_0\)</span>. Moreover, when looking closer within each strain of mice, we can see that mice have different distributions too. Therefore, based on the inter-distances,  we cannot conclude that mice behave similarly depending on their strains.</p>
+</div>
 <div class="section" id="further-work">
 <h2>Further Work:<a class="headerlink" href="#further-work" title="Permalink to this headline">¶</a></h2>
 <p>Here are some further research we could do. However, because of
@@ -382,6 +405,7 @@ significant difference, it will not harm that much.</p>
 <li><a class="reference internal" href="#methodology-approach-description">Methodology/ Approach Description</a></li>
 <li><a class="reference internal" href="#testing-framework-outline">Testing Framework Outline</a></li>
 <li><a class="reference internal" href="#result">Result</a></li>
+<li><a class="reference internal" href="#mann-whitney-u-test-on-distances">Mann-Whitney U test on distances:</a></li>
 <li><a class="reference internal" href="#further-work">Further Work:</a></li>
 <li><a class="reference internal" href="#reference-reading">Reference reading:</a></li>
 </ul>

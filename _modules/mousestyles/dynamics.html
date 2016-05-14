@@ -47,7 +47,8 @@
 <span class="kn">from</span> <span class="nn">mousestyles</span> <span class="kn">import</span> <span class="n">data</span>
 
 
-<div class="viewcode-block" id="create_time_matrix"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.create_time_matrix">[docs]</a><span class="k">def</span> <span class="nf">create_time_matrix</span><span class="p">(</span><span class="n">combined_gap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">time_gap</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">days_index</span><span class="o">=</span><span class="mi">137</span><span class="p">):</span>
+<div class="viewcode-block" id="create_time_matrix"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.create_time_matrix">[docs]</a><span class="k">def</span> <span class="nf">create_time_matrix</span><span class="p">(</span><span class="n">combined_gap</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">time_gap</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">days_index</span><span class="o">=</span><span class="mi">137</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;</span>
 <span class="sd">    Return a time matrix for estimate the MLE parobability.</span>
 <span class="sd">    The rows are 137 mousedays. The columns are time series</span>
@@ -65,6 +66,8 @@
 <span class="sd">        The time gap for create the columns time series</span>
 <span class="sd">    days_index: nonnegative int</span>
 <span class="sd">        The number of days to process, from day 0 to day days_index.</span>
+<span class="sd">    verbose: bool</span>
+<span class="sd">        If True, print out helpful information to the screen</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -155,7 +158,8 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># others</span>
         <span class="c1"># give you the precent of matrix has been processed</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">days</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;has been processed&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">days</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;has been processed&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">days_index</span><span class="p">:</span>
             <span class="k">break</span>
     <span class="c1"># format data frame</span>
@@ -248,7 +252,7 @@
     <span class="k">return</span> <span class="n">matrix_list</span></div>
 
 
-<div class="viewcode-block" id="get_prob_matrix_small_interval"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.get_prob_matrix_small_interval">[docs]</a><span class="k">def</span> <span class="nf">get_prob_matrix_small_interval</span><span class="p">(</span><span class="n">string_list</span><span class="p">):</span>
+<div class="viewcode-block" id="get_prob_matrix_small_interval"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.get_prob_matrix_small_interval">[docs]</a><span class="k">def</span> <span class="nf">get_prob_matrix_small_interval</span><span class="p">(</span><span class="n">string_list</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;</span>
 <span class="sd">    return the MLE estimate of the probability matrix</span>
 <span class="sd">    of the markov chain model. The data used as input</span>
@@ -263,6 +267,8 @@
 <span class="sd">    string_list: list</span>
 <span class="sd">        a list of strings of the states in the given</span>
 <span class="sd">        time slot.</span>
+<span class="sd">    verbose: bool</span>
+<span class="sd">        If True, print out helpful information to the screen</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -285,7 +291,8 @@
     <span class="c1"># check all the inputs</span>
     <span class="n">condition_string_list</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">string_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">)</span>
     <span class="n">condition_list_item</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">string_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">string_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">string_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_string_list</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;string_list should be a list&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_list_item</span><span class="p">:</span>
@@ -472,6 +479,103 @@
             <span class="n">score</span> <span class="o">+=</span> <span class="n">weight</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">status</span><span class="p">)]</span>
     <span class="n">score</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="n">len_true</span>
     <span class="k">return</span> <span class="n">score</span></div>
+
+
+<div class="viewcode-block" id="find_best_interval"><a class="viewcode-back" href="../../api/mousestyles.dynamics.html#mousestyles.dynamics.find_best_interval">[docs]</a><span class="k">def</span> <span class="nf">find_best_interval</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">strain_num</span><span class="p">,</span> <span class="n">interval_length_initial</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span>
+                       <span class="mi">7800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)):</span>
+    <span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">    Returns the optimized time interval length and the corresponding</span>
+<span class="sd">    fake mouse behavior string with the evaluation score for a</span>
+<span class="sd">    particular mouse strain. The input data are the pandas DataFrame</span>
+<span class="sd">    generated by function create_time_matrix which contains all strains</span>
+<span class="sd">    information, the strain number that we want to develop, and some</span>
+<span class="sd">    initial time interval length we want to optimize on. The outputs</span>
+<span class="sd">    are the optimized time interval length, the simulated mouse states</span>
+<span class="sd">    string using that optimized time interval and the evaluation score</span>
+<span class="sd">    comparing this simulated mouse with the real mice behavior in the</span>
+<span class="sd">    strain using the same optimized time interval length.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: Pandas.DataFrame</span>
+<span class="sd">        a huge data frame containing info on strain, mouse</span>
+<span class="sd">        no., mouse day, and different states at chosen time</span>
+<span class="sd">        points.</span>
+<span class="sd">    strain_num: int</span>
+<span class="sd">        an integer of 0, 1, 2 that specifying the desired mouse strain</span>
+<span class="sd">    interval_length_initial: numpy.ndarray</span>
+<span class="sd">        a numpy.ndarray specifying the range of time interval</span>
+<span class="sd">        that it optimizes on, with the default value of a sequence</span>
+<span class="sd">        from 600s to 7200s with 600s step since 10min to 2h is a</span>
+<span class="sd">        reasonable choice.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    best_interval_length: int</span>
+<span class="sd">        a interger indicating the optimized time interval</span>
+<span class="sd">        in terms of the evaluation score</span>
+<span class="sd">    best_fake_mouse: list</span>
+<span class="sd">        a list of around 88,283 integers indicating the simulated</span>
+<span class="sd">        states using the best_interval_length</span>
+<span class="sd">    best_score: float</span>
+<span class="sd">        a float between 0 and 1 representing the evaluation score</span>
+<span class="sd">        comparing the best_fake_mouse with the real mice</span>
+<span class="sd">        behavior in the strain under the same optimized</span>
+<span class="sd">        time interval length. higher the score, better the</span>
+<span class="sd">        simulation behavior.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; row_i = np.hstack((np.zeros(40)))</span>
+<span class="sd">    &gt;&gt;&gt; time_df_eg = np.vstack((row_i, row_i, row_i))</span>
+<span class="sd">    &gt;&gt;&gt; time_df_eg = pd.DataFrame(time_df_eg)</span>
+<span class="sd">    &gt;&gt;&gt; time_df_eg.rename(columns={0:&#39;strain&#39;}, inplace=True)</span>
+<span class="sd">    &gt;&gt;&gt; find_best_interval(time_df_eg, 0, np.arange(10, 40, 10))</span>
+<span class="sd">    (10, array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
+<span class="sd">    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span>
+<span class="sd">    0, 0]), 0.98245614035087725)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check all the inputs: dataframe, strain number, intitial time length</span>
+    <span class="n">condition_df</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="n">condition_strain_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">strain_num</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">condition_interval_length_initial</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">interval_length_initial</span><span class="p">)</span> <span class="o">==</span>
+                                         <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span>
+                                         <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">interval_length_initial</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span>
+                                         <span class="nb">len</span><span class="p">(</span><span class="n">interval_length_initial</span><span class="p">)</span> <span class="ow">and</span>
+                                         <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span>
+                                             <span class="ow">in</span> <span class="n">interval_length_initial</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_df</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;df should be pandas DataFrame&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_strain_num</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;strain_num can only be 0, 1, 2&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_interval_length_initial</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;interval_length_initial positive np.array&quot;</span><span class="p">)</span>
+
+    <span class="n">interval_length_initial</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">interval_length</span><span class="p">)</span> <span class="k">for</span> <span class="n">interval_length</span> <span class="ow">in</span>
+                               <span class="n">interval_length_initial</span><span class="p">]</span>
+    <span class="n">data_strain</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">strain</span> <span class="o">==</span> <span class="n">strain_num</span><span class="p">]</span>
+    <span class="n">time_score</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">store_fake_mouse</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">interval_length</span> <span class="ow">in</span> <span class="n">interval_length_initial</span><span class="p">:</span>
+        <span class="n">prob_matrix_list</span> <span class="o">=</span> <span class="n">get_prob_matrix_list</span><span class="p">(</span><span class="n">data_strain</span><span class="p">,</span> <span class="n">interval_length</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">fake_mouse</span> <span class="o">=</span> <span class="n">mcmc_simulation</span><span class="p">(</span><span class="n">prob_matrix_list</span><span class="p">,</span> <span class="n">interval_length</span><span class="p">)</span>
+        <span class="n">store_fake_mouse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fake_mouse</span><span class="p">)</span>
+        <span class="n">real_mouse</span> <span class="o">=</span> <span class="n">data_strain</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span>
+        <span class="n">real_mouse</span> <span class="o">=</span> <span class="n">real_mouse</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">n_mouse</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_mouse</span><span class="p">)</span>
+        <span class="n">mouse_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_mouse</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">mouse_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_mouse</span><span class="p">):</span>
+            <span class="n">real_mouse_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">real_mouse</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">mouse_index</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="n">mouse_score</span><span class="p">[</span><span class="n">mouse_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real_mouse_list</span><span class="p">),</span>
+                                                 <span class="n">fake_mouse</span><span class="p">)</span>
+        <span class="n">time_score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mouse_score</span><span class="p">))</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_score</span><span class="p">)</span>
+    <span class="n">best_score_index</span> <span class="o">=</span> <span class="n">time_score</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">best_score</span><span class="p">)</span>
+    <span class="n">best_interval_length</span> <span class="o">=</span> <span class="n">interval_length_initial</span><span class="p">[</span><span class="n">best_score_index</span><span class="p">]</span>
+    <span class="n">best_fake_mouse</span> <span class="o">=</span> <span class="n">store_fake_mouse</span><span class="p">[</span><span class="n">best_score_index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">best_interval_length</span><span class="p">,</span> <span class="n">best_fake_mouse</span><span class="p">,</span> <span class="n">best_score</span></div>
 </pre></div>
 
           </div>

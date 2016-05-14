@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.classification.classification &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.classification.classification</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="prep_data"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.classification.prep_data">[docs]</a><span class="k">def</span> <span class="nf">prep_data</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">rseed</span><span class="o">=</span><span class="mi">222</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of 4: [train_y, train_x, test_y, test_x]</span>
+<span class="sd">        train_y: pandas.Series of strain labels in train data sets,</span>
+<span class="sd">        train_x: pandas.DataFrame of features in train data sets,</span>
+<span class="sd">        test_y: pandas.Series of strain labels in test data sets,</span>
+<span class="sd">        test_x: pandas.DataFrame of features in train data sets</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain: pandas.Series</span>
+<span class="sd">            classification labels</span>
+<span class="sd">    features: pandas.DataFrame</span>
+<span class="sd">              classification features</span>
+<span class="sd">    rseed: int, optional</span>
+<span class="sd">           random seed for shuffling the data set to separate train and test</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    splitted data: list</span>
+<span class="sd">        A list of 4 as explained above</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># shuffle observations</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">rseed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    <span class="c1"># split the dataset to 75% training and 25% testing</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.75</span><span class="p">)</span>
+    <span class="n">train_x</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">[:</span><span class="n">sep</span><span class="p">]]</span>
+    <span class="n">train_y</span> <span class="o">=</span> <span class="n">strain</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">[:</span><span class="n">sep</span><span class="p">]]</span>
+    <span class="n">test_x</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">sep</span><span class="p">:]]</span>
+    <span class="n">test_y</span> <span class="o">=</span> <span class="n">strain</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="n">sep</span><span class="p">:]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">,</span> <span class="n">test_x</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="fit_random_forest"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.classification.fit_random_forest">[docs]</a><span class="k">def</span> <span class="nf">fit_random_forest</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span>
+                      <span class="n">n_estimators</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_feature</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                      <span class="n">importance_level</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a DataFrame of RandomForest results, containing prediction strain</span>
+<span class="sd">    labels and printing the best model. The model&#39;s parameters will be tuned by</span>
+<span class="sd">    cross validation, and accepts user-defined parameters.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    train_y: pandas.Series</span>
+<span class="sd">             labels of classification results, which are predicted strains.</span>
+<span class="sd">    train_x: pandas.DataFrame</span>
+<span class="sd">             features used to predict strains in training set</span>
+<span class="sd">    test_x: pandas.DataFrame</span>
+<span class="sd">            features used to predict strains in testing set</span>
+<span class="sd">    n_estimators: list, optional</span>
+<span class="sd">                  tuning parameter of RandomForest, which is the number of</span>
+<span class="sd">                  trees in the forest</span>
+<span class="sd">    max_feature: list, optional</span>
+<span class="sd">                 tuning parameter of RandomForest, which is the number of</span>
+<span class="sd">                 features to consider when looking for the best split</span>
+<span class="sd">    importance_level: int, optional</span>
+<span class="sd">                      the minimum importance of features</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    RandomForest results: list</span>
+<span class="sd">        The first element is the dataframe of prediction strain labels.</span>
+<span class="sd">        The second element is the list of tuples of score and important</span>
+<span class="sd">        features larger than the importance level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># input validation</span>
+    <span class="k">if</span> <span class="n">n_estimators</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_estimators</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;n_estimators should be a list&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n_estimators</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;All the n_estimators should be integers&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n_estimators</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All the n_estimators should be positive&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_feature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_feature</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;max_feature should be a list&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">max_feature</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;All the max_feature should be integers&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">max_feature</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;max_features must be in (0, n_features]&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">max_feature</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;max_features must be in (0, n_features]&quot;</span><span class="p">)</span>
+    <span class="c1"># creat RF model</span>
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="n">train_x</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">n_estimators</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">max_feature</span>
+    <span class="k">if</span> <span class="n">n_estimators</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">es</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">max_feature</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">99</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">importance_level</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">importance_level</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">es</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">fs</span><span class="p">))</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="n">imp</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">feature_importances_</span>
+    <span class="n">important_feature</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">test_x</span><span class="o">.</span><span class="n">columns</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imp</span><span class="p">)):</span>
+        <span class="n">sorted_imp</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">imp</span><span class="p">,</span> <span class="n">names</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">sorted_imp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">importance_level</span><span class="p">:</span>
+            <span class="n">important_feature</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sorted_imp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="c1"># fit the best model</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="c1"># predict the testing data and convert to data frame</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">((</span><span class="n">test_x</span><span class="p">)))</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+    <span class="n">prediction</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;predict_strain&#39;</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;The best RandomForest Model is:&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">important_feature</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fit_gradient_boosting"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.classification.fit_gradient_boosting">[docs]</a><span class="k">def</span> <span class="nf">fit_gradient_boosting</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span>
+                          <span class="n">n_estimators</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a DataFrame of Gradient Boosting results, containing</span>
+<span class="sd">    prediction strain labels and printing the best model. The</span>
+<span class="sd">    model&#39;s parameters will be tuned by cross validation, and</span>
+<span class="sd">    accepts user-defined parameters.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    train_y: pandas.Series</span>
+<span class="sd">             labels of classification results, which are predicted strains.</span>
+<span class="sd">    train_x: pandas.DataFrame</span>
+<span class="sd">             features used to predict strains in training set</span>
+<span class="sd">    test_x: pandas.DataFrame</span>
+<span class="sd">            features used to predict strains in testing set</span>
+<span class="sd">    n_estimators: list, optional</span>
+<span class="sd">                  tuning parameter of GradientBoosting, which is the number of</span>
+<span class="sd">                  boosting stages to perform</span>
+<span class="sd">    learning_rate: list, optional</span>
+<span class="sd">                   learning_rate shrinks the contribution of each tree</span>
+<span class="sd">                   learning_rate</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    GradientBoosting results: pandas.DataFrame</span>
+<span class="sd">        Prediction strain labels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># input validation</span>
+    <span class="k">if</span> <span class="n">n_estimators</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_estimators</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;n_estimators should be a list&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n_estimators</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;All the n_estimators should be integers&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n_estimators</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All the n_estimators should be positive&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">learning_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;max_feature should be a list&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">learning_rate</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;max_features must be greater than 0&quot;</span><span class="p">)</span>
+    <span class="c1"># creat GradientBoosting model</span>
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="n">train_x</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">n_estimators</span>
+    <span class="n">ls</span> <span class="o">=</span> <span class="n">learning_rate</span>
+    <span class="k">if</span> <span class="n">n_estimators</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">es</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">learning_rate</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">gb</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">gb</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">es</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">ls</span><span class="p">),</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="c1"># fit the best model</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="c1"># predict the testing data and convert to data frame</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">((</span><span class="n">test_x</span><span class="p">)))</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+    <span class="n">prediction</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;predict_strain&#39;</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;The best GradientBoosting Model is:&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fit_svm"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.classification.fit_svm">[docs]</a><span class="k">def</span> <span class="nf">fit_svm</span><span class="p">(</span><span class="n">train_y</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a DataFrame of svm results, containing</span>
+<span class="sd">    prediction strain labels and printing the best model. The</span>
+<span class="sd">    model&#39;s parameters will be tuned by cross validation, and</span>
+<span class="sd">    accepts user-defined parameters.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    train_y: pandas.Series</span>
+<span class="sd">             labels of classification results, which are predicted strains.</span>
+<span class="sd">    train_x: pandas.DataFrame</span>
+<span class="sd">             features used to predict strains in training set</span>
+<span class="sd">    test_x: pandas.DataFrame</span>
+<span class="sd">            features used to predict strains in testing set</span>
+<span class="sd">    c: list, optional</span>
+<span class="sd">       tuning parameter of svm, which is penalty parameter of the error term</span>
+<span class="sd">    gamma: list, optional</span>
+<span class="sd">           tuning parameter of svm, which is kernel coefficient</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    svm results: pandas.DataFrame</span>
+<span class="sd">        Prediction strain labels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># input validation</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;c should be a list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gamma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;gamma should be a list&quot;</span><span class="p">)</span>
+    <span class="c1"># creat svm model</span>
+    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="n">train_x</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+    <span class="n">Cs</span> <span class="o">=</span> <span class="n">c</span>
+    <span class="n">Gammas</span> <span class="o">=</span> <span class="n">gamma</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">Cs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">gamma</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">Gammas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">svc</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">()</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">Cs</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">Gammas</span><span class="p">),</span>
+                       <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_estimator_</span>
+    <span class="c1"># fit the best model</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="c1"># predict the testing data and convert to data frame</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">((</span><span class="n">test_x</span><span class="p">)))</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+    <span class="n">prediction</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;predict_strain&#39;</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;The best SVM Model is:&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_summary"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.classification.get_summary">[docs]</a><span class="k">def</span> <span class="nf">get_summary</span><span class="p">(</span><span class="n">predict_labels</span><span class="p">,</span> <span class="n">true_labels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a DataFrame of classification result summary,</span>
+<span class="sd">    including precision, recall, F1 measure in terms of different</span>
+<span class="sd">    strains.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predict_labels: pandas.DataFrame</span>
+<span class="sd">                    prediction strain labels</span>
+<span class="sd">    true_labels: pandas.Series</span>
+<span class="sd">                 true strain labels, used to measure the prediction</span>
+<span class="sd">                 accuracy</span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    classification result summary: pandas.DataFrame, shape (16,3).</span>
+<span class="sd">       16 rows, for each strain 0-15</span>
+<span class="sd">       Column 0: precision</span>
+<span class="sd">       Column 1: recall</span>
+<span class="sd">       Column 2: F-1 measure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">true_labels</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">true_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">predict_labels</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">true_labels</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;predict_strain&#39;</span><span class="p">,</span> <span class="s1">&#39;true_strain&#39;</span><span class="p">]</span>
+    <span class="n">prediction_accurate_count_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                                   <span class="n">columns</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                                                   <span class="n">margins</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">prediction_accurate_count_matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;All&quot;</span><span class="p">:</span> <span class="s2">&quot;rowTotal&quot;</span><span class="p">},</span>
+                                            <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">prediction_accurate_count_matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;All&quot;</span><span class="p">:</span> <span class="s2">&quot;colTotal&quot;</span><span class="p">},</span>
+                                            <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">prediction_accurate_rate_matrix</span> <span class="o">=</span> <span class="n">prediction_accurate_count_matrix</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span>\
+        <span class="n">prediction_accurate_count_matrix</span><span class="p">[</span><span class="s2">&quot;rowTotal&quot;</span><span class="p">]</span>
+    <span class="c1"># get the precision list</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="p">[</span><span class="n">prediction_accurate_rate_matrix</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prediction_accurate_rate_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">prediction_accurate_rate_matrix</span> <span class="o">=</span> <span class="n">prediction_accurate_count_matrix</span> <span class="o">/</span>\
+        <span class="n">prediction_accurate_count_matrix</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="s2">&quot;colTotal&quot;</span><span class="p">]</span>
+    <span class="c1"># get the recall list</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="p">[</span><span class="n">prediction_accurate_rate_matrix</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prediction_accurate_rate_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="c1"># get the F1 list</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">precision</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">recall</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">precision</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">recall</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prediction_accurate_rate_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">precision</span><span class="p">),</span>
+                         <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">recall</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">f1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="s2">&quot;F1_score&quot;</span><span class="p">]</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

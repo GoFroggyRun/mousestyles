@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.classification.clustering &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.classification.clustering</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">AgglomerativeClustering</span><span class="p">,</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">cophenet</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">pdist</span>
+<span class="kn">from</span> <span class="nn">mousestyles.data.utils</span> <span class="kn">import</span> <span class="n">day_to_mouse_average</span>
+
+
+<span class="c1"># prep data functions</span>
+<div class="viewcode-block" id="prep_data"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.clustering.prep_data">[docs]</a><span class="k">def</span> <span class="nf">prep_data</span><span class="p">(</span><span class="n">mouse_data</span><span class="p">,</span> <span class="n">melted</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a ndarray data to be used in clustering algorithms:</span>
+<span class="sd">        column 0 : strain,</span>
+<span class="sd">        column 1: mouse,</span>
+<span class="sd">        other columns corresponding to feature avg/std of a mouse over 16 days</span>
+<span class="sd">            that may or may not be rescaled to the same unit as specified</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mouse_data:</span>
+<span class="sd">        (i) a 21131 * (4 + ) pandas DataFrame,</span>
+<span class="sd">            column 0 : strain,</span>
+<span class="sd">            column 1: mouse,</span>
+<span class="sd">            column 2: day,</span>
+<span class="sd">            column 3: hour,</span>
+<span class="sd">            other columns corresponding to features</span>
+<span class="sd">        or</span>
+<span class="sd">        (ii) a 1921 * (3 + ) pandas DataFrame,</span>
+<span class="sd">            column 0: strain,</span>
+<span class="sd">            column 1: mouse,</span>
+<span class="sd">            column 2: day,</span>
+<span class="sd">            other columns corresponding to features</span>
+<span class="sd">    melted: bool,</span>
+<span class="sd">        False if the input mouse_data is of type (i)</span>
+<span class="sd">    std: bool,</span>
+<span class="sd">        whether the standard deviation of each feature is returned</span>
+<span class="sd">    rescale: bool,</span>
+<span class="sd">        whether each column is rescaled or not (rescale is performed by the</span>
+<span class="sd">        column&#39;s maximum)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    The ndarray as specified</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">melted</span><span class="p">:</span>
+        <span class="n">mouse_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mouse_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mouse_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mouse_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">mouse_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mouse_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">mouse_dayavg</span><span class="p">,</span> <span class="n">mouse_daystd</span> <span class="o">=</span> <span class="n">day_to_mouse_average</span><span class="p">(</span>
+        <span class="n">mouse_X</span><span class="p">,</span> <span class="n">mouse_labels</span><span class="p">,</span> <span class="n">num_strains</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">stdev</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">mouse_dayavgstd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">mouse_dayavg</span><span class="p">,</span> <span class="n">mouse_daystd</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]])</span>
+    <span class="n">mouse_dayavgstd_X</span> <span class="o">=</span> <span class="n">mouse_dayavgstd</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span>
+    <span class="n">mouse_dayavgstd_X_scl</span> <span class="o">=</span> <span class="n">mouse_dayavgstd_X</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+        <span class="n">mouse_dayavgstd_X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mouse_dayavgstd_scl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">mouse_dayavgstd</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">mouse_dayavgstd_X_scl</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">rescale</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">mouse_dayavg</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">std</span> <span class="ow">is</span> <span class="bp">True</span> <span class="ow">and</span> <span class="n">rescale</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">mouse_dayavgstd</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">std</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">rescale</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">mouse_dayavgstd_scl</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:(</span><span class="n">mouse_dayavg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">mouse_dayavgstd_scl</span><span class="p">)</span></div>
+
+
+<span class="c1"># model fitting functions</span>
+<div class="viewcode-block" id="get_optimal_hc_params"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.clustering.get_optimal_hc_params">[docs]</a><span class="k">def</span> <span class="nf">get_optimal_hc_params</span><span class="p">(</span><span class="n">mouse_day</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of 2: [method, dist]</span>
+<span class="sd">        method: {&#39;ward&#39;, &#39;average&#39;, &#39;complete&#39;}</span>
+<span class="sd">        dist: {&#39;cityblock&#39;, &#39;euclidean&#39;, &#39;chebychev&#39;}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mouse_day: a 170 * M numpy array,</span>
+<span class="sd">        column 0 : strain,</span>
+<span class="sd">        column 1: mouse,</span>
+<span class="sd">        other columns corresponding to feature avg/std of a mouse over 16 days</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    method_distance: list</span>
+<span class="sd">        [method, dist]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="s1">&#39;average&#39;</span><span class="p">,</span> <span class="s1">&#39;complete&#39;</span><span class="p">]</span>
+    <span class="n">dists</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cityblock&#39;</span><span class="p">,</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s1">&#39;chebychev&#39;</span><span class="p">]</span>
+
+    <span class="n">method_dists</span> <span class="o">=</span> <span class="p">[(</span><span class="n">methods</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dists</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dists</span><span class="p">))]</span>
+    <span class="n">method_dists</span> <span class="o">=</span> <span class="p">[(</span><span class="n">method</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">method_dists</span>
+                    <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="s1">&#39;ward&#39;</span> <span class="ow">or</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">]</span>
+
+    <span class="n">cs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">method_dists</span><span class="p">:</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">mouse_day</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:],</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">dist</span><span class="p">)</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">coph_dists</span> <span class="o">=</span> <span class="n">cophenet</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">pdist</span><span class="p">(</span><span class="n">mouse_day</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]))</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># determine the distance method</span>
+    <span class="n">method</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">method_dists</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cs</span><span class="p">)]</span>
+    <span class="k">return</span><span class="p">([</span><span class="n">method</span><span class="p">,</span> <span class="n">dist</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="fit_hc"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.clustering.fit_hc">[docs]</a><span class="k">def</span> <span class="nf">fit_hc</span><span class="p">(</span><span class="n">mouse_day_X</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">num_clusters</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">17</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of 2: [silhouettes, cluster_labels]</span>
+<span class="sd">        silhouettes: list of float,</span>
+<span class="sd">        cluster_labels: list of list,</span>
+<span class="sd">            each sublist is the labels corresponding to the silhouette</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mouse_day_X: a 170 * M numpy array,</span>
+<span class="sd">        all columns corresponding to feature avg/std of a mouse over 16 days</span>
+<span class="sd">    method: str,</span>
+<span class="sd">        method of calculating distance between clusters</span>
+<span class="sd">    dist: str,</span>
+<span class="sd">        distance metric</span>
+<span class="sd">    num_clusters: range</span>
+<span class="sd">        range of number of clusters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A list of 2: [silhouettes, cluster_labels]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dist</span> <span class="o">==</span> <span class="s2">&quot;chebychev&quot;</span><span class="p">):</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="s2">&quot;chebyshev&quot;</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">silhouettes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n_clusters</span> <span class="ow">in</span> <span class="n">num_clusters</span><span class="p">:</span>
+        <span class="n">clustering</span> <span class="o">=</span> <span class="n">AgglomerativeClustering</span><span class="p">(</span>
+            <span class="n">linkage</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+        <span class="n">clustering</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mouse_day_X</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span>
+        <span class="n">silhouettes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">silhouette_score</span><span class="p">(</span>
+            <span class="n">mouse_day_X</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">dist</span><span class="p">))</span>
+        <span class="n">cluster_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+
+    <span class="k">return</span><span class="p">([</span><span class="n">silhouettes</span><span class="p">,</span> <span class="n">cluster_labels</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="get_optimal_fit_kmeans"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.clustering.get_optimal_fit_kmeans">[docs]</a><span class="k">def</span> <span class="nf">get_optimal_fit_kmeans</span><span class="p">(</span><span class="n">mouse_X</span><span class="p">,</span> <span class="n">num_clusters</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of 2: [silhouettes, cluster_labels]</span>
+<span class="sd">        silhouettes: list of float,</span>
+<span class="sd">        cluster_labels: list of list,</span>
+<span class="sd">            each sublist is the labels corresponding to the silhouette</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mouse_X: a 170 * M numpy array or 21131 * M numpy array,</span>
+<span class="sd">        all columns corresponding to feature avg/std of a mouse over 16 days</span>
+<span class="sd">        or the raw data without averaging over days</span>
+<span class="sd">    num_clusters: range or a list or a numpy array</span>
+<span class="sd">        range of number of clusters</span>
+<span class="sd">    raw: a boolean with default is False</span>
+<span class="sd">       False if using the 170 * M array</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A list of 2: [silhouettes, cluster_labels]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="n">sample_amount</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sample_amount</span> <span class="o">=</span> <span class="n">mouse_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">silhouettes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n_clusters</span> <span class="ow">in</span> <span class="n">num_clusters</span><span class="p">:</span>
+        <span class="n">clustering</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+        <span class="n">clustering</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mouse_X</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span>
+        <span class="n">silhouettes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">metrics</span><span class="o">.</span><span class="n">silhouette_score</span><span class="p">(</span>
+                <span class="n">mouse_X</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+                <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_amount</span><span class="p">))</span>
+        <span class="n">cluster_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">([</span><span class="n">silhouettes</span><span class="p">,</span> <span class="n">cluster_labels</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="cluster_in_strain"><a class="viewcode-back" href="../../../api/mousestyles.classification.html#mousestyles.classification.clustering.cluster_in_strain">[docs]</a><span class="k">def</span> <span class="nf">cluster_in_strain</span><span class="p">(</span><span class="n">labels_first</span><span class="p">,</span> <span class="n">labels_second</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dictionary object indicating the count of different</span>
+<span class="sd">    clusters in each different strain (when put cluster labels as first)</span>
+<span class="sd">    or the count of different strain in each clusters (when put strain</span>
+<span class="sd">    labels as first).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels_first: numpy arrary or list</span>
+<span class="sd">        A numpy arrary or list of integers representing which cluster</span>
+<span class="sd">        the mice in, or representing which strain mice in.</span>
+<span class="sd">    labels_second: numpy arrary or list</span>
+<span class="sd">        A numpy array or list of integers (0-15) representing which strain</span>
+<span class="sd">        the mice in, or representing which cluster the mice in</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    count_data : dictionary</span>
+<span class="sd">        A dictioanry object with key is the strain number and value is a list</span>
+<span class="sd">        indicating the distribution of clusters, or the key is the cluster</span>
+<span class="sd">        number and the value is a list indicating the distribution of each</span>
+<span class="sd">        strain.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; count_1 = cluster_in_strain([1,2,1,0,0],[0,1,1,2,1])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count_data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">labels_first</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels_first</span><span class="p">)</span>
+    <span class="n">labels_second</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels_second</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label_2</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_second</span><span class="p">):</span>
+        <span class="n">label_2_index</span> <span class="o">=</span> <span class="n">labels_second</span> <span class="o">==</span> <span class="n">label_2</span>
+        <span class="n">label_1_sub</span> <span class="o">=</span> <span class="n">labels_first</span><span class="p">[</span><span class="n">label_2_index</span><span class="p">]</span>
+        <span class="n">count_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">label_1</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_first</span><span class="p">):</span>
+            <span class="n">count_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">label_1_sub</span> <span class="o">==</span> <span class="n">label_1</span><span class="p">))</span>
+        <span class="n">count_data</span><span class="p">[</span><span class="n">label_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_list</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">count_data</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
