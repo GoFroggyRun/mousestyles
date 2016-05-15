@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mousestyles.kde &mdash; mousestyles 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mousestyles 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mousestyles.kde</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KernelDensity</span>
+<span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+
+<div class="viewcode-block" id="kde"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.kde.kde">[docs]</a><span class="k">def</span> <span class="nf">kde</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_grid</span><span class="p">,</span> <span class="n">symmetric_correction</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a numpy.ndarray object of estimated density</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x      : numpy.ndarray</span>
+<span class="sd">        data, as realiztions of variable X</span>
+<span class="sd">    x_grid : numpy.ndarray</span>
+<span class="sd">        the grid points for the estimated density</span>
+<span class="sd">    symmetric_correction : boolean</span>
+<span class="sd">        a method indicator. If False, do common gaussian kernel density</span>
+<span class="sd">        estimation (kde). If True, do common gaussian kde on data generated</span>
+<span class="sd">        from x concatenating with its reflection around the cutoff point. Then</span>
+<span class="sd">        transform the estimated kde back by a factor of 2. Used for e.g. kde</span>
+<span class="sd">        for nonnegative kernel estimation</span>
+<span class="sd">    cutoff : float</span>
+<span class="sd">        the axis of symmetry for symmetric correction</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pdf : numpy.ndarray</span>
+<span class="sd">        estimated density at the specified grid points x_grid</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; kde(x = np.array([2,3,1,0]), x_grid=np.linspace(0, 5, 10))</span>
+<span class="sd">    array([ 0.17483395,  0.21599529,  0.23685855,  0.24007961,  0.22670763,</span>
+<span class="sd">        0.19365019,  0.14228937,  0.08552725,  0.04043597,  0.01463953])</span>
+<span class="sd">    &gt;&gt;&gt; x1 = np.concatenate([norm(-1, 1.).rvs(400), norm(1, 0.3).rvs(100)])</span>
+<span class="sd">    &gt;&gt;&gt; pdf1 = kde(x=x1, x_grid=np.linspace(0, 5, 100), symmetric_correction</span>
+<span class="sd">                   =True, cutoff=1)</span>
+<span class="sd">    array([ 0.26625297,  0.26818492,  0.27105849,  0.27489486,  0.27968752, ...</span>
+<span class="sd">        0.07764054,  0.07239964,  0.06736559,  0.06254175,  0.05793043])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if we want to do a symmetric correction to do kde, we transform</span>
+    <span class="c1"># the data to be the symmetric format by adding the counterpart</span>
+    <span class="c1"># obtained by reflecting the data around x=cutoff</span>
+    <span class="k">if</span> <span class="n">symmetric_correction</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">cutoff</span> <span class="o">-</span> <span class="n">x</span><span class="p">])</span>
+
+    <span class="c1"># Use GridSearchCV to search for the best bandwidth by 5 fold</span>
+    <span class="c1"># cross-validation max loglikelihood</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KernelDensity</span><span class="p">(),</span>
+                        <span class="p">{</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)},</span>
+                        <span class="n">cv</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="bp">None</span><span class="p">])</span>
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">]</span>
+
+    <span class="c1"># do desity estimation</span>
+    <span class="n">kde_skl</span> <span class="o">=</span> <span class="n">KernelDensity</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="n">bandwidth</span><span class="p">)</span>
+    <span class="n">kde_skl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
+    <span class="n">log_pdf</span> <span class="o">=</span> <span class="n">kde_skl</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_grid</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
+
+    <span class="c1"># transform the fuction score function to density</span>
+    <span class="k">if</span> <span class="n">symmetric_correction</span><span class="p">:</span>
+        <span class="c1"># transform back to the one-sided density in symmetric correction</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pdf</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># vanilla case</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pdf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pdf</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 2016 UC Berkeley MA students.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

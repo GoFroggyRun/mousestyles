@@ -39,7 +39,9 @@
           <div class="body" role="main">
             
   <h1>Source code for mousestyles.distribution</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span>  <span class="n">absolute_import</span><span class="p">,</span>  <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span>
+                        <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 
@@ -49,14 +51,14 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x : int</span>
+<span class="sd">    x : float &gt; 0, or a np.dnarray</span>
 <span class="sd">        x in formula p(x)=(alpha-1)*x^(-alpha).</span>
-<span class="sd">    a : int&gt;1</span>
+<span class="sd">    a : float &gt; 1</span>
 <span class="sd">        alpha in formula p(x)=(alpha-1)*x^(-alpha).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    probability density : a float number</span>
+<span class="sd">    probability density : float</span>
 <span class="sd">        The probability density of power law at x.</span>
 
 <span class="sd">    Examples</span>
@@ -64,7 +66,7 @@
 <span class="sd">    &gt;&gt;&gt; powerlaw_pdf (2, 2)</span>
 <span class="sd">    0.25</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="exp_pdf"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.distribution.exp_pdf">[docs]</a><span class="k">def</span> <span class="nf">exp_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
@@ -73,14 +75,14 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x : int</span>
+<span class="sd">    x : float, or a np.dnarray</span>
 <span class="sd">        x in formula p(x)=lambda*exp(-lambda*x).</span>
-<span class="sd">    l : int</span>
+<span class="sd">    l : float</span>
 <span class="sd">        lambda in formula p(x)=lambda*exp(-lambda*x).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    probability density : a float number</span>
+<span class="sd">    probability density : float</span>
 <span class="sd">        The probability density of power law at x.</span>
 
 <span class="sd">    Examples</span>
@@ -88,7 +90,57 @@
 <span class="sd">    &gt;&gt;&gt; exp_pdf(1, 1)</span>
 <span class="sd">    0.36787944117144233</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">l</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">l</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="powerlaw_inverse_cdf"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.distribution.powerlaw_inverse_cdf">[docs]</a><span class="k">def</span> <span class="nf">powerlaw_inverse_cdf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The inverse CDF function of power law distribution</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : float in [0, 1], or a np.dnarray</span>
+<span class="sd">        y in formula F^(-1)(y) = (1 - y)^(1/(1-a))</span>
+<span class="sd">    a : float &gt; 1</span>
+<span class="sd">        a in formula F^(-1)(y) = (1 - y)^(1/(1-a))</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : float</span>
+<span class="sd">        The inverse CDF function of power law distribution with</span>
+<span class="sd">        parameter a at point y</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; powerlaw_inverse_cdf(0.5, 5)</span>
+<span class="sd">    1.189207115002721</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="exp_inverse_cdf"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.distribution.exp_inverse_cdf">[docs]</a><span class="k">def</span> <span class="nf">exp_inverse_cdf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The inverse CDF function of truncated (at 1) exponential distribution</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : float in [0, 1], or a np.dnarray</span>
+<span class="sd">        y in formula F^(-1)(y) = 1 - log(1 - y) / l</span>
+<span class="sd">    l : float &gt; 0</span>
+<span class="sd">        a in formula F^(-1)(y) = 1 - log(1 - y) / l</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : float</span>
+<span class="sd">        The inverse CDF function of truncated (at 1) exponential distribution</span>
+<span class="sd">        distribution with parameter l at point y</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; exp_inverse_cdf(0.6,2)</span>
+<span class="sd">    1.4581453659370776</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">l</span></div>
 </pre></div>
 
           </div>

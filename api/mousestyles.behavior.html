@@ -42,6 +42,333 @@
             
   <div class="section" id="mousestyles-behavior-package">
 <h1>mousestyles.behavior package<a class="headerlink" href="#mousestyles-behavior-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mousestyles.behavior.behavior">
+<span id="mousestyles-behavior-behavior-module"></span><h2>mousestyles.behavior.behavior module<a class="headerlink" href="#module-mousestyles.behavior.behavior" title="Permalink to this headline">¶</a></h2>
+<p>Behavior Analysis</p>
+</div>
+<div class="section" id="module-mousestyles.behavior.behavior_tree">
+<span id="mousestyles-behavior-behavior-tree-module"></span><h2>mousestyles.behavior.behavior_tree module<a class="headerlink" href="#module-mousestyles.behavior.behavior_tree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mousestyles.behavior.behavior_tree.BehaviorTree">
+<em class="property">class </em><code class="descclassname">mousestyles.behavior.behavior_tree.</code><code class="descname">BehaviorTree</code><span class="sig-paren">(</span><em>structure=None</em>, <em>contents=None</em>, <em>units=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/behavior_tree.html#BehaviorTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.behavior_tree.BehaviorTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object representing a decomposed tree of behavior. Behaves much like
+a dictionary, with an additional representation of the tree structure
+of the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>structure</strong> (<em>list, optional</em>) &#8211; Representation of parent-child relationships between nodes</li>
+<li><strong>contents</strong> (<em>defaultdict, optional</em>) &#8211; Initial  node values</li>
+<li><strong>units</strong> (<em>defaultdict, optional</em>) &#8211; Mapping of node names to units</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">BehaviorTree</span><span class="p">([</span><span class="s1">&#39;Consumption&#39;</span><span class="p">,</span>
+<span class="go">                         [&#39;AS Prob&#39;, &#39;Intensity&#39;]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;Consumption&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;AS Prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="s1">&#39;Intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">contents</span>
+<span class="go">defaultdict(float, {&#39;AS Prob&#39;: 1, &#39;Consumption&#39;: 5, &#39;Intensity&#39;: 2})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span>
+<span class="go">[&#39;Consumption&#39;, [&#39;AS Prob&#39;, &#39;Intensity&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Consumption: 5</dt>
+<dd>AS Prob: 1
+Intensity: 2</dd>
+</dl>
+<dl class="method">
+<dt id="mousestyles.behavior.behavior_tree.BehaviorTree.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/behavior_tree.html#BehaviorTree.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.behavior_tree.BehaviorTree.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the tree.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mousestyles.behavior.behavior_tree.BehaviorTree.merge">
+<em class="property">static </em><code class="descname">merge</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/behavior_tree.html#BehaviorTree.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.behavior_tree.BehaviorTree.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge several trees into one compound tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> (<em>variable-length argument list of BehaviorTree objects</em>) &#8211; One or more trees to be merged.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>new_tree</strong> &#8211; Tree with same structure as input trees, where each node
+is a list containing the node values from the input trees.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mousestyles.behavior.behavior_tree.BehaviorTree" title="mousestyles.behavior.behavior_tree.BehaviorTree">BehaviorTree</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">BehaviorTree</span><span class="p">(</span><span class="n">contents</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree2</span> <span class="o">=</span> <span class="n">BehaviorTree</span><span class="p">(</span><span class="n">contents</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">BehaviorTree</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">tree2</span><span class="p">)</span><span class="o">.</span><span class="n">contents</span>
+<span class="go">defaultdict(list, {&#39;a&#39;: [1, -1.5], &#39;b&#39;: [2, 20]})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mousestyles.behavior.behavior_tree.BehaviorTree.summarize">
+<code class="descname">summarize</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/behavior_tree.html#BehaviorTree.summarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.behavior_tree.BehaviorTree.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a summary statistic for the nodes in a tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> (<em>function</em>) &#8211; A function to be applied to the contents in each node. Most
+often, this will take in a list and return a single number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>A new tree with the same structure, where each node value tree[k]</em></li>
+<li><em>is replaced by f(tree[k]).</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.behavior.construct_trees">
+<span id="mousestyles-behavior-construct-trees-module"></span><h2>mousestyles.behavior.construct_trees module<a class="headerlink" href="#module-mousestyles.behavior.construct_trees" title="Permalink to this headline">¶</a></h2>
+<p>Construct behavior trees</p>
+<dl class="function">
+<dt id="mousestyles.behavior.construct_trees.compute_tree">
+<code class="descclassname">mousestyles.behavior.construct_trees.</code><code class="descname">compute_tree</code><span class="sig-paren">(</span><em>feature</em>, <em>strain</em>, <em>mouse</em>, <em>day</em>, <em>epsilon=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/construct_trees.html#compute_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.construct_trees.compute_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute and return a tree decomposition of a feature for a single mouse-day</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>feature</strong> (<em>{'F', 'W', 'L'}</em>) &#8211; The feature used. &#8216;F&#8217; for food, &#8216;W&#8217; for water, &#8216;L&#8217; for locomotion.</li>
+<li><strong>strain</strong> (<em>int</em>) &#8211; Integer representing the strain of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; Integer representing the specific mouse</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; Integer representing the day to produce the metrics for</li>
+<li><strong>epsilon</strong> (<em>float, optional</em>) &#8211; tolerance for merging events into bouts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>behavior</strong> &#8211; dictionary-like object representing breakdown of
+consumption into various nodes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mousestyles.behavior.behavior_tree.BehaviorTree" title="mousestyles.behavior.behavior_tree.BehaviorTree">BehaviorTree</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.behavior.construct_trees.process_raw_intervals">
+<code class="descclassname">mousestyles.behavior.construct_trees.</code><code class="descname">process_raw_intervals</code><span class="sig-paren">(</span><em>feature</em>, <em>consumption</em>, <em>intervals</em>, <em>active_time</em>, <em>total_time</em>, <em>epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/construct_trees.html#process_raw_intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.construct_trees.process_raw_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes <cite>total_consumption</cite> and the data in <cite>intervals</cite> and
+decomposes it into a tree of behavioral summary statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>feature</strong> (<em>{'F', 'W', 'L'}</em>) &#8211; The feature used. &#8216;F&#8217; for food, &#8216;W&#8217; for water, &#8216;L&#8217; for locomotion.</li>
+<li><strong>consumption</strong> (<em>float</em>) &#8211; total consumption (food, water, or movement) in the time period</li>
+<li><strong>intervals</strong> (<a class="reference internal" href="mousestyles.html#mousestyles.intervals.Intervals" title="mousestyles.intervals.Intervals"><em>Intervals</em></a>) &#8211; Intervals object representing intervals of behavior</li>
+<li><strong>active_time</strong> (<em>float</em>) &#8211; amount of time the mouse was active in the day</li>
+<li><strong>total_time</strong> (<em>float</em>) &#8211; total amount of recording time in the day</li>
+<li><strong>epsilon</strong> (<em>float</em>) &#8211; tolerance for merging events into bouts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>behavior</strong> &#8211; dictionary-like object representing breakdown of
+consumption into various nodes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mousestyles.behavior.behavior_tree.BehaviorTree" title="mousestyles.behavior.behavior_tree.BehaviorTree">BehaviorTree</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mousestyles</span> <span class="k">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">intervals</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ints</span> <span class="o">=</span> <span class="n">intervals</span><span class="o">.</span><span class="n">Intervals</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">load_intervals</span><span class="p">(</span><span class="s1">&#39;AS&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">process_raw_intervals</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">ints</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mousestyles.behavior.metrics">
+<span id="mousestyles-behavior-metrics-module"></span><h2>mousestyles.behavior.metrics module<a class="headerlink" href="#module-mousestyles.behavior.metrics" title="Permalink to this headline">¶</a></h2>
+<p>Metrics for behavior</p>
+<dl class="function">
+<dt id="mousestyles.behavior.metrics.active_time">
+<code class="descclassname">mousestyles.behavior.metrics.</code><code class="descname">active_time</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/metrics.html#active_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.metrics.active_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total amount of active time recorded for a certain mouse-day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; </li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; </li>
+<li><strong>day</strong> (<em>int</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The total amount of active time in seconds for the specified mouse-day.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.behavior.metrics.create_collapsed_intervals">
+<code class="descclassname">mousestyles.behavior.metrics.</code><code class="descname">create_collapsed_intervals</code><span class="sig-paren">(</span><em>intervals</em>, <em>bout_threshold</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/metrics.html#create_collapsed_intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.metrics.create_collapsed_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a collapsed interval object (within a
+given threshold) on a certain mouse-strain-day for a given activity type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>intervals</strong> (<em>interval object on a certain mouse-strain-day</em>) &#8211; </li>
+<li><strong>a given activity type</strong> (<em>for</em>) &#8211; </li>
+<li><strong>bout_threshold</strong> (<em>: float</em>) &#8211; Float representing the time threshold to use for collapsing separate
+events into bouts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li>An intervals object <cite>intervals</cite> for the given activity type and</li>
+<li><em>mouse-strain-day within a bout threshold</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ints</span><span class="o">=</span><span class="n">behavior</span><span class="o">.</span><span class="n">create_intervals</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">strain</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="go">                                   , mouse = 0, day = 0</span>
+<span class="go">                                   , bout_threshold = 0.001)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collapsed_ints</span><span class="o">=</span><span class="n">behavior</span><span class="o">.</span><span class="n">create_collapsed_intervals</span><span class="p">(</span><span class="n">intervals</span> <span class="o">=</span> <span class="n">ints</span>
+<span class="go">                                                , bout_threshold = 0.001)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">collapsed_ints</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.behavior.metrics.create_intervals">
+<code class="descclassname">mousestyles.behavior.metrics.</code><code class="descname">create_intervals</code><span class="sig-paren">(</span><em>activity_type</em>, <em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/metrics.html#create_intervals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.metrics.create_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an interval object on a certain mouse-strain-day
+for a given activity type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>activity_type</strong> (<em>str</em>) &#8211; String specifying activity type {&#8220;AS&#8221;, &#8220;F&#8221;, &#8220;IS&#8221;, &#8220;M_AS&#8221;, &#8220;M_IS&#8221;, &#8220;W&#8221;}</li>
+<li><strong>strain</strong> (<em>int</em>) &#8211; Integer representing the strain of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; Integer representing the specific mouse</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; Integer representing the day to produce the metrics for</li>
+<li><strong>bout_threshold</strong> (<em>: float</em>) &#8211; Float representing the time threshold to use for collapsing separate
+events into bouts</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li>An intervals object <cite>intervals</cite> for the given activity type and</li>
+<li><em>mouse-strain-day within a bout threshold</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ints</span><span class="o">=</span><span class="n">behavior</span><span class="o">.</span><span class="n">create_intervals</span><span class="p">(</span><span class="n">activity_type</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">strain</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="go">                                   , mouse = 0, day = 0</span>
+<span class="go">                                   , bout_threshold = 0.001)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">ints</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.behavior.metrics.total_amount">
+<code class="descclassname">mousestyles.behavior.metrics.</code><code class="descname">total_amount</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/metrics.html#total_amount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.metrics.total_amount" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns the total amount consumed/moved for one of the following features:</dt>
+<dd>food (&#8220;F&#8221;), water (&#8220;W&#8221;), and locomotion (&#8220;L&#8221;).</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; </li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; </li>
+<li><strong>day</strong> (<em>int</em>) &#8211; </li>
+<li><strong>feature</strong> (<em>{'F', 'W', 'L'}</em>) &#8211; The feature used. &#8216;F&#8217; for food, &#8216;W&#8217; for water, &#8216;L&#8217; for locomotion.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The total amount consumed/moved for the given feature in the mouse-day.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.behavior.metrics.total_time">
+<code class="descclassname">mousestyles.behavior.metrics.</code><code class="descname">total_time</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/behavior/metrics.html#total_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.behavior.metrics.total_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total amount of time recorded for a certain mouse-day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; </li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; </li>
+<li><strong>day</strong> (<em>int</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The total amount of time in seconds of the specified mouse-day.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.behavior">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.behavior" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -56,6 +383,11 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">mousestyles.behavior package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-mousestyles.behavior.behavior">mousestyles.behavior.behavior module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.behavior.behavior_tree">mousestyles.behavior.behavior_tree module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.behavior.construct_trees">mousestyles.behavior.construct_trees module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.behavior.metrics">mousestyles.behavior.metrics module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.behavior">Module contents</a></li>
 </ul>
 </li>

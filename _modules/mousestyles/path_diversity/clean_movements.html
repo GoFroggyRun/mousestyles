@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
-    <link rel="up" title="mousestyles.path_diversity" href="../path_diversity.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -103,7 +103,7 @@
             <span class="n">out</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
 
     <span class="k">def</span> <span class="nf">detect_same_loc</span><span class="p">(</span><span class="n">one_movement</span><span class="p">):</span>
         <span class="c1"># returns indices which have same x,y-coordinates as the previous</span>
@@ -112,21 +112,21 @@
         <span class="n">same_loc_bool</span> <span class="o">=</span> <span class="n">x_bool</span> <span class="o">&amp;</span> <span class="n">y_bool</span>
         <span class="n">same_loc</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">same_loc_bool</span><span class="p">))</span>
                     <span class="k">if</span> <span class="n">same_loc_bool</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">same_loc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">same_loc</span>
 
     <span class="k">def</span> <span class="nf">detect_same_time</span><span class="p">(</span><span class="n">one_movement</span><span class="p">):</span>
         <span class="c1"># returns indices which have same timestamp as the previous</span>
         <span class="n">time_bool</span> <span class="o">=</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">one_movement</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
         <span class="n">same_time</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_bool</span><span class="p">))</span>
                      <span class="k">if</span> <span class="n">time_bool</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">same_time</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">same_time</span>
 
     <span class="k">def</span> <span class="nf">drop_same_loc</span><span class="p">(</span><span class="n">one_movement</span><span class="p">,</span> <span class="n">same_loc</span><span class="p">):</span>
         <span class="c1"># based on `same_loc` drops the duplicated rows</span>
         <span class="n">new_one_movement</span> <span class="o">=</span> <span class="n">one_movement</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">same_loc</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keep_index</span><span class="p">:</span>
             <span class="n">new_one_movement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_one_movement</span><span class="p">))</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">new_one_movement</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_one_movement</span>
 
     <span class="c1"># testing each element of `movements` obj.</span>
     <span class="n">test_outs</span> <span class="o">=</span> <span class="p">[</span><span class="n">testing_input_movement</span><span class="p">(</span><span class="n">one_movement</span><span class="p">)</span>
@@ -153,7 +153,7 @@
 
     <span class="n">cleaned_movements</span> <span class="o">=</span> <span class="p">[</span><span class="n">drop_same_loc</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">same_loc</span><span class="p">)</span>
                          <span class="k">for</span> <span class="n">movement</span><span class="p">,</span> <span class="n">same_loc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">movements</span><span class="p">,</span> <span class="n">same_locs</span><span class="p">)]</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">cleaned_movements</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">cleaned_movements</span></div>
 </pre></div>
 
           </div>
@@ -165,8 +165,6 @@
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../../index.html">Module code</a><ul>
-  <li><a href="../path_diversity.html">mousestyles.path_diversity</a><ul>
-  </ul></li>
   </ul></li>
   </ul></li>
 </ul>

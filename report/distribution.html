@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Power Laws &amp; Universality &mdash; mousestyles 0.1 documentation</title>
+    <title>Power Laws and Universality &mdash; mousestyles 0.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -40,10 +40,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="power-laws-universality">
-<span id="distribution"></span><h1>Power Laws &amp; Universality<a class="headerlink" href="#power-laws-universality" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="power-laws-and-universality">
+<span id="distribution"></span><h1>Power Laws and Universality<a class="headerlink" href="#power-laws-and-universality" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="statement-of-problem">
-<h2>Statement of Problem:<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
+<h2>Statement of Problem<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
 <p><strong>Construct Statistical Model for Locomotion Distribution</strong></p>
 <p>To take a closer look at the tail property of locomotion, we analyze the
 moving distance distribution for each string. Fitting those distributions
@@ -60,7 +60,7 @@ estimator, and further figure figure out with strain they belong to.</p>
 </div></blockquote>
 </div>
 <div class="section" id="statement-of-statistical-problem">
-<h2>Statement of Statistical Problem:<a class="headerlink" href="#statement-of-statistical-problem" title="Permalink to this headline">¶</a></h2>
+<h2>Statement of Statistical Problem<a class="headerlink" href="#statement-of-statistical-problem" title="Permalink to this headline">¶</a></h2>
 <p><strong>Distribution Selection</strong></p>
 <p>The major statistical question is how to choose fitted distribution
 family. Based on conventions and data we have, we propose two
@@ -86,7 +86,7 @@ general assumption, such as exponential distribution.</p>
 them make sense but we need to have more quantitative evidence to see
 the fittness or, hopefully, compare their goodness of fit.</p>
 <p>The check of fitness is in needed after obtaining the parameter.
-Kolmogorov–Smirnov test enable us to test the fitness of power
+Kolmogorov-Smirnov test enable us to test the fitness of power
 law and exponential distribution. For them, we choose the null
 to be selected distribution, and if we reject K-S test, we will
 conclude the the sample distribution is not familiar with theoretical
@@ -134,23 +134,23 @@ what Chris said about the sensor, as it will only detect when a mice moves
 more than 1cm within in 20ms. It does not make sense to have observations
 less than 1cm and outliers needs to be cleaned up. After we put a threshold
 with 1cm, we find the distribution is monotonic decreasing and we can fit
-power law distribution, as well as exponential distribution.
-=======</p>
-<blockquote>
-<div>Distribution</div></blockquote>
+power law distribution, as well as exponential distribution.</p>
+</div>
+<div class="section" id="id1">
+<h2>Distribution<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Preferred choice of distribution: the power law is a
 monotone decreasing, however our plot indicates a peak, in which gamma
 distribution may fit better.</li>
 <li>Another idea would be to record the position of the mouse at regular time intervals and compute the distances between them. This will give us an idea of the speed distribution of the mouse.</li>
 </ul>
-<div class="figure" id="id1">
+<div class="figure" id="id2">
 <img alt="alt tag" src="../_images/distances.png" />
 <p class="caption"><span class="caption-text">Distances recorded every second, for different strains of mice</span></p>
 </div>
 </div>
-<div class="section" id="data-requirements-description">
-<h2>Data Requirements Description<a class="headerlink" href="#data-requirements-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-requirements">
+<h2>Data Requirements<a class="headerlink" href="#data-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Label of “home base” or “non home base”: generated in the process of
 data pre-processing by the definition. The build-in function enable
@@ -163,8 +163,8 @@ difference x,y coordinates</li>
 of this distance.</li>
 </ul>
 </div>
-<div class="section" id="methodology-approach-description">
-<h2>Methodology/ Approach Description<a class="headerlink" href="#methodology-approach-description" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="methodology">
+<h2>Methodology<a class="headerlink" href="#methodology" title="Permalink to this headline">¶</a></h2>
 <p>Given the estimated parameter for each distribution, we can learn more
 about its distribution and the information lies mainly in the decay rate
 of the tail.</p>
@@ -249,7 +249,7 @@ alpha and lambda. Draw histogram of the estimator where red, blue and green stan
 <li>The histogram of estimators from powerlaw:</li>
 </ul>
 <p>(<a class="reference external" href="../report/plots/plot_powerlaw.py">Source code</a>, <a class="reference external" href="../report/plots/plot_powerlaw.png">png</a>, <a class="reference external" href="../report/plots/plot_powerlaw.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_powerlaw.pdf">pdf</a>)</p>
-<div class="figure" id="id2">
+<div class="figure" id="id3">
 <img alt="../_images/plot_powerlaw.png" src="../_images/plot_powerlaw.png" />
 <p class="caption"><span class="caption-text">Histogram of the parameters of powerlaw.</span></p>
 </div>
@@ -257,7 +257,7 @@ alpha and lambda. Draw histogram of the estimator where red, blue and green stan
 <li>The histogram of estimators from exponential:</li>
 </ul>
 <p>(<a class="reference external" href="../report/plots/plot_exponential.py">Source code</a>, <a class="reference external" href="../report/plots/plot_exponential.png">png</a>, <a class="reference external" href="../report/plots/plot_exponential.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_exponential.pdf">pdf</a>)</p>
-<div class="figure" id="id4">
+<div class="figure" id="id5">
 <img alt="../_images/plot_exponential.png" src="../_images/plot_exponential.png" />
 <p class="caption"><span class="caption-text">Histogram of the parameters of exponential.</span></p>
 </div>
@@ -269,7 +269,7 @@ Here is an example of strain 0, mouse 2, day 5. From the plot we can see the fit
 <li>The histogram of data and fitted curve for strain 0, mouse 2, day 5:</li>
 </ul>
 <p>(<a class="reference external" href="../report/plots/plot_fitted.py">Source code</a>, <a class="reference external" href="../report/plots/plot_fitted.png">png</a>, <a class="reference external" href="../report/plots/plot_fitted.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_fitted.pdf">pdf</a>)</p>
-<div class="figure" id="id6">
+<div class="figure" id="id7">
 <img alt="../_images/plot_fitted.png" src="../_images/plot_fitted.png" />
 <p class="caption"><span class="caption-text">Histogram and fitted curve for strain 0, mouse 2, day 5.</span></p>
 </div>
@@ -281,7 +281,7 @@ and day 0; fitting by Maximum Likelihood, and by minimizing Kolmogorov
 CDF distances:</li>
 </ul>
 <p>(<a class="reference external" href="../report/plots/hist_kolmogorov.py">Source code</a>, <a class="reference external" href="../report/plots/hist_kolmogorov.png">png</a>, <a class="reference external" href="../report/plots/hist_kolmogorov.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/hist_kolmogorov.pdf">pdf</a>)</p>
-<div class="figure" id="id8">
+<div class="figure" id="id9">
 <img alt="../_images/hist_kolmogorov.png" src="../_images/hist_kolmogorov.png" />
 <p class="caption"><span class="caption-text">Histogram of distances travelled in 20ms by strain 0, mouse 0, day 0.</span></p>
 </div>
@@ -338,31 +338,91 @@ Small, next to 0.0005. This is a strong evidence that we should not think
 power law is a better fit than exponential. Thus, we conclude that we should
 use exponential to fit and do further research.</p>
 </div>
+<div class="section" id="relative-distribution-with-kernel-smooting">
+<h2>Relative distribution with kernel smooting<a class="headerlink" href="#relative-distribution-with-kernel-smooting" title="Permalink to this headline">¶</a></h2>
+<p>In the previous section, the result of K-S test suggests that the actual
+distribution of distance doesn&#8217;t follow the power law family but may follow in
+the exponential family. In this section, we characterize discrepency of the
+actual distribution to  these two by looking at their relative distribution.</p>
+<p>In the relative distribution framework, we call the actual distribution <span class="math">\(G\)</span>
+comparison distribution and call the proposed distribution <span class="math">\(F_0\)</span>, e.g. power
+law with parameter <span class="math">\(\alpha\)</span>, the reference distribution. The idea of the
+relative distribution is to characterize the change in distributions by using
+<span class="math">\(F_0\)</span> to transform X into <span class="math">\([0,1]\)</span>, and then look at how the density departs
+from uniformity.</p>
+<p>The relative data, or grades, are <span class="math">\(r_i =F_0(x_i)\)</span>, which lies in <span class="math">\([0,1]\)</span>. Its
+probability density function is $f_r(x) =
+frac{g(F_0^{-1}(x))}{f_0(F_0^{-1}(x))}$. <span class="math">\(r\)</span> has uniform density in the
+special case when <span class="math">\(G = F\)</span>.</p>
+<p>As shown in the previous formula, we need to get the density <span class="math">\(g\)</span> of the
+observed data to calculate the relative distribution. However, the naive
+nonparametric density estimation with gaussian kernel doesn&#8217;t work well when
+the random variable is nonnegative. We propose a strategy using symmetric
+correction to work it around.</p>
+<p>In the first step, we create the symmetric-corrected data <span class="math">\(X'\)</span> by concatenating
+the original data <span class="math">\(X\)</span> and its reflection around its left boundary point 1,
+<span class="math">\(2-X\)</span>. In the second step, we get <span class="math">\(f_1\)</span>, the density estimate using gaussian
+kernel with bandwidth maximizing 5-fold cross-validated score. In the third
+step, we delete <span class="math">\(2-X\)</span> and set the density estimate of <span class="math">\(X\)</span> to be <span class="math">\(f=2f_1\)</span>. An
+example is shown in the plot.</p>
+<p>(<a class="reference external" href="../report/plots/plot_kernel_smoothing.py">Source code</a>, <a class="reference external" href="../report/plots/plot_kernel_smoothing.png">png</a>, <a class="reference external" href="../report/plots/plot_kernel_smoothing.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_kernel_smoothing.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/plot_kernel_smoothing.png" src="../_images/plot_kernel_smoothing.png" />
+</div>
+<p>We construct the relative distribution to the best-fitted power law
+distribution and exponential distribution using this density. The result is
+shown in the plotted density curve.</p>
+<p>(<a class="reference external" href="../report/plots/plot_relative_distribution.py">Source code</a>, <a class="reference external" href="../report/plots/plot_relative_distribution.png">png</a>, <a class="reference external" href="../report/plots/plot_relative_distribution.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_relative_distribution.pdf">pdf</a>)</p>
+<div class="figure" id="id11">
+<img alt="../_images/plot_relative_distribution.png" src="../_images/plot_relative_distribution.png" />
+<p class="caption"><span class="caption-text">Relative distributions, power law on the left, exponential on the right</span></p>
+</div>
+<p>Now, the fine relative density structure is very clear. We see our actual
+distribution has a smaller density at the beginning and a thicker tail compared
+to both power law distribution and exponential distribution. Exponential has a
+better fit at the beginning and a worse fit for the tail, which gives rise to
+smaller discrepency in CDF and smaller K-S statistic. However, neither family
+seems to be good enough in terms of density characterization of distribution.</p>
+</div>
 <div class="section" id="mann-whitney-u-test-on-distances">
-<h2>Mann-Whitney U test on distances:<a class="headerlink" href="#mann-whitney-u-test-on-distances" title="Permalink to this headline">¶</a></h2>
-<p>Given the distribution of distances, we perform a hypothesis test on the distributions of these distances. The goal is to identify some similarity on mice in the same strain when only looking at the distances covered every second.</p>
-<p>To do so we chose a non parametric test since we only have access to sample distributions. The Kolmogorov Smirnov test is a very popular test used in this case but I chose to explore the Mann-Whitney U test instead for the following reasons:</p>
+<h2>Mann-Whitney U test on distances<a class="headerlink" href="#mann-whitney-u-test-on-distances" title="Permalink to this headline">¶</a></h2>
+<p>Given the distribution of distances, we perform a hypothesis test on the
+distributions of these distances. The goal is to identify some similarity on
+mice in the same strain when only looking at the distances covered every
+second.</p>
+<p>To do so we chose a non parametric test since we only have access to sample
+distributions. The Kolmogorov Smirnov test is a very popular test used in this
+case but I chose to explore the Mann-Whitney U test instead for the following
+reasons:</p>
 <ul class="simple">
 <li>The KS test is sensitive to any differences in the two distributions. Substantial differences in shape, spread or median will result in a small P value. (see here for more details). Here we can feel that the distances have high variance. Therefore, the KS test would be too strict for our study.</li>
 <li>In contrast, the MW test is mostly sensitive to changes in the median, which is less sensitive of noise in the case of mice.</li>
 </ul>
-<p>The MannWhitney U test is a test for assessing whether two independent samples come from the same distribution. The null hypothesis for this test is that the two groups have the same distribution, while the alternative hypothesis is that one group has larger (or smaller) values than the other.</p>
+<p>The MannWhitney U test is a test for assessing whether two independent samples
+come from the same distribution. The null hypothesis for this test is that the
+two groups have the same distribution, while the alternative hypothesis is that
+one group has larger (or smaller) values than the other.</p>
 <ul class="simple">
 <li><span class="math">\(H_0$: $P(X&gt;Y)=P(Y&gt;X)\)</span></li>
 <li><span class="math">\(H_1$: $P(X&gt;Y)\neq P(Y&gt;X)\)</span></li>
 </ul>
-<div class="figure" id="id10">
+<div class="figure" id="id13">
 <img alt="alt tag" src="../_images/strains_cor.png" />
 <p class="caption"><span class="caption-text">MW U test p-values for different strains of mice. Dark blue is close to 1 and very light blue is close to zero.</span></p>
 </div>
-<div class="figure" id="id11">
+<div class="figure" id="id14">
 <img alt="alt tag" src="../_images/allmice_cor.png" />
 <p class="caption"><span class="caption-text">MW U test p-values for mice within the same strains. Dark blue is close to 1 and very light blue is close to zero.</span></p>
 </div>
-<p>From the figures above, we notice that in terms of p-values, strain 1 is closer to strain 0 than strain 2. But we also notice that the p-values are still very low, which means that there is evidence for rejecting <span class="math">\(H_0\)</span>. Moreover, when looking closer within each strain of mice, we can see that mice have different distributions too. Therefore, based on the inter-distances,  we cannot conclude that mice behave similarly depending on their strains.</p>
+<p>From the figures above, we notice that in terms of p-values, strain 1 is closer
+to strain 0 than strain 2. But we also notice that the p-values are still very
+low, which means that there is evidence for rejecting <span class="math">\(H_0\)</span>. Moreover, when
+looking closer within each strain of mice, we can see that mice have different
+distributions too. Therefore, based on the inter-distances,  we cannot conclude
+that mice behave similarly depending on their strains.</p>
 </div>
-<div class="section" id="further-work">
-<h2>Further Work:<a class="headerlink" href="#further-work" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="future-work">
+<h2>Future Work<a class="headerlink" href="#future-work" title="Permalink to this headline">¶</a></h2>
 <p>Here are some further research we could do. However, because of
 Incomplete sample we have, we cannot do it for now, but it is easy
 to fix the function</p>
@@ -381,7 +441,7 @@ between our parameters is not uniform but as long as there exists
 significant difference, it will not harm that much.</p>
 </div>
 <div class="section" id="reference-reading">
-<h2>Reference reading:<a class="headerlink" href="#reference-reading" title="Permalink to this headline">¶</a></h2>
+<h2>Reference reading<a class="headerlink" href="#reference-reading" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="https://en.wikipedia.org/wiki/Power_law">https://en.wikipedia.org/wiki/Power_law</a></li>
 <li><a class="reference external" href="http://arxiv.org/pdf/0706.1062v2.pdf">http://arxiv.org/pdf/0706.1062v2.pdf</a></li>
@@ -397,17 +457,19 @@ significant difference, it will not harm that much.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Power Laws &amp; Universality</a><ul>
-<li><a class="reference internal" href="#statement-of-problem">Statement of Problem:</a></li>
-<li><a class="reference internal" href="#statement-of-statistical-problem">Statement of Statistical Problem:</a></li>
+<li><a class="reference internal" href="#">Power Laws and Universality</a><ul>
+<li><a class="reference internal" href="#statement-of-problem">Statement of Problem</a></li>
+<li><a class="reference internal" href="#statement-of-statistical-problem">Statement of Statistical Problem</a></li>
 <li><a class="reference internal" href="#exploratory-analysis">Exploratory Analysis</a></li>
-<li><a class="reference internal" href="#data-requirements-description">Data Requirements Description</a></li>
-<li><a class="reference internal" href="#methodology-approach-description">Methodology/ Approach Description</a></li>
+<li><a class="reference internal" href="#id1">Distribution</a></li>
+<li><a class="reference internal" href="#data-requirements">Data Requirements</a></li>
+<li><a class="reference internal" href="#methodology">Methodology</a></li>
 <li><a class="reference internal" href="#testing-framework-outline">Testing Framework Outline</a></li>
 <li><a class="reference internal" href="#result">Result</a></li>
-<li><a class="reference internal" href="#mann-whitney-u-test-on-distances">Mann-Whitney U test on distances:</a></li>
-<li><a class="reference internal" href="#further-work">Further Work:</a></li>
-<li><a class="reference internal" href="#reference-reading">Reference reading:</a></li>
+<li><a class="reference internal" href="#relative-distribution-with-kernel-smooting">Relative distribution with kernel smooting</a></li>
+<li><a class="reference internal" href="#mann-whitney-u-test-on-distances">Mann-Whitney U test on distances</a></li>
+<li><a class="reference internal" href="#future-work">Future Work</a></li>
+<li><a class="reference internal" href="#reference-reading">Reference reading</a></li>
 </ul>
 </li>
 </ul>

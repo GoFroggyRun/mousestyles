@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
     <link rel="up" title="mousestyles package" href="mousestyles.html" />
-    <link rel="prev" title="mousestyles.path_diversity package" href="mousestyles.path_diversity.html" />
+    <link rel="prev" title="mousestyles.ultradian package" href="mousestyles.ultradian.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -67,11 +67,12 @@ to check the distribution.</p>
 
 <dl class="function">
 <dt id="mousestyles.visualization.distribution_plot.plot_fitted">
-<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_fitted</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_fitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_fitted" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_fitted</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em>, <em>hist=True</em>, <em>density=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_fitted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_fitted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the plot of one single mouse day
--histogram of distance
 -fitted power law
--fitted exponential</p>
+-fitted exponential
+-histogram of distance
+-kernel density curve</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -80,13 +81,15 @@ to check the distribution.</p>
 <li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
 <li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
 <li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+<li><strong>hist</strong> (<em>boolean</em>) &#8211; Plot histogram if True</li>
+<li><strong>density</strong> (<em>boolean</em>) &#8211; plot density if True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>plot</strong></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1 histogram + 2 fitted curve</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">1 histogram (blue) + 2 fitted curve + 1 density (cyan)</p>
 </td>
 </tr>
 </tbody>
@@ -107,6 +110,37 @@ to check the distribution.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>plot</strong> &#8211; The histogram of all estimators of power law</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">histogram</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.visualization.distribution_plot.plot_relative_dist">
+<code class="descclassname">mousestyles.visualization.distribution_plot.</code><code class="descname">plot_relative_dist</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>day</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/distribution_plot.html#plot_relative_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.distribution_plot.plot_relative_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the relative distribution of distance of a single mouse day
+The relative distribution of a comparison distribution with density g
+vs a reference distribution with density f is g(F^(-1)(x))/f(F^(-1)(x))
+It&#8217;s a prob distribution on [0, 1].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; the strain number of the mouse</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; the mouse number in its strain</li>
+<li><strong>day</strong> (<em>int</em>) &#8211; the day number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>pdf_rel_power</strong> (<em>numpy.ndarray</em>) &#8211; the relative distribution, referencing the best fit powerlaw
+distribution, at grid points np.arange(0, 1.0, 0.02)</li>
+<li><strong>pdf_rel_exp</strong> (<em>numpy.ndarray</em>) &#8211; the relative distribution, referencing the best fit exponential
+distribution, at grid points np.arange(0, 1.0, 0.02)</li>
+</ul>
+</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -179,7 +213,7 @@ and red represents other activities in AS.</p>
 <span id="mousestyles-visualization-path-diversity-plotting-module"></span><h2>mousestyles.visualization.path_diversity_plotting module<a class="headerlink" href="#module-mousestyles.visualization.path_diversity_plotting" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="mousestyles.visualization.path_diversity_plotting.plot_box">
-<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_box</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title='Box Plot of Distribution'</em>, <em>width=4</em>, <em>height=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_box" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_box</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title=u'Box Plot of Distribution'</em>, <em>width=4</em>, <em>height=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a box plot of the desired metric (path length, speed, angle, etc)
 per mouse, day or strain.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -208,7 +242,7 @@ generated from another function in the package.</li>
 
 <dl class="function">
 <dt id="mousestyles.visualization.path_diversity_plotting.plot_hist">
-<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_hist</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title='Histogram of Distribution'</em>, <em>xlab='X Values'</em>, <em>ylab='Y Values'</em>, <em>leg=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_hist" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mousestyles.visualization.path_diversity_plotting.</code><code class="descname">plot_hist</code><span class="sig-paren">(</span><em>list_of_arrays</em>, <em>title=u'Histogram of Distribution'</em>, <em>xlab=u'X Values'</em>, <em>ylab=u'Y Values'</em>, <em>leg=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/path_diversity_plotting.html#plot_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.path_diversity_plotting.plot_hist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a histogram of the desired metric (path length, speed, angle, etc)
 per mouse, day, or strain.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -352,11 +386,51 @@ values are lists containing strain counts</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mousestyles.visualization.plot_lomb_scargle">
+<span id="mousestyles-visualization-plot-lomb-scargle-module"></span><h2>mousestyles.visualization.plot_lomb_scargle module<a class="headerlink" href="#module-mousestyles.visualization.plot_lomb_scargle" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.visualization.plot_lomb_scargle.lombscargle_visualize">
+<code class="descclassname">mousestyles.visualization.plot_lomb_scargle.</code><code class="descname">lombscargle_visualize</code><span class="sig-paren">(</span><em>periods</em>, <em>power</em>, <em>sig</em>, <em>N</em>, <em>cycle</em>, <em>cycle_power</em>, <em>cycle_pvalue</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_lomb_scargle.html#lombscargle_visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_lomb_scargle.lombscargle_visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use Lomb-Scargel method on different strain and mouse&#8217;s data to find the
+best possible periods with highest p-values, and plot the Lomb Scargle
+power versus periods plot. use the periods as time sequence to predict
+the corresponding LS power, draw the plot.</p>
+<p>There will also be stars and horizontal lines indicating the p-value of
+significance. Three stars will be p-value in [0,0.001], two stars will be
+p-value in [0.001,0.01], one star will be p-value in [0.01,0.05]. The
+horizontal line is the LS power that has p-value of 0.05.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>periods</strong> (<em>numpy array of the same length with 'power'</em>) &#8211; use as time sequence in LS model to make predictions</li>
+<li><strong>power</strong> (<em>numpy array of the same length with 'periods'</em>) &#8211; the corresponding predicted power of periods</li>
+<li><strong>sig</strong> (<em>list, tuple or numpy array, default is [0.05].</em>) &#8211; significance level to be used for plot horizontal line.</li>
+<li><strong>N</strong> (<em>int</em>) &#8211; the length of time sequence in the fit model</li>
+<li><strong>cycle</strong> (<em>numpy array</em>) &#8211; periods</li>
+<li><strong>cycle_power</strong> (<em>numpy array</em>) &#8211; LS power corrsponding to the periods in &#8216;cycle&#8217;</li>
+<li><strong>cycle_pvalue</strong> (<em>numpy array</em>) &#8211; p-values corresponding to the periods in &#8216;cycle&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Lomb Scargle Power versus Periods (hours) plot with significant levels.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.visualization.plot_path">
 <span id="mousestyles-visualization-plot-path-module"></span><h2>mousestyles.visualization.plot_path module<a class="headerlink" href="#module-mousestyles.visualization.plot_path" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="mousestyles.visualization.plot_path.plot_path">
-<code class="descclassname">mousestyles.visualization.plot_path.</code><code class="descname">plot_path</code><span class="sig-paren">(</span><em>movement, paths, title='example plot of path', alpha=0.1, linewidth=1.0, xlim=[-16.24, 3.76], ylim=[0.9, 43.5]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_path.html#plot_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_path.plot_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mousestyles.visualization.plot_path.</code><code class="descname">plot_path</code><span class="sig-paren">(</span><em>movement, paths, title=u'example plot of path', alpha=0.1, linewidth=1.0, xlim=[-16.24, 3.76], ylim=[0.9, 43.5]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_path.html#plot_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_path.plot_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the lines along paths.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -391,6 +465,87 @@ line. Default is 1.</li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mousestyles.visualization.plot_ultradian">
+<span id="mousestyles-visualization-plot-ultradian-module"></span><h2>mousestyles.visualization.plot_ultradian module<a class="headerlink" href="#module-mousestyles.visualization.plot_ultradian" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.visualization.plot_ultradian.compare_strain">
+<code class="descclassname">mousestyles.visualization.plot_ultradian.</code><code class="descname">compare_strain</code><span class="sig-paren">(</span><em>feature</em>, <em>n_strain=3</em>, <em>bin_width=15</em>, <em>disturb_t=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_ultradian.html#compare_strain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_ultradian.compare_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the data from function find_cycle and plotting method from function
+lombscargle_visualize to compare the Lomb-Scargle plots between different
+strains.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>feature</strong> (<em>string in {&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)
+&#8220;Distance&#8221;: Distance traveled</li>
+<li><strong>n_strain</strong> (<em>int, defalt is 3</em>) &#8211; nonnegative integer indicating total number of strains to be compared</li>
+<li><strong>bin_width</strong> (<em>int, minute unit, default is 15 minutes</em>) &#8211; number of minutes, the time interval for data aggregation</li>
+<li><strong>disturb_t</strong> (<em>boolean, default is False</em>) &#8211; If True, add uniformly distributed noise to the time sequence which
+are used to fit the Lomb Scargle model. This is to avoid the singular
+matrix error that could happen sometimes.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Lomb Scargle Power versus Periods (hours) plot with significant levels.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.visualization.plot_ultradian.plot_strain_seasonal">
+<code class="descclassname">mousestyles.visualization.plot_ultradian.</code><code class="descname">plot_strain_seasonal</code><span class="sig-paren">(</span><em>strains</em>, <em>mouse</em>, <em>feature</em>, <em>bin_width</em>, <em>period_length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/visualization/plot_ultradian.html#plot_strain_seasonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.visualization.plot_ultradian.plot_strain_seasonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use seansonal decomposition model on the time series
+of specified strain, mouse, feature and bin_width.
+return the seasonal term and the plot of seasonal term
+by mouse of a set of mouses in a strain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>list, set or tuple</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>list, set or tuple</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>feature</strong> (<em>{&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)
+&#8220;Distance&#8221;: Distance traveled</li>
+<li><strong>bin_width</strong> (<em>int</em>) &#8211; number of minutes, the time interval for data aggregation</li>
+<li><strong>period_length</strong> (<em>float or int</em>) &#8211; number of hours, usually the significant period
+length indicated by Lomb-scargle model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>seasonal_plot</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">plot of seasonal term by mouse</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">plot_strain_seasonal</span><span class="p">(</span><span class="n">strains</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,},</span> <span class="n">mouse</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>
+<span class="go">                               feature=&quot;W&quot;,</span>
+<span class="go">                               bin_width=30, period_length = 24)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.visualization">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.visualization" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -411,7 +566,9 @@ line. Default is 1.</li>
 <li><a class="reference internal" href="#module-mousestyles.visualization.path_diversity_plotting">mousestyles.visualization.path_diversity_plotting module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.visualization.plot_classification">mousestyles.visualization.plot_classification module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.visualization.plot_clustering">mousestyles.visualization.plot_clustering module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization.plot_lomb_scargle">mousestyles.visualization.plot_lomb_scargle module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.visualization.plot_path">mousestyles.visualization.plot_path module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.visualization.plot_ultradian">mousestyles.visualization.plot_ultradian module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.visualization">Module contents</a></li>
 </ul>
 </li>
@@ -422,7 +579,7 @@ line. Default is 1.</li>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API reference</a><ul>
   <li><a href="mousestyles.html">mousestyles package</a><ul>
-      <li>Previous: <a href="mousestyles.path_diversity.html" title="previous chapter">mousestyles.path_diversity package</a></li>
+      <li>Previous: <a href="mousestyles.ultradian.html" title="previous chapter">mousestyles.ultradian package</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

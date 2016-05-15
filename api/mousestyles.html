@@ -47,6 +47,11 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="mousestyles.behavior.html">mousestyles.behavior package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior.behavior">mousestyles.behavior.behavior module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior.behavior_tree">mousestyles.behavior.behavior_tree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior.construct_trees">mousestyles.behavior.construct_trees module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior.metrics">mousestyles.behavior.metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.behavior.html#module-mousestyles.behavior">Module contents</a></li>
 </ul>
 </li>
@@ -80,8 +85,14 @@
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.filter_path">mousestyles.path_diversity.filter_path module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.get_dist_speed">mousestyles.path_diversity.get_dist_speed module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.path_features">mousestyles.path_diversity.path_features module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.path_features_advanced">mousestyles.path_diversity.path_features_advanced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.path_index">mousestyles.path_diversity.path_index module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity.smooth_noise">mousestyles.path_diversity.smooth_noise module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.path_diversity.html#module-mousestyles.path_diversity">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mousestyles.ultradian.html">mousestyles.ultradian package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.ultradian.html#module-mousestyles.ultradian">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="mousestyles.visualization.html">mousestyles.visualization package</a><ul>
@@ -91,7 +102,9 @@
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.path_diversity_plotting">mousestyles.visualization.path_diversity_plotting module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_classification">mousestyles.visualization.plot_classification module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_clustering">mousestyles.visualization.plot_clustering module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_lomb_scargle">mousestyles.visualization.plot_lomb_scargle module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_path">mousestyles.visualization.plot_path module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization.plot_ultradian">mousestyles.visualization.plot_ultradian module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mousestyles.visualization.html#module-mousestyles.visualization">Module contents</a></li>
 </ul>
 </li>
@@ -241,7 +254,7 @@ value.</p>
 <dd><p>Random generate points of truncated power law.</p>
 <p>The method we generate is to inverse Cumulative Density Function
 of truncated powerlaw function, and put random number draw from
-Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
+Unif[0,1]. The theory behind it is <span class="math">\(F^{-1}(U) \sim F\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -271,6 +284,36 @@ Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
 <div class="section" id="module-mousestyles.distribution">
 <span id="mousestyles-distribution-module"></span><h2>mousestyles.distribution module<a class="headerlink" href="#module-mousestyles.distribution" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="mousestyles.distribution.exp_inverse_cdf">
+<code class="descclassname">mousestyles.distribution.</code><code class="descname">exp_inverse_cdf</code><span class="sig-paren">(</span><em>y</em>, <em>l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distribution.html#exp_inverse_cdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distribution.exp_inverse_cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inverse CDF function of truncated (at 1) exponential distribution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> (<em>float in [0, 1], or a np.dnarray</em>) &#8211; y in formula F^(-1)(y) = 1 - log(1 - y) / l</li>
+<li><strong>l</strong> (<em>float &gt; 0</em>) &#8211; a in formula F^(-1)(y) = 1 - log(1 - y) / l</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>x</strong> &#8211; The inverse CDF function of truncated (at 1) exponential distribution
+distribution with parameter l at point y</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exp_inverse_cdf</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">1.4581453659370776</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="mousestyles.distribution.exp_pdf">
 <code class="descclassname">mousestyles.distribution.</code><code class="descname">exp_pdf</code><span class="sig-paren">(</span><em>x</em>, <em>l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distribution.html#exp_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distribution.exp_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>The probability density function of truncated exponential.</p>
@@ -279,15 +322,15 @@ Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>int</em>) &#8211; x in formula p(x)=lambda*exp(-lambda*x).</li>
-<li><strong>l</strong> (<em>int</em>) &#8211; lambda in formula p(x)=lambda*exp(-lambda*x).</li>
+<li><strong>x</strong> (<em>float, or a np.dnarray</em>) &#8211; x in formula p(x)=lambda*exp(-lambda*x).</li>
+<li><strong>l</strong> (<em>float</em>) &#8211; lambda in formula p(x)=lambda*exp(-lambda*x).</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>probability density</strong> &#8211; The probability density of power law at x.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
 </td>
 </tr>
 </tbody>
@@ -295,6 +338,36 @@ Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exp_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="go">0.36787944117144233</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.distribution.powerlaw_inverse_cdf">
+<code class="descclassname">mousestyles.distribution.</code><code class="descname">powerlaw_inverse_cdf</code><span class="sig-paren">(</span><em>y</em>, <em>a</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/distribution.html#powerlaw_inverse_cdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.distribution.powerlaw_inverse_cdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inverse CDF function of power law distribution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> (<em>float in [0, 1], or a np.dnarray</em>) &#8211; y in formula F^(-1)(y) = (1 - y)^(1/(1-a))</li>
+<li><strong>a</strong> (<em>float &gt; 1</em>) &#8211; a in formula F^(-1)(y) = (1 - y)^(1/(1-a))</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>x</strong> &#8211; The inverse CDF function of power law distribution with
+parameter a at point y</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">powerlaw_inverse_cdf</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">1.189207115002721</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -308,15 +381,15 @@ Unif[0,1]. The theory behind it is F^{-1}(U)~F.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>int</em>) &#8211; x in formula p(x)=(alpha-1)*x^(-alpha).</li>
-<li><strong>a</strong> (<em>int&gt;1</em>) &#8211; alpha in formula p(x)=(alpha-1)*x^(-alpha).</li>
+<li><strong>x</strong> (<em>float &gt; 0, or a np.dnarray</em>) &#8211; x in formula p(x)=(alpha-1)*x^(-alpha).</li>
+<li><strong>a</strong> (<em>float &gt; 1</em>) &#8211; alpha in formula p(x)=(alpha-1)*x^(-alpha).</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>probability density</strong> &#8211; The probability density of power law at x.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a float number</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
 </td>
 </tr>
 </tbody>
@@ -500,10 +573,11 @@ Chris Hillar revised, 2015</p>
 <dl class="method">
 <dt id="mousestyles.intervals.Intervals.connect_gaps_by_rule">
 <code class="descname">connect_gaps_by_rule</code><span class="sig-paren">(</span><em>rule</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.connect_gaps_by_rule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.connect_gaps_by_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a new object with gaps connected when rule returns True.
-parameters</p>
-<blockquote>
-<div>rule: Callable that takes parameters start_time and end_time.</div></blockquote>
+<dd><p>Returns a new object with gaps connected when rule returns True.</p>
+<dl class="docutils">
+<dt>Parameters</dt>
+<dd>rule: Callable that takes parameters start_time and end_time.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -546,7 +620,7 @@ of self and [a, b]
 
 <dl class="method">
 <dt id="mousestyles.intervals.Intervals.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>filename='Intervals_save.npz'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.load" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename=u'Intervals_save.npz'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -566,7 +640,7 @@ of self and [a, b]
 
 <dl class="method">
 <dt id="mousestyles.intervals.Intervals.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>filename='Intervals_save'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename=u'Intervals_save'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/intervals.html#Intervals.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.intervals.Intervals.save" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -619,6 +693,50 @@ default 0.01 is half of minimum HCM sampling rate</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mousestyles.kde">
+<span id="mousestyles-kde-module"></span><h2>mousestyles.kde module<a class="headerlink" href="#module-mousestyles.kde" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.kde.kde">
+<code class="descclassname">mousestyles.kde.</code><code class="descname">kde</code><span class="sig-paren">(</span><em>x</em>, <em>x_grid</em>, <em>symmetric_correction=False</em>, <em>cutoff=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/kde.html#kde"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.kde.kde" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a numpy.ndarray object of estimated density</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>numpy.ndarray</em>) &#8211; data, as realiztions of variable X</li>
+<li><strong>x_grid</strong> (<em>numpy.ndarray</em>) &#8211; the grid points for the estimated density</li>
+<li><strong>symmetric_correction</strong> (<em>boolean</em>) &#8211; a method indicator. If False, do common gaussian kernel density
+estimation (kde). If True, do common gaussian kde on data generated
+from x concatenating with its reflection around the cutoff point. Then
+transform the estimated kde back by a factor of 2. Used for e.g. kde
+for nonnegative kernel estimation</li>
+<li><strong>cutoff</strong> (<em>float</em>) &#8211; the axis of symmetry for symmetric correction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pdf</strong> &#8211; estimated density at the specified grid points x_grid</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kde</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">x_grid</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="go">array([ 0.17483395,  0.21599529,  0.23685855,  0.24007961,  0.22670763,</span>
+<span class="go">    0.19365019,  0.14228937,  0.08552725,  0.04043597,  0.01463953])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">norm</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">400</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf1</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x1</span><span class="p">,</span> <span class="n">x_grid</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">symmetric_correction</span>
+<span class="go">               =True, cutoff=1)</span>
+<span class="go">array([ 0.26625297,  0.26818492,  0.27105849,  0.27489486,  0.27968752, ...</span>
+<span class="go">    0.07764054,  0.07239964,  0.06736559,  0.06254175,  0.05793043])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mousestyles.mww">
 <span id="mousestyles-mww-module"></span><h2>mousestyles.mww module<a class="headerlink" href="#module-mousestyles.mww" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -652,7 +770,7 @@ default 0.01 is half of minimum HCM sampling rate</p>
 <dt id="mousestyles.mww.MWW_mice">
 <code class="descclassname">mousestyles.mww.</code><code class="descname">MWW_mice</code><span class="sig-paren">(</span><em>strain</em>, <em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#MWW_mice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.MWW_mice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare distributions of distances among mice of the same strain.
-Use p-values of the Mann–Whitney U test.</p>
+Use p-values of the Mann-Whitney U test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -666,7 +784,7 @@ See data.distances_bymouse for more information.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>cor</strong> (<em>pvalues of the Mann–Whitney U test for each couple of distances</em>) &#8211; samples among mice of the corresponding strain.</li>
+<li><strong>cor</strong> (<em>pvalues of the Mann-Whitney U test for each couple of distances</em>) &#8211; samples among mice of the corresponding strain.</li>
 <li><em>Examples</em></li>
 <li><em>&#8212;&#8212;&#8212;</em></li>
 <li><em>&gt;&gt;&gt; cor = MWW_mice(0)</em></li>
@@ -683,7 +801,7 @@ See data.distances_bymouse for more information.</li>
 <code class="descclassname">mousestyles.mww.</code><code class="descname">MWW_strains</code><span class="sig-paren">(</span><em>step=50</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#MWW_strains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.MWW_strains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare distributions of distances among strains. Proceed as if
 the mice in each strain are i.i.d. samples, and compare the p-values
-of the Mann–Whitney U test.</p>
+of the Mann-Whitney U test.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -695,7 +813,7 @@ of the Mann–Whitney U test.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>cor</strong> (<em>pvalues of the Mann–Whitney U test for each couple of distances</em>) &#8211; samples among strains of mice.</li>
+<li><strong>cor</strong> (<em>pvalues of the Mann-Whitney U test for each couple of distances</em>) &#8211; samples among strains of mice.</li>
 <li><em>Examples</em></li>
 <li><em>&#8212;&#8212;&#8212;</em></li>
 <li><em>&gt;&gt;&gt; cor = MWW_strains()</em></li>
@@ -712,14 +830,14 @@ of the Mann–Whitney U test.</p>
 <code class="descclassname">mousestyles.mww.</code><code class="descname">get_pvalues</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#get_pvalues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.get_pvalues" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a bunch of sampled distributions and compute the
 p-values of the two sided Mann Whitney U test for each couple of samples.</p>
-<p>The Mann–Whitney U test is a test for assessing whether two independent
+<p>The Mann-Whitney U test is a test for assessing whether two independent
 samples come from the same distribution. The null hypothesis for this test
 is that the two groups have the same distribution, while the alternative
 hypothesis is that one group has larger (or smaller) values than the other.</p>
-<p>Null hypothesis H0: P(X&gt;Y)=P(Y&gt;X).
-Alternative H1: not H0.</p>
+<p>Null hypothesis <span class="math">\(H_0$: $P(X&gt;Y)=P(Y&gt;X)\)</span>.
+Alternative <span class="math">\(H_1$: not $H_0\)</span>.</p>
 <p>The Mann-Whitney U test is similar to the Wilcoxon test, but can be used to
-compare multiple samples that aren’t necessarily paired.</p>
+compare multiple samples that aren&#8217;t necessarily paired.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -735,7 +853,7 @@ compare multiple samples that aren’t necessarily paired.</p>
 <li><em>References</em></li>
 <li><em>&#8212;&#8212;&#8212;&#8211;</em> &#8211;<ol class="arabic">
 <li><dl class="first docutils">
-<dt>Mann–Whitney U test:</dt>
+<dt>Mann-Whitney U test:</dt>
 <dd><a class="reference external" href="http://tqmp.org/RegularArticles/vol04-1/p013/p013.pdf">http://tqmp.org/RegularArticles/vol04-1/p013/p013.pdf</a></dd>
 </dl>
 </li>
@@ -759,7 +877,7 @@ compare multiple samples that aren’t necessarily paired.</p>
 <dl class="function">
 <dt id="mousestyles.mww.plot_cor">
 <code class="descclassname">mousestyles.mww.</code><code class="descname">plot_cor</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/mww.html#plot_cor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.mww.plot_cor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the p-values outputed by the Mann–Whitney U test using
+<dd><p>Plot the p-values outputed by the Mann-Whitney U test using
 a correlation matrix representation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -805,12 +923,6 @@ matrices side by side using plot_cor.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="mousestyles-pca-hcm-data-module">
-<h2>mousestyles.pca_hcm_data module<a class="headerlink" href="#mousestyles-pca-hcm-data-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="mousestyles-strain-classification-module">
-<h2>mousestyles.strain_classification module<a class="headerlink" href="#mousestyles-strain-classification-module" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-mousestyles">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">mousestyles</span></code> is the final project for UC Berkeley&#8217;s 2016 Masters Capstone
@@ -834,9 +946,8 @@ at UCSF.</p>
 <li><a class="reference internal" href="#module-mousestyles.distribution">mousestyles.distribution module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.est_power_param">mousestyles.est_power_param module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.intervals">mousestyles.intervals module</a></li>
+<li><a class="reference internal" href="#module-mousestyles.kde">mousestyles.kde module</a></li>
 <li><a class="reference internal" href="#module-mousestyles.mww">mousestyles.mww module</a></li>
-<li><a class="reference internal" href="#mousestyles-pca-hcm-data-module">mousestyles.pca_hcm_data module</a></li>
-<li><a class="reference internal" href="#mousestyles-strain-classification-module">mousestyles.strain_classification module</a></li>
 <li><a class="reference internal" href="#module-mousestyles">Module contents</a></li>
 </ul>
 </li>

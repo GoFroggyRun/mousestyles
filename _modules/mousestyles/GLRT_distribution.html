@@ -39,7 +39,9 @@
           <div class="body" role="main">
             
   <h1>Source code for mousestyles.GLRT_distribution</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span>
+                        <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mousestyles</span> <span class="kn">import</span> <span class="n">data</span>
@@ -49,11 +51,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Random generate points of truncated power law.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
 <span class="sd">    The method we generate is to inverse Cumulative Density Function</span>
 <span class="sd">    of truncated powerlaw function, and put random number draw from</span>
-<span class="sd">    Unif[0,1]. The theory behind it is F^{-1}(U)~F.</span>
+<span class="sd">    Unif[0,1]. The theory behind it is $F^{-1}(U) \sim F$.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -75,15 +75,13 @@
     <span class="k">if</span> <span class="n">seed</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="random_exp"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.GLRT_distribution.random_exp">[docs]</a><span class="k">def</span> <span class="nf">random_exp</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">seed</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Random generate points of truncated exponential.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
 <span class="sd">    The method we generate is to use the memorylessness property</span>
 <span class="sd">    of exponential distribution. As the survival function of</span>
 <span class="sd">    exponential distribution is always the same, for truncated</span>
@@ -111,15 +109,13 @@
     <span class="k">if</span> <span class="n">seed</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="hypo_powerLaw_null"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.GLRT_distribution.hypo_powerLaw_null">[docs]</a><span class="k">def</span> <span class="nf">hypo_powerLaw_null</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">law_est</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the outcome from GLRT with null hypothesis law distribution.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
 <span class="sd">    This function used the Generalized Likelihood Ratio Test to test the</span>
 <span class="sd">    goodness of fit: in other words, which distribution is more likely.</span>
 
@@ -146,9 +142,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    strain : int</span>
 <span class="sd">        the strain number of the mouse</span>
-<span class="sd">    mouse  : int</span>
+<span class="sd">    mouse : int</span>
 <span class="sd">        the mouse number in its strain</span>
-<span class="sd">    day       :  int</span>
+<span class="sd">    day :  int</span>
 <span class="sd">        the day number</span>
 <span class="sd">    law_est: double (optional)</span>
 <span class="sd">        the estimated parameter in law distribution</span>
@@ -173,7 +169,7 @@
     <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">distance_vector</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">law_est</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">law_est</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> \
-                          <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))))</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))))</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span>
     <span class="n">log_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span>
     <span class="n">sum_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">log_cut</span><span class="p">)</span>
@@ -184,19 +180,18 @@
         <span class="n">sum_sam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
         <span class="n">log_sam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
         <span class="n">sum_log_sam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">log_sam</span><span class="p">))</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sum_sam</span><span class="o">-</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="n">sum_log_sam</span><span class="p">)</span> <span class="o">-</span> <span class="n">law_est</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">log_sam</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sum_sam</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="n">sum_log_sam</span><span class="p">)</span> <span class="o">-</span> \
+            <span class="n">law_est</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">log_sam</span><span class="p">)</span>
         <span class="n">sample_stat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
     <span class="c1"># critical_value = ss.mstats.mquantiles(sample_stat, prob = 0.05)[0]</span>
     <span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sample_stat</span> <span class="o">&gt;</span> <span class="n">test_stat</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_stat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">p_value</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">p_value</span></div>
 
 
 <div class="viewcode-block" id="hypo_exp_null"><a class="viewcode-back" href="../../api/mousestyles.html#mousestyles.GLRT_distribution.hypo_exp_null">[docs]</a><span class="k">def</span> <span class="nf">hypo_exp_null</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">law_est</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">exp_est</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the outcome from GLRT with null hypothesis law distribution.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
 <span class="sd">    This function also used the Generalized Likelihood Ratio Test to test</span>
 <span class="sd">    goodness of fit: in other words, which distribution is more likely.</span>
 
@@ -252,7 +247,7 @@
     <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">distance_vector</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">law_est</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">law_est</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> \
-                        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))))</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cut_dist</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))))</span>
     <span class="k">if</span> <span class="n">exp_est</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">exp_est</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">))</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span>
@@ -272,7 +267,7 @@
         <span class="n">sample_stat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
     <span class="c1"># critical_value = ss.mstats.mquantiles(sample_stat, prob = 0.95)[0]</span>
     <span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sample_stat</span> <span class="o">&lt;=</span> <span class="n">test_stat</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_stat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">p_value</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">p_value</span></div>
 </pre></div>
 
           </div>

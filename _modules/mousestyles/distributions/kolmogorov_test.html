@@ -39,7 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for mousestyles.distributions.kolmogorov_test</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span>
+                        <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span><span class="p">,</span> <span class="n">optimize</span>
@@ -81,7 +82,7 @@
 <span class="sd">    fit of the distribution using Kolmogorov-Smirnov test.</span>
 
 <span class="sd">    The Kolmogorov-Smirnov test constructs the test statistic, which is defined</span>
-<span class="sd">    as \sup |F_n(x) - F(x)|, for F_n is the sample CDF, and F is the</span>
+<span class="sd">    as $\sup |F_n(x) - F(x)|$, for $F_n$ is the sample CDF, and F is the</span>
 <span class="sd">    theoretical CDF. This statistics can be considered as a measure of</span>
 <span class="sd">    distance between the sample distribution and the theoretical distribution.</span>
 <span class="sd">    The smaller it is, the more similar the two distributions.</span>
@@ -90,7 +91,7 @@
 <span class="sd">    statistic.</span>
 
 <span class="sd">    The Pareto distribution is sometimes known as the Power Law distribution,</span>
-<span class="sd">    with the PDF:  b / x**(b + 1) for x &gt;= 1, b &gt; 0.</span>
+<span class="sd">    with the PDF:  $b / x**(b + 1)$ for $x &gt;= 1, b &gt; 0$.</span>
 <span class="sd">    The truncated exponential distribution is the same as the rescaled</span>
 <span class="sd">    exponential distribution.</span>
 

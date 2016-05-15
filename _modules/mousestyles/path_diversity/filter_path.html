@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../../../index.html" />
-    <link rel="up" title="mousestyles.path_diversity" href="../path_diversity.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,10 +39,11 @@
           <div class="body" role="main">
             
   <h1>Source code for mousestyles.path_diversity.filter_path</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span>
+                        <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="filter_paths"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.filter_path.filter_paths">[docs]</a><span class="k">def</span> <span class="nf">filter_paths</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">time_threshold</span><span class="p">):</span>
+<div class="viewcode-block" id="filter_path"><a class="viewcode-back" href="../../../api/mousestyles.path_diversity.html#mousestyles.path_diversity.filter_path.filter_path">[docs]</a><span class="k">def</span> <span class="nf">filter_path</span><span class="p">(</span><span class="n">movement</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">time_threshold</span><span class="p">):</span>
     <span class="sd">r&quot;&quot;&quot;</span>
 <span class="sd">    Return a list object containing start and end indices for</span>
 <span class="sd">    movements lasting equal to or longer than the specified time</span>
@@ -67,7 +68,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; movement = data.load_movement(1, 2, 1)</span>
 <span class="sd">    &gt;&gt;&gt; paths = path_index(movement, 1, 1)</span>
-<span class="sd">    &gt;&gt;&gt; filter_paths(movement, paths, 20)</span>
+<span class="sd">    &gt;&gt;&gt; filter_path(movement, paths, 20)</span>
 <span class="sd">    [[26754, 26897], [28538, 28627]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -89,7 +90,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">time_threshold</span><span class="p">:</span>
             <span class="n">pass_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
-    <span class="k">return</span><span class="p">(</span><span class="n">pass_paths</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">pass_paths</span></div>
 </pre></div>
 
           </div>
@@ -101,8 +102,6 @@
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../../index.html">Module code</a><ul>
-  <li><a href="../path_diversity.html">mousestyles.path_diversity</a><ul>
-  </ul></li>
   </ul></li>
   </ul></li>
 </ul>

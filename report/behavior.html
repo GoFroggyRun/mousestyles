@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
     <link rel="up" title="Project Report" href="index.html" />
-    <link rel="next" title="Exploration &amp; Path Diversity" href="path.html" />
+    <link rel="next" title="Exploration and Path Diversity" href="path.html" />
     <link rel="prev" title="Overview" href="overview.html" />
    
   
@@ -43,7 +43,7 @@
   <div class="section" id="behavioral-model">
 <span id="behavior"></span><h1>Behavioral Model<a class="headerlink" href="#behavioral-model" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="statement-of-problem">
-<h2>Statement of Problem:<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
+<h2>Statement of Problem<a class="headerlink" href="#statement-of-problem" title="Permalink to this headline">¶</a></h2>
 <p>In order to differentiate mice, we need to create a detailed behavior
 profile to describe:</p>
 <ol class="arabic simple">
@@ -51,18 +51,23 @@ profile to describe:</p>
 <li>how they translate between active state or inactive state.</li>
 </ol>
 <p>We have the following key background information from the paper:</p>
-<ul class="simple">
-<li><strong>Home Cage Monitoring System(HCM)</strong> HCM cages were spatially
-discretized into a 12 x 24 array of cells and occupancy times for
+<ul>
+<li><dl class="first docutils">
+<dt><strong>Home Cage Monitoring System(HCM)</strong> HCM cages were spatially</dt>
+<dd><p class="first last">discretized into a 12 x 24 array of cells and occupancy times for
 each MD were computed as the proportion of time spent within each of
 the 288 cells. To determine whether animals establish a Home base,
 HCM cages were spatially discretized into a 2 x 4 array of cells, and
 occupancy times for each mouse day were calculated as above. In the
 experiment, 56/158 animals displayed largest occupancy times in the
 cell containing the niche area, which was considered to be their Home
-base location.</li>
-<li><strong>Active and Inactive State</strong> Mice react differently during
-Active state and Inactive states and
+base location.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Active and Inactive State</strong> Mice react differently during</dt>
+<dd><p class="first last">Active state and Inactive states and
 all behavioral record should be classified into 2 mutually exclusive
 categories, Active States (ASs) and Inactive States (ISs). To
 designate ISs, we examined all time intervals occurring between
@@ -73,229 +78,138 @@ defined as the complement of these ISs. Equivalent mathematically,
 ASs can also be defined as those intervals resulting from connecting
 gaps between events outside the Home base of length at most IST; ISs
 are then defined as the complement of these ASs. (<em>Active State
-Organization of Spontaneous Behavior Patterns</em>, C. Hillar et al.)</li>
+Organization of Spontaneous Behavior Patterns</em>, C. Hillar et al.)</p>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 <div class="section" id="statement-of-statistical-problems">
-<h2>Statement of statistical problems:<a class="headerlink" href="#statement-of-statistical-problems" title="Permalink to this headline">¶</a></h2>
+<h2>Statement of Statistical Problems<a class="headerlink" href="#statement-of-statistical-problems" title="Permalink to this headline">¶</a></h2>
 <p>The above flowchart shows the key metrics that are required by the study
 to capture the behavioral profile:</p>
 <div class="figure" id="id1">
 <img alt="alt tag" src="../_images/project1_behavior_profile.png" />
 <p class="caption"><span class="caption-text">Behavioral Profile (image courtesy of Tecott Lab)</span></p>
 </div>
-<p>The main focus is 3 key states of the mice i.e. [<em>Drinking | Feeding |
-Locomotion</em>]</p>
+<p>The main focus is 3 key states of the mice i.e. <em>Drinking</em>, <em>Feeding</em> and
+<em>Locomotion</em>.</p>
 <p>Each of these metrics can be seen visually in the slides referenced
 below. Each metric is a tree, decomposed into two child node metrics,
 whereby when the child nodes are multiplied together, they yield the
-parent metric.</p>
-<ul class="simple">
-<li>AS [<em>Drinking | Feeding | Locomotion</em>] Intensity</li>
-<li><em>A note about intensity:</em> We are not entirely sure what the Tecott
-Lab&#8217;s meaning of &#8220;intensity&#8221; is. Our current hypothesis is that
-intensity is defined as quantity over active state time. E.g. for
-drinking, intensity is the quantity consumed divided by the total
-amount of time the mouse is in an active state.<ul>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Bout Size<ul>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Bout Duration</li>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Bout Intensity<ul>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Bout EventRate</li>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Event Size</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>[<em>Drinking | Feeding | Locomotion</em>] Bout Rt</li>
-</ul>
-</li>
-</ul>
-<p>Additionally the following needs to be calculated for Inactive /Active
-State:</p>
-<ul class="simple">
-<li>AS Probability: the probability of AS among all time period</li>
-<li>AS Duration: the length of time of AS</li>
-<li>AS Rate: the reciprocal of average length of time of AS</li>
-</ul>
-</div>
-<div class="section" id="data-collection">
-<h2>Data Collection:<a class="headerlink" href="#data-collection" title="Permalink to this headline">¶</a></h2>
-<p>The data we have:</p>
-<ul class="simple">
-<li>the observations of location for each mice, <span class="math">\((x, y, t)\)</span> with <span class="math">\(t\)</span> small.</li>
-<li>the aggregated time binned features about each event and its intensity.</li>
-</ul>
-<p>The data we need:</p>
-<ul class="simple">
-<li>the observation of consumption size and moving distance with each event.</li>
-</ul>
-</div>
-<div class="section" id="exploratory-analysis">
-<h2>Exploratory Analysis<a class="headerlink" href="#exploratory-analysis" title="Permalink to this headline">¶</a></h2>
-<p>Based on the data requirements being provided, we will need to start
-plotting the following metrics:</p>
-<p>For Event</p>
-<ul class="simple">
-<li>Event Consumption or Distance: Already in basic time bin features.</li>
-<li>AS Event Intensity: Already in basic time bin features.</li>
-<li>AS Bout Routine: Use <cite>txy_coords</cite> within each event intervals to generate
-the path.</li>
-<li>Event Bout Size or Distance: Use observation of consumption size and
-moving distance data.</li>
-<li>Event Bout Duration: Use event intervals data.</li>
-<li>Event Bout Intensity: Use Event Consumption or Distance over minute of AS time</li>
-<li>Event Size: Use interval to get the number of event happened in binned time</li>
-<li>Event Bout Rate: Use Event Size over AS time.</li>
-</ul>
-<p>For In/Active State</p>
-<ul class="simple">
-<li>AS Probability: Already in basic time bin features.</li>
-<li>AS Duration: Already in basic time bin features.</li>
-<li>AS Rate: Use AS Number over AS Duration.</li>
-</ul>
-</div>
-<div class="section" id="data-requirements-description">
-<h2>Data Requirements Description<a class="headerlink" href="#data-requirements-description" title="Permalink to this headline">¶</a></h2>
-<p>The data we have:</p>
-<ul class="simple">
-<li>a dataframe of observations of location for each mice, <span class="math">\((x, y, t)\)</span>
-with <span class="math">\(t\)</span> small.</li>
-<li>The above dataframe with a classification of strain number and mouse
-number at each time <span class="math">\(t\)</span> (if available)</li>
-</ul>
-<p>The data we require:</p>
-<ul class="simple">
-<li>The above dataframe with AS/ IS properly classified at each point <span class="math">\(t\)</span> for
-each mouse</li>
-<li>The above dataframe with a classification of drinking, feeding and
-locomotion for each mouse at each time <span class="math">\(t\)</span></li>
-<li>The above dataframe with a classification of consumption size and moving
-distance with each event at each time <span class="math">\(t\)</span></li>
-</ul>
-<p>A graphic view of the above is as below:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="16%" />
-<col width="14%" />
-<col width="16%" />
-<col width="14%" />
-<col width="22%" />
-<col width="19%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">strain</th>
-<th class="head">mouse</th>
-<th class="head">time</th>
-<th class="head">IS/AS</th>
-<th class="head">D/F/L/S*</th>
-<th class="head">Consn.</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>0</td>
-<td>1</td>
-<td>1.1</td>
-<td>IS</td>
-<td>S</td>
-<td>0</td>
-</tr>
-<tr class="row-odd"><td>0</td>
-<td>1</td>
-<td>1.4</td>
-<td>AS</td>
-<td>F</td>
-<td>4</td>
-</tr>
-<tr class="row-even"><td>1</td>
-<td>2</td>
-<td>1.1</td>
-<td>AS</td>
-<td>D</td>
-<td>5</td>
-</tr>
-<tr class="row-odd"><td>1</td>
-<td>2</td>
-<td>1.3</td>
-<td>AS</td>
-<td>D</td>
-<td>3</td>
-</tr>
-<tr class="row-even"><td>1</td>
-<td>2</td>
-<td>1.6</td>
-<td>IS</td>
-<td>S</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-<p>*<strong>``D/F/L/S``</strong> above is a flag for <strong>D</strong>rinking/ <strong>F</strong>eeding/
-<strong>L</strong>ocomotion/ <strong>S</strong>tationary</p>
-</div>
-<div class="section" id="methodology-approach-description">
-<h2>Methodology/ Approach Description<a class="headerlink" href="#methodology-approach-description" title="Permalink to this headline">¶</a></h2>
-<p>We wish to create a single function that should be able to return all of
-the above metrics as a list:</p>
-<p>Key inputs are:</p>
-<ul class="simple">
-<li>mouse/ strain as string</li>
-<li>starting time</li>
-<li>ending time</li>
-<li>a dictionary containing the rectangular vertices marking the area to
-restrict the movement to i.e. x_lower, x_upper, y_lower, y_upper.</li>
-<li>[<em>Drinking | Feeding | Locomotion</em>] state specification</li>
-<li>The main output is a list containing the key metrics stated in
-<code class="docutils literal"><span class="pre">Statement</span> <span class="pre">of</span> <span class="pre">statistical</span> <span class="pre">problems</span></code> section</li>
-<li>Key idea is that if we have the most granular dataframe in
-<code class="docutils literal"><span class="pre">Data</span> <span class="pre">Requirements</span> <span class="pre">Description</span></code> then the Python code is really just
-a SQL (in <code class="docutils literal"><span class="pre">pandas</span></code> form) filtering/ grouping query to generate the
-required output metrics (from flowchart) in the form of a list</li>
-</ul>
-<p>An example of a metric calculation for <cite>Drinking</cite> is as follows:
-<span class="math">\(\frac{Drinking}{Total\ Time}=\frac{Drink\ Consumed}{AS\ Time}\times \frac{AS\ Time}{Total\ Time}\)</span></p>
-</div>
-<div class="section" id="testing-framework-outline">
-<h2>Testing Framework Outline<a class="headerlink" href="#testing-framework-outline" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="additional-remarks">
-<h2>Additional Remarks<a class="headerlink" href="#additional-remarks" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first">It is not clear exactly how the specified required metrics are to be
-calculated in the form of a single query or multiple queries. We need
-more clarification on what intensity means.</p>
-</li>
-<li><p class="first">Not sure yet whether the required dataframe at the most granular
-level can be easily constructed. This would be really useful for all
-projects to use so we should really consider developing it for the
-wider team.</p>
-</li>
-<li><p class="first">Some of the required data metrics like consumption of food/ water at
-each time t may not be easy to obtain as they are provided for each
-interval. These may have to be prorated across each time t in some
-stable way in the construction of the required dataframe</p>
-</li>
-<li><p class="first">We also believe that the metrics provided at each point are single
-point statistics i.e. means. We should consider outputing the actual
-histogram of values at each point for the given metric rather than
-just the single-valued mean metrics</p>
+parent metric. We illustrate the relevant calculations in the case
+of <strong>drinking state</strong>:</p>
+<p><strong>Drinking</strong> Consumption Rate: <code class="docutils literal"><span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Amount/</span> <span class="pre">Total</span> <span class="pre">Time</span></code> (mg/s)</p>
+<p>Active State Prob: <code class="docutils literal"><span class="pre">Active</span> <span class="pre">Time/</span> <span class="pre">Total</span> <span class="pre">Time</span></code></p>
+<p><strong>Drinking</strong> Intensity: <code class="docutils literal"><span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Amount/</span> <span class="pre">Active</span> <span class="pre">Time</span></code> (mg/s)</p>
 <blockquote>
-<div><ul class="simple">
-<li>For example, we may not only be interested in the average amount
-of active time spent in locomotion, but the distribution of
-locomotion. This is a more complicated metric than those outlined
-in the work by the Tecott Lab&#8217;s papers referenced below. With this
-information, we could potentially see interesting trends: the
-proportion of a mouse-day spent in locomotion could be the same in
-two time chunks, but the types of movements (distances) could form
-a more nuanced distribution.</li>
+<div><ul>
+<li><p class="first"><strong>Drinking</strong> Bout Rate: <code class="docutils literal"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">Bouts/</span> <span class="pre">Active</span> <span class="pre">Time</span></code> (bouts/s)</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Drinking</strong> Bout Size: <code class="docutils literal"><span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Amount/</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">Bouts</span></code> (mg/bout)</dt>
+<dd><ul class="first last">
+<li><p class="first"><strong>Drinking</strong> Bout Duration: <code class="docutils literal"><span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Time/</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">Bouts</span></code> (s/bout)</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Drinking</strong> Bout Intensity: <code class="docutils literal"><span class="pre">Drinking</span> <span class="pre">Amount/</span> <span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Time</span></code> (mg/s)</dt>
+<dd><ul class="first last simple">
+<li><strong>Drinking</strong> Bout Event Rate: <code class="docutils literal"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">Events/</span> <span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Time</span></code> (events/s)</li>
+<li><strong>Drinking</strong> Event Size: <code class="docutils literal"><span class="pre">Total</span> <span class="pre">Drinking</span> <span class="pre">Amount/</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">Events</span></code> (mg/event)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div></blockquote>
-</li>
-<li><p class="first">Not sure if this is feasible, but if we had to produce the mean value
-we could output the time series mean value over the given interval
-rather than <em>just</em> the overall mean from the given interval</p>
-</li>
+</div>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<p>Our underlying functions depend on the following key data
+requirements for each <strong>mouse, strain and day</strong>:</p>
+<ul class="simple">
+<li>Active State</li>
+<li>Inactive State</li>
+<li>Moving Active State</li>
+<li>Moving Inactive State</li>
+<li>Total Distance Travelled (meters)</li>
+<li>Food Consumption (grams)</li>
+<li>Water Consumption (milligrams)</li>
 </ul>
+<p>These data requirements are sourced via the <code class="docutils literal"><span class="pre">mousestyles</span></code> <code class="docutils literal"><span class="pre">data</span>
+<span class="pre">loader</span></code> utilities.</p>
+<p>The Food and Water consumption data was only provided on a daily
+basis and our <code class="docutils literal"><span class="pre">behavior</span></code> utilities assume that such quantities
+are uniformly consumed over the time period studied.</p>
+</div>
+<div class="section" id="illustrative-examples">
+<h2>Illustrative Examples<a class="headerlink" href="#illustrative-examples" title="Permalink to this headline">¶</a></h2>
+<p>We illustrate the use of the <code class="docutils literal"><span class="pre">behavior</span></code> utilties with a
+motivating research question:</p>
+<p><em>How do do the key feeding metrics compare across 2 different mice
+for the entire 11 days?</em></p>
+<p>In this code, we see a few important features. First, we create
+behavior trees using the <code class="docutils literal"><span class="pre">compute_tree</span></code> function, and demonstrate
+their pretty-printing functionality.  Then, we merge lists of trees
+into one larger tree of lists, which we can then summarize or turn
+into a Pandas data frame. Finally, we show how to plot the results
+using <code class="docutils literal"><span class="pre">matplotlib</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+
+<span class="kn">import</span> <span class="nn">mousestyles.behavior</span> <span class="kn">as</span> <span class="nn">bh</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="c1"># get a tree for each day for two different mice</span>
+<span class="n">mouse1_trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">bh</span><span class="o">.</span><span class="n">compute_tree</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)]</span>
+<span class="n">mouse2_trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">bh</span><span class="o">.</span><span class="n">compute_tree</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse1_trees</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse2_trees</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># merge each of the trees for the two mice</span>
+<span class="n">mouse1_merged</span> <span class="o">=</span> <span class="n">bh</span><span class="o">.</span><span class="n">BehaviorTree</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="o">*</span><span class="n">mouse1_trees</span><span class="p">)</span>
+<span class="n">mouse2_merged</span> <span class="o">=</span> <span class="n">bh</span><span class="o">.</span><span class="n">BehaviorTree</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="o">*</span><span class="n">mouse2_trees</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse1_merged</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse2_merged</span><span class="p">)</span>
+
+<span class="c1"># get the means for the two mice</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse1_merged</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse2_merged</span><span class="o">.</span><span class="n">summarize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">))</span>
+
+<span class="c1"># turn the tree into pandas DataFrame</span>
+<span class="n">mouse1_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">mouse1_merged</span><span class="o">.</span><span class="n">contents</span><span class="p">)</span>
+<span class="c1"># this gives us another way to compute summary statistics</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mouse1_df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+
+<span class="c1"># plot the AS Probability over time</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+         <span class="n">mouse1_merged</span><span class="p">[</span><span class="s1">&#39;AS Prob&#39;</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span>
+         <span class="n">mouse2_merged</span><span class="p">[</span><span class="s1">&#39;AS Prob&#39;</span><span class="p">],</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Mouse 1 and 2 AS prob. over time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../report/plots/plot_behavior_example.py">Source code</a>, <a class="reference external" href="../report/plots/plot_behavior_example_00_00.png">png</a>, <a class="reference external" href="../report/plots/plot_behavior_example_00_00.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_behavior_example_00_00.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/plot_behavior_example_00_00.png" src="../_images/plot_behavior_example_00_00.png" />
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># plot consumption vs. AS prob</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mouse2_merged</span><span class="p">[</span><span class="s1">&#39;AS Prob&#39;</span><span class="p">],</span>
+         <span class="n">mouse2_merged</span><span class="p">[</span><span class="s1">&#39;Consumption Rate&#39;</span><span class="p">],</span> <span class="s1">&#39;go&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Mouse 2 consumption rate vs. AS prob.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../report/plots/plot_behavior_example_01_00.png">png</a>, <a class="reference external" href="../report/plots/plot_behavior_example_01_00.hires.png">hires.png</a>, <a class="reference external" href="../report/plots/plot_behavior_example_01_00.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="../_images/plot_behavior_example_01_00.png" src="../_images/plot_behavior_example_01_00.png" />
+</div>
 </div>
 </div>
 
@@ -308,14 +222,10 @@ rather than <em>just</em> the overall mean from the given interval</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Behavioral Model</a><ul>
-<li><a class="reference internal" href="#statement-of-problem">Statement of Problem:</a></li>
-<li><a class="reference internal" href="#statement-of-statistical-problems">Statement of statistical problems:</a></li>
-<li><a class="reference internal" href="#data-collection">Data Collection:</a></li>
-<li><a class="reference internal" href="#exploratory-analysis">Exploratory Analysis</a></li>
-<li><a class="reference internal" href="#data-requirements-description">Data Requirements Description</a></li>
-<li><a class="reference internal" href="#methodology-approach-description">Methodology/ Approach Description</a></li>
-<li><a class="reference internal" href="#testing-framework-outline">Testing Framework Outline</a></li>
-<li><a class="reference internal" href="#additional-remarks">Additional Remarks</a></li>
+<li><a class="reference internal" href="#statement-of-problem">Statement of Problem</a></li>
+<li><a class="reference internal" href="#statement-of-statistical-problems">Statement of Statistical Problems</a></li>
+<li><a class="reference internal" href="#data">Data</a></li>
+<li><a class="reference internal" href="#illustrative-examples">Illustrative Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -325,7 +235,7 @@ rather than <em>just</em> the overall mean from the given interval</p>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="index.html">Project Report</a><ul>
       <li>Previous: <a href="overview.html" title="previous chapter">Overview</a></li>
-      <li>Next: <a href="path.html" title="next chapter">Exploration &amp; Path Diversity</a></li>
+      <li>Next: <a href="path.html" title="next chapter">Exploration and Path Diversity</a></li>
   </ul></li>
   </ul></li>
 </ul>

@@ -25,6 +25,9 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="mousestyles 0.1 documentation" href="../index.html" />
+    <link rel="up" title="mousestyles package" href="mousestyles.html" />
+    <link rel="next" title="mousestyles.visualization package" href="mousestyles.visualization.html" />
+    <link rel="prev" title="mousestyles.path_diversity package" href="mousestyles.path_diversity.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -39,8 +42,326 @@
             
   <div class="section" id="mousestyles-ultradian-package">
 <h1>mousestyles.ultradian package<a class="headerlink" href="#mousestyles-ultradian-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-mousestyles.ultradian">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mousestyles.ultradian" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mousestyles.ultradian.aggregate_data">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">aggregate_data</code><span class="sig-paren">(</span><em>feature</em>, <em>bin_width</em>, <em>nmouse=4</em>, <em>nstrain=3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#aggregate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.aggregate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate all the strains and mouses with any feature together
+in one dataframe. It combines the results you got from
+aggregate_movements and aggregate_interval. It will return
+a dataframe with three variables: mouse, strain, feature and hour.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>feature</strong> &#8211; {&#8220;AS&#8221;, &#8220;F&#8221;, &#8220;IS&#8221;, &#8220;M_AS&#8221;, &#8220;M_IS&#8221;, &#8220;W&#8221;, &#8220;Distance&#8221;}</li>
+<li><strong>bin_width</strong> (<em>int</em>) &#8211; Number of minutes, the time interval for data aggregation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>pandas.dataframe</em></li>
+<li><em>describe</em> &#8211; Column 0: the mouse number (number depends on strain)(0-3)
+Column 1: the strain of the mouse (0-2)
+Column 2: hour(numeric values below 24 accourding to bin_width)
+Column 3: feature values</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test</span> <span class="o">=</span> <span class="n">aggregate_data</span><span class="p">(</span><span class="s2">&quot;Distance&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;Distance&quot;</span><span class="p">]))</span>
+<span class="go">531.4500177747973</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.aggregate_interval">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">aggregate_interval</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>feature</em>, <em>bin_width</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#aggregate_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.aggregate_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate the interval data based on n-minute time
+intervals, return a time series.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>feature</strong> (<em>{&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)</li>
+<li><strong>bin_width</strong> (<em>number of minutes of time interval for data aggregation</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ts</strong> &#8211; a pandas time series of length 12(day)*24(hour)*60(minute)/n</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.tseries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.aggregate_movement">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">aggregate_movement</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>bin_width</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#aggregate_movement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.aggregate_movement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate the movement data based on n-minute
+time intervals, return a time series.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>bin_width</strong> (<em>number of minutes of time interval for data aggregation</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ts</strong> &#8211; a pandas time series of length (#day)*24(hour)*60(minute)/n</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.tseries</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.find_cycle">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">find_cycle</code><span class="sig-paren">(</span><em>feature</em>, <em>strain</em>, <em>mouse=None</em>, <em>bin_width=15</em>, <em>methods=u'LombScargleFast'</em>, <em>disturb_t=False</em>, <em>gen_doc=False</em>, <em>plot=True</em>, <em>search_range_fit=None</em>, <em>nyquist_factor=3</em>, <em>n_cycle=10</em>, <em>search_range_find=(2</em>, <em>26)</em>, <em>sig=array([ 0.05])</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#find_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.find_cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use Lomb-Scargel method on different strain and mouse&#8217;s data to find the
+best possible periods with highest p-values. The function can be used on
+specific strains and specific mouses, as well as just specific strains
+without specifying mouse number. We use the O(NlogN) fast implementation
+of Lomb-Scargle from the gatspy package, and also provide a way to
+visualize the result.</p>
+<p>Note that either plotting or calculating L-S power doesn&#8217;t use the same
+method in finding best cycle. The former can use user-specified
+search_range, while the latter uses default two grid search_range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>feature</strong> (<em>string in {&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)
+&#8220;Distance&#8221;: Distance traveled</li>
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int, default is None</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>bin_width</strong> (<em>int, minute unit, default is 15 minutes</em>) &#8211; number of minutes, the time interval for data aggregation</li>
+<li><strong>methods</strong> (<em>string in {&quot;LombScargleFast&quot;, &quot;LombScargle&quot;}</em>) &#8211; indicating the method used in determining periods and best cycle.
+If choose &#8216;LombScargle&#8217;, &#8216;disturb_t&#8217; must be True.</li>
+<li><strong>disturb_t</strong> (<em>boolean, default is False</em>) &#8211; If True, add uniformly distributed noise to the time sequence which
+are used to fit the Lomb Scargle model. This is to avoid the singular
+matrix error that could happen sometimes.</li>
+<li><strong>plot</strong> (<em>boolean, default is True</em>) &#8211; If True, call the visualization function to plot the Lomb Scargle
+power versus periods plot. First use the data (either strain specific
+or strain-mouse specific) to fit the LS model, then use the
+search_range_fit as time sequence to predict the corresponding LS
+power, at last draw the plot out. There will also be stars and
+horizontal lines indicating the p-value of significance. Three stars
+will be p-value in [0,0.001], two stars will be p-value in
+[0.001,0.01], one star will be p-value in [0.01,0.05]. The horizontal
+line is the LS power that has p-value of 0.05.</li>
+<li><strong>search_range_fit</strong> (<em>list, numpy array or numpy arange, hours unit,</em>) &#8211; default is None
+list of numbers as the time sequence to predict the corrsponding
+Lomb Scargle power. If plot is &#8216;True&#8217;, these will be drawn as the
+x-axis. Note that the number of search_range_fit points can not be
+too small, or the prediction smooth line will not be accurate.
+However the plot will always give the right periods and their LS
+power with 1,2 or 3 stars. This could be a sign to check whether
+search_range_fit is not enough to draw the correct plot.
+We recommend the default None, which is easy to use.</li>
+<li><strong>nyquist_factor</strong> (<em>int</em>) &#8211; If search_range_fit is None, the algorithm will automatically
+choose the periods sequence.
+5 * nyquist_factor * length(time sequence) / 2 gives the number of
+power and periods used to make LS prediction and plot the graph.</li>
+<li><strong>n_cycle</strong> (<em>int, default is 10</em>) &#8211; numbers of periods to be returned by function, which have the highest
+Lomb Scargle power and p-value.</li>
+<li><strong>search_range_find</strong> (<em>list, tuple or numpy array with length of 2, default is</em>) &#8211; (2,26), hours unit
+Range of periods to be searched for best cycle. Note that the minimum
+should be strictly larger than 0 to avoid 1/0 issues.</li>
+<li><strong>sig</strong> (<em>list or numpy array, default is [0.05].</em>) &#8211; significance level to be used for plot horizontal line.</li>
+<li><strong>gen_doc</strong> (<em>boolean, default is False</em>) &#8211; If true, return the parameters needed for visualize the LS power versus
+periods</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>cycle</strong> (<em>numpy array of length &#8216;n_cycle&#8217;</em>) &#8211; The best periods with highest LS power and p-values.</li>
+<li><strong>cycle_power</strong> (<em>numpy array of length &#8216;n_cycle&#8217;</em>) &#8211; The corrsponding LS power of &#8216;cycle&#8217;.</li>
+<li><strong>cycle_pvalue</strong> (<em>numpy array of length &#8216;n_cycle&#8217;</em>) &#8211; The corrsponding p-value of &#8216;cycle&#8217;.</li>
+<li><strong>periods</strong> (<em>numpy array of the same length with &#8216;power&#8217;</em>) &#8211; use as time sequence in LS model to make predictions.Only return when
+gen_doc is True.</li>
+<li><strong>power</strong> (<em>numpy array of the same length with &#8216;periods&#8217;</em>) &#8211; the corresponding predicted power of periods. Only return when
+gen_doc is True.</li>
+<li><strong>sig</strong> (<em>list, tuple or numpy array, default is [0.05].</em>) &#8211; significance level to be used for plot horizontal line.
+Only return when gen_doc is True.</li>
+<li><strong>N</strong> (<em>int</em>) &#8211; the length of time sequence in the fit model. Only return when
+gen_doc is True.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="n">find_cycle</span><span class="p">(</span><span class="n">feature</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">strain</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">mouse</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="mf">23.98055016</span>   <span class="mf">4.81080233</span>  <span class="mf">12.00693952</span>   <span class="mf">6.01216335</span>   <span class="mf">8.0356203</span>
+<span class="go">     3.4316698    2.56303353   4.9294791   21.37925713   3.5697756 ]</span>
+<span class="go">    [ 0.11543449  0.05138839  0.03853218  0.02982237  0.02275952</span>
+<span class="go">    0.0147941  0.01151601  0.00998443  0.00845883  0.0082382 ]</span>
+<span class="go">    [  0.00000000e+00   3.29976046e-10   5.39367189e-07   8.10528027e-05</span>
+<span class="go">      4.71001953e-03   3.70178834e-01   9.52707020e-01   9.99372657e-01</span>
+<span class="go">     9.99999981e-01   9.99999998e-01]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.mix_strain">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">mix_strain</code><span class="sig-paren">(</span><em>data</em>, <em>feature</em>, <em>print_opt=True</em>, <em>nstrain=3</em>, <em>search_range=(3</em>, <em>12)</em>, <em>degree=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#mix_strain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.mix_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the linear mixed model onto our aggregate data. The fixed effects
+are the hour, strain, interactions between hour and strain; The random
+effect is mouse because we want to make sure that the different mouses
+will not give out any differences. We added two dummy variables:
+strain0 and strain1 to be our fixed effects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>data frame output from aggregate_data function</em>) &#8211; </li>
+<li><strong>feature</strong> (<em>{&quot;AS&quot;, &quot;F&quot;, &quot;IS&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; </li>
+<li><strong>print_opt</strong> (<em>True or False</em>) &#8211; </li>
+<li><strong>nstrain</strong> (<em>positive integer</em>) &#8211; </li>
+<li><strong>range</strong> (<em>array contains two elements</em>) &#8211; </li>
+<li><strong>degree</strong> (<em>positive integer</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>Two mixed model regression results which includes all the coefficients,</em></li>
+<li><em>t statistics and p values for corresponding coefficients; The first model</em></li>
+<li><em>includes interaction terms while the second model does not include the</em></li>
+<li><em>interaction terms</em></li>
+<li><em>Likelihood ratio test p values, if it is below our significance level,</em></li>
+<li><em>we can conclude that the different strains have significantly different</em></li>
+<li><em>time patterns</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">mix_strain</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">aggregate_data</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="n">feature</span> <span class="o">=</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="n">print_opt</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="go">2.5025846540930469e-09</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.seasonal_decomposition">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">seasonal_decomposition</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>feature</em>, <em>bin_width</em>, <em>period_length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#seasonal_decomposition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.seasonal_decomposition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply seasonal decomposition model on the time series
+of specified strain, mouse, feature and bin_width.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>int</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>feature</strong> (<em>{&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)
+&#8220;Distance&#8221;: Distance traveled</li>
+<li><strong>bin_width</strong> (<em>int</em>) &#8211; number of minutes, the time interval for data aggregation</li>
+<li><strong>period_length</strong> (<em>int or float</em>) &#8211; number of hours, usually the significant period
+length indicated by Lomb-scargle model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>res</strong> &#8211; seasonal decomposition result for the mouse.
+Check the seasonal decomposition plot by res.plot(),
+seasonl term and trend term by res.seasonal and
+res.trend separately.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">statsmodel seasonal decomposition object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">seasonal_decomposition</span><span class="p">(</span><span class="n">strain</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mouse</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
+<span class="go">                                 bin_width=30, period_length = 24)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mousestyles.ultradian.strain_seasonal">
+<code class="descclassname">mousestyles.ultradian.</code><code class="descname">strain_seasonal</code><span class="sig-paren">(</span><em>strain</em>, <em>mouse</em>, <em>feature</em>, <em>bin_width</em>, <em>period_length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mousestyles/ultradian.html#strain_seasonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mousestyles.ultradian.strain_seasonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use seansonal decomposition model on the time series
+of specified strain, mouse, feature and bin_width.
+return the seasonal term and the plot of seasonal term
+by mouse of a set of mouses in a strain</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>strain</strong> (<em>int</em>) &#8211; nonnegative integer indicating the strain number</li>
+<li><strong>mouse</strong> (<em>list, set or tuple</em>) &#8211; nonnegative integer indicating the mouse number</li>
+<li><strong>feature</strong> (<em>{&quot;AS&quot;, &quot;F&quot;, &quot;M_AS&quot;, &quot;M_IS&quot;, &quot;W&quot;, &quot;Distance&quot;}</em>) &#8211; &#8220;AS&#8221;: Active state probalibity
+&#8220;F&#8221;: Food consumed (g)
+&#8220;M_AS&#8221;: Movement outside homebase
+&#8220;M_IS&#8221;: Movement inside homebase
+&#8220;W&#8221;: Water consumed (g)
+&#8220;Distance&#8221;: Distance traveled</li>
+<li><strong>bin_width</strong> (<em>int</em>) &#8211; number of minutes, the time interval for data aggregation</li>
+<li><strong>period_length</strong> (<em>int or float</em>) &#8211; number of hours, usually the significant period
+length indicated by Lomb-scargle model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>seasonal_all</strong> &#8211; mouse indicated by the input parameter</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array containing the seasonal term for every</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">strain_seasonal</span><span class="p">(</span><span class="n">strain</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mouse</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">feature</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">,</span>
+<span class="go">                          bin_width=30, period_length = 24)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -53,7 +374,7 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">mousestyles.ultradian package</a><ul>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-mousestyles.ultradian">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -61,6 +382,12 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API reference</a><ul>
+  <li><a href="mousestyles.html">mousestyles package</a><ul>
+      <li>Previous: <a href="mousestyles.path_diversity.html" title="previous chapter">mousestyles.path_diversity package</a></li>
+      <li>Next: <a href="mousestyles.visualization.html" title="next chapter">mousestyles.visualization package</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

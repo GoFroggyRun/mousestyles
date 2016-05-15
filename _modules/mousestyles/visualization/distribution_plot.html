@@ -39,12 +39,16 @@
           <div class="body" role="main">
             
   <h1>Source code for mousestyles.visualization.distribution_plot</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span>
+                        <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">mousestyles.distribution</span> <span class="kn">import</span> <span class="n">powerlaw_pdf</span><span class="p">,</span> <span class="n">exp_pdf</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">mousestyles.distribution</span> <span class="kn">import</span> <span class="p">(</span><span class="n">powerlaw_pdf</span><span class="p">,</span> <span class="n">exp_pdf</span><span class="p">,</span>
+                                      <span class="n">powerlaw_inverse_cdf</span><span class="p">,</span> <span class="n">exp_inverse_cdf</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">mousestyles.est_power_param</span> <span class="kn">import</span> <span class="p">(</span><span class="n">fit_powerlaw</span><span class="p">,</span> <span class="n">fit_exponential</span><span class="p">,</span>
                                          <span class="n">getdistance</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">mousestyles.kde</span> <span class="kn">import</span> <span class="n">kde</span>
 
 
 <div class="viewcode-block" id="plot_powerlaw"><a class="viewcode-back" href="../../../api/mousestyles.visualization.html#mousestyles.visualization.distribution_plot.plot_powerlaw">[docs]</a><span class="k">def</span> <span class="nf">plot_powerlaw</span><span class="p">(</span><span class="n">estimation</span><span class="p">):</span>
@@ -89,12 +93,58 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Histogram: Exponential parameters distribution by strain&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_fitted"><a class="viewcode-back" href="../../../api/mousestyles.visualization.html#mousestyles.visualization.distribution_plot.plot_fitted">[docs]</a><span class="k">def</span> <span class="nf">plot_fitted</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_fitted"><a class="viewcode-back" href="../../../api/mousestyles.visualization.html#mousestyles.visualization.distribution_plot.plot_fitted">[docs]</a><span class="k">def</span> <span class="nf">plot_fitted</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the plot of one single mouse day</span>
-<span class="sd">    -histogram of distance</span>
 <span class="sd">    -fitted power law</span>
 <span class="sd">    -fitted exponential</span>
+<span class="sd">    -histogram of distance</span>
+<span class="sd">    -kernel density curve</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain : int</span>
+<span class="sd">        the strain number of the mouse</span>
+<span class="sd">    mouse  : int</span>
+<span class="sd">        the mouse number in its strain</span>
+<span class="sd">    day :  int</span>
+<span class="sd">        the day number</span>
+<span class="sd">    hist : boolean</span>
+<span class="sd">        Plot histogram if True</span>
+<span class="sd">    density : boolean</span>
+<span class="sd">        plot density if True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    plot : 1 histogram (blue) + 2 fitted curve + 1 density (cyan)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">fit_powerlaw</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">lamb</span> <span class="o">=</span> <span class="n">fit_exponential</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">getdistance</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">powerlaw_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;powerlaw pdf&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lamb</span><span class="p">),</span> <span class="s1">&#39;y-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;exp pdf&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hist</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">density</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">sample_cut_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">sample_cut_dist</span><span class="p">,</span> <span class="n">x_grid</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">symmetric_correction</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                  <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;powerlaw pdf&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_relative_dist"><a class="viewcode-back" href="../../../api/mousestyles.visualization.html#mousestyles.visualization.distribution_plot.plot_relative_dist">[docs]</a><span class="k">def</span> <span class="nf">plot_relative_dist</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the relative distribution of distance of a single mouse day</span>
+<span class="sd">    The relative distribution of a comparison distribution with density g</span>
+<span class="sd">    vs a reference distribution with density f is g(F^(-1)(x))/f(F^(-1)(x))</span>
+<span class="sd">    It&#39;s a prob distribution on [0, 1].</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -107,19 +157,41 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    plot : 1 histogram + 2 fitted curve</span>
+<span class="sd">    pdf_rel_power : numpy.ndarray</span>
+<span class="sd">        the relative distribution, referencing the best fit powerlaw</span>
+<span class="sd">        distribution, at grid points np.arange(0, 1.0, 0.02)</span>
+<span class="sd">    pdf_rel_exp : numpy.ndarray</span>
+<span class="sd">        the relative distribution, referencing the best fit exponential</span>
+<span class="sd">        distribution, at grid points np.arange(0, 1.0, 0.02)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="c1"># calculate the best fit parameters for powerlaw and exponential</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">fit_powerlaw</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
     <span class="n">lamb</span> <span class="o">=</span> <span class="n">fit_exponential</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
+    <span class="c1"># set up the grid points on [0, 1]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span>
+    <span class="c1"># transform x to F^(-1)(x) = y</span>
+    <span class="n">y_grid_power</span> <span class="o">=</span> <span class="n">powerlaw_inverse_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="n">y_grid_exp</span> <span class="o">=</span> <span class="n">exp_inverse_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lamb</span><span class="p">)</span>
     <span class="n">cut_dist</span> <span class="o">=</span> <span class="n">getdistance</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="n">mouse</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">powerlaw_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;powerlaw pdf&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lamb</span><span class="p">),</span> <span class="s1">&#39;y-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;exp pdf&#39;</span><span class="p">)</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span></div>
+    <span class="c1"># to save computation, we do random sampling</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sample_cut_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">cut_dist</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="c1"># get the corresponding density at points y</span>
+    <span class="n">pdf_grid_power</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">sample_cut_dist</span><span class="p">,</span> <span class="n">x_grid</span><span class="o">=</span><span class="n">y_grid_power</span><span class="p">,</span>
+                         <span class="n">symmetric_correction</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pdf_grid_exp</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">sample_cut_dist</span><span class="p">,</span> <span class="n">x_grid</span><span class="o">=</span><span class="n">y_grid_exp</span><span class="p">,</span>
+                       <span class="n">symmetric_correction</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># calculate the ratio as relative distribution</span>
+    <span class="n">pdf_rel_power</span> <span class="o">=</span> <span class="n">pdf_grid_power</span> <span class="o">/</span> <span class="n">powerlaw_pdf</span><span class="p">(</span><span class="n">y_grid_power</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="n">pdf_rel_exp</span> <span class="o">=</span> <span class="n">pdf_grid_exp</span> <span class="o">/</span> <span class="n">exp_pdf</span><span class="p">(</span><span class="n">y_grid_exp</span><span class="p">,</span> <span class="n">lamb</span><span class="p">)</span>
+    <span class="c1"># plot the relative distribution</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pdf_rel_power</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Relative distribution, powerlaw&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pdf_rel_exp</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Relative distribution, exponential&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
